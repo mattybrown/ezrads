@@ -1,0 +1,22 @@
+
+<h4><%= @customer.business_name %></h4>
+<p>
+  <%= @customer.contact_name %><br />
+  <%= @customer.email %>
+</p>
+
+<ul class="collection">
+
+    <% @customer.ads.each do |a| %>
+      <li class="collection-item avatar">
+        <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil circle"></i></a>
+        <span class="title"><%= a.publication_date %></span>
+        <p>
+          <%= a.size %>
+          <%= a.position %>
+        </p>
+      </li>
+    <% end %>
+
+
+</ul>

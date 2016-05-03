@@ -1,0 +1,43 @@
+
+<div class="row">
+  <h3>Edit ad</h3>
+  <form action="/edit/ad/<%= @ad.id %>" method="post" class="col s12">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="date" class="datepicker" id="publication_date" name="ad[publication_date]" value="<%= @ad.publication_date %>">
+        <label for="publication_date">Publication date</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="publication" name="ad[publication]" value="<%= @ad.publication %>">
+        <label for="publication">Publication</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="size" name="ad[size]" value="<%= @ad.size %>">
+        <label for="size">Size</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="position" name="ad[position]" value="<%= @ad.position %>">
+        <label for="position">Position</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="price" name="ad[price]" value="<%= @ad.price %>">
+        <label for="price">Price</label>
+      </div>
+
+      <div class="input-field col 26">
+        <select name="ad[customer]">
+          <option value="<%= @ad.customer.id %>" selected><%= @ad.customer.business_name %></option>
+          <% @customers.each do |c| %>
+            <option value="<%= c.id %>"><%= c.business_name %></option>
+          <% end %>
+        </select>
+      </div>
+
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>
+  </form>
+</div>

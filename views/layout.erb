@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>
+    EzrAds | <%= @title ? @title : nil %>
+  </title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+  <link rel="stylesheet" href="<%= url('/style.css') %>" type="text/css">
+  <link rel="stylesheet" href="<%= url('/custom.css') %>" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+  <script type="text/javascript" src="<%= url('/jquery.tablesorter.min.js') %>"></script>
+  <script type="text/javascript" src="<%= url('/custom.js') %>"></script>
+
+</head>
+<body>
+
+  <nav>
+    <div class="nav-wrapper red darken-4">
+      <a href="/" class="brand-logo">EzrAds</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="/view/users">Users</a></li>
+        <li><a href="/view/customers">Customers</a></li>
+        <% if env['warden'].user == nil %>
+          <li><a href="/auth/login">Login</a></li>
+        <% else %>
+          <li><a href="/auth/logout">Logout</a></li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <form action="/search">
+      <div class="input-field custom_search">
+        <input id="search" type="search" name="search[query]" required>
+        <label for="search"><i class="fa fa-search"></i></label>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function(){
+      $('#search').autocomplete({
+        source: <%= dblist() %>
+      });
+    });
+  </script>
+
+  <div class="flash">
+    <div class="container">
+      <div class="col">
+        <% if flash[:success] %>
+          <div class="card light-green accent-2">
+              <div class="card-content">
+                <p>Success: <%= flash[:success] %></p>
+                <button class="btn-floating light-green darken-2 right close-flash"><i class="fa fa-close"></i></button>
+              </div>
+          </div>
+        <% end %>
+        <% if flash[:error] %>
+          <div class="card red darken-2">
+              <div class="card-content white-text">
+                <p>Error: <%= flash[:error] %></p>
+                <button class="btn-floating red lighten-2 secondary-content close-flash"><i class="fa fa-close"></i></button>
+              </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+  <div class="container">
+  <%= yield %>
+  </div>
+  </div>
+  <div class="footer">
+
+  </div>
+</body>
+</html>

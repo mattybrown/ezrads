@@ -1,0 +1,46 @@
+
+<div class="row">
+  <h3>Edit user</h3>
+  <form action="/edit/user/<%= @user.id %>" method="post" class="col s12">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="username" name="user[username]" value="<%= @user.username %>">
+        <label for="username">Username</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="password" id="password" name="user[password]">
+        <label for="password">Password</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="phone" name="user[phone]" value="<%= @user.phone %>">
+        <label for="phone">Phone</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="email" name="user[email]" value="<%= @user.email %>">
+        <label for="email">Email</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select name="user[role]">
+          <option value="" disabled selected>Role</option>
+          <option value="1">Admin</option>
+          <option value="2">Sales</option>
+          <option value="3">Production</option>
+          <option value="4">Accounts</option>
+        </select>
+      </div>
+      <div class="input-field col s6">
+        <select name="user[publication]">
+          <option value="" disabled selected>Publication</option>
+          <option value="1">All</option>
+          <option value="2">Blenheim Sun</option>
+          <option value="3">Cook Strait News</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>
+  </form>
+</div>

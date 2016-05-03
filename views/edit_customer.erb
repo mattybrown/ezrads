@@ -1,0 +1,37 @@
+
+<div class="row">
+  <h3>Edit customer</h3>
+  <form action="/edit/customer/<%= @customer.id %>" method="post" class="col s12">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="contact_name" name="customer[contact_name]" value="<%= @customer.contact_name %>">
+        <label for="contact_name">Contact name</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="business_name" name="customer[business_name]" value="<%= @customer.business_name %>">
+        <label for="business_name">Business name</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="billing_address" name="customer[billing_address]" value="<%= @customer.billing_address %>">
+        <label for="billing_address">Phone</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="phone" name="customer[phone]" value="<%= @customer.phone %>">
+        <label for="phone">Phone</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="mobile" name="customer[mobile]" value="<%= @customer.mobile %>">
+        <label for="mobile">Email</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="email" name="customer[email]" value="<%= @customer.email %>">
+        <label for="email">Email</label>
+      </div>
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>
+  </form>
+</div>
