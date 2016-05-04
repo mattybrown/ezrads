@@ -22,8 +22,9 @@
     <div class="nav-wrapper red darken-4">
       <a href="/" class="brand-logo">EzrAds</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="/view/users">Users</a></li>
+        <li><a href="/">Ads</a></li>
         <li><a href="/view/customers">Customers</a></li>
+        <li><a href="/view/users">Users</a></li>
         <% if env['warden'].user == nil %>
           <li><a href="/auth/login">Login</a></li>
         <% else %>
@@ -32,22 +33,6 @@
       </ul>
     </div>
   </nav>
-
-  <div class="container">
-    <form action="/search">
-      <div class="input-field custom_search">
-        <input id="search" type="search" name="search[query]" required>
-        <label for="search"><i class="fa fa-search"></i></label>
-      </div>
-    </form>
-  </div>
-  <script>
-    $(document).ready(function(){
-      $('#search').autocomplete({
-        source: <%= dblist() %>
-      });
-    });
-  </script>
 
   <div class="flash">
     <div class="container">
@@ -71,6 +56,22 @@
       </div>
     </div>
   </div>
+
+  <div class="container">
+    <form action="/search">
+      <div class="input-field custom_search">
+        <input id="search" type="search" name="search[query]" required>
+        <label for="search"><i class="fa fa-search"></i></label>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function(){
+      $('#search').autocomplete({
+        source: <%= dblist() %>
+      });
+    });
+  </script>
 
   <div class="main">
   <div class="container">

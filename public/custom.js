@@ -14,4 +14,8 @@ $(document).ready(function(){
 
   $('.toggle-note').leanModal();
 
+  $('#repeat').click(function(){
+    $('#repeat-input').toggle(this.checked);
+  }
+
 });

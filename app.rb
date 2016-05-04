@@ -46,9 +46,13 @@ class EzrAds < Sinatra::Base
 
   get '/' do
     env['warden'].authenticate!
+
+    @s = Date.today
+    @e = @s + 28
+
     @role = env['warden'].user[:role]
     @title = "Home"
-    @ads = Ad.all
+    @ads = Ad.all(:publication_date => (@s..@e))
     erb :view_ads
   end
 
@@ -183,7 +187,7 @@ class EzrAds < Sinatra::Base
 
   post '/create/ad' do
     ad_user = env['warden'].user[:id]
-    ad = Ad.new(created_at: Time.now, publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'])
+    ad = Ad.new(created_at: Time.now, publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
     if ad.save
       flash[:success] = "Ad successfully created"
       redirect '/'

@@ -36,7 +36,12 @@
           <% end %>
         </select>
       </div>
-
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
+          <label for="note">Notes</label>
+        </div>
+      </div>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>
   </form>

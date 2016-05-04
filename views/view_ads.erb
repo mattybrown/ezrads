@@ -1,5 +1,6 @@
 <a href="/create/ad" class="btn right"><i class="fa fa-plus-circle"></i> Create ad</a>
 <a href="#" class="btn toggle-completed">Toggle completed</a>
+<p><%= "Today is #{@s.strftime('%A %d %b %Y')}... Showing ads up to #{@e.strftime('%A %d %b %Y')}" %></p>
 <table class="ad_table tablesorter">
   <thead>
     <tr>
@@ -19,8 +20,8 @@
     <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
       <td><%= a.id %></td>
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
-      <% date = Date.parse(a.publication_date) %>
-      <td><%= date.strftime('%d %b %Y') %></td>
+
+      <td><%= a.publication_date.strftime('%d %b %Y') %></td>
       <td><%= a.size %></td>
       <td><%= a.position %></td>
       <% if @role != 3 %>

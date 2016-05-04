@@ -44,7 +44,7 @@ class Ad
 
   property :id, Serial, :key => true
   property :created_at, DateTime
-  property :publication_date, Text
+  property :publication_date, Date
   property :publication, Integer
   property :size, String
   property :position, String

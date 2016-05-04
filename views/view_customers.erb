@@ -3,7 +3,7 @@
 <% @customers.each do |c| %>
   <li class="collection-item avatar">
     <i class="fa fa-briefcase circle"></i>
-    <span class="title"><%= c.business_name %></span>
+    <span class="title"><a href="/view/customer/<%= c.id %>"><%= c.business_name %></a></span>
     <p><%= c.contact_name %><br />
     <%= c.billing_address %><br />
     <%= c.phone %><br />

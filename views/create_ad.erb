@@ -8,8 +8,18 @@
         <label for="publication_date">Publication date</label>
       </div>
       <div class="input-field col s6">
-        <input type="text" id="publication" name="ad[publication]">
-        <label for="publication">Publication</label>
+        <input type="checkbox" class="repeat" id="repeat">
+        <label for="repeat">Repeat?</label>
+      </div>
+    </div>
+    <div class="row" id="repeat-input">
+      <div class="input-field col s6">
+        <input type="text" id="size" name="ad[size]">
+        <label for="size">Poo</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="position" name="ad[position]">
+        <label for="position">Fart</label>
       </div>
     </div>
     <div class="row">
@@ -27,8 +37,17 @@
         <input type="text" id="price" name="ad[price]">
         <label for="price">Price</label>
       </div>
-
-      <div class="input-field col 26">
+      <div class="input-field col s6">
+        <input type="text" id="publication" name="ad[publication]">
+        <label for="publication">Publication</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <textarea name="ad[note]" id="note"></textarea>
+        <label for="note">Notes</label>
+      </div>
+      <div class="input-field col s6">
         <select name="ad[customer]">
           <option value="" disabled selected>Customer</option>
           <% @customers.each do |c| %>
@@ -36,7 +55,6 @@
           <% end %>
         </select>
       </div>
-
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
