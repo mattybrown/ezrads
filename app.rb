@@ -187,19 +187,28 @@ class EzrAds < Sinatra::Base
 
   post '/create/ad' do
     ad_user = env['warden'].user[:id]
-    ad = Ad.new(created_at: Time.now, publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
-    if ad.save
-      flash[:success] = "Ad successfully created"
-      redirect '/'
-    else
-      arr = []
-      arr << ad_user
-      params['ad'].each do |p|
-        arr << p
-        flash[:error] = arr
+
+    params['ad']['publication_date'].each do |p|
+      if p[1] != ""
+        ad = Ad.new(created_at: Time.now, publication_date: p[1], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
+        ad.save
       end
-      redirect back
     end
+    redirect '/'
+    flash[:success] = "Ad booked"
+  #  ad = Ad.new(created_at: Time.now, publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
+#    if ad.save
+#      flash[:success] = "Ad successfully created"
+#      redirect '/'
+##      arr = []
+  #    arr << ad_user
+  #    params['ad'].each do |p|
+  #      arr << p
+  #      flash[:error] = arr
+  #    end
+  #    redirect back
+  #  end
+
   end
 
   get '/edit/ad/:id' do
@@ -215,13 +224,22 @@ class EzrAds < Sinatra::Base
   post '/edit/ad/:id' do
     ad = Ad.get params['id']
 
-    if ad.update(publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], completed: params['ad']['completed'], placed: params['ad']['placed'], note: params['ad']['note'])
-      flash[:success] = "Ad updated"
-      redirect '/'
-    else
-      flash[:error] = "Ad update failed"
-      redirect back
+    params['ad']['publication_date'].each do |p|
+      if p[1] != ""
+        ad.update(publication_date: p[1], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
+        ad.save
+      end
     end
+    redirect '/'
+    flash[:success] = "Ad updated"
+
+#    if ad.update(publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], completed: params['ad']['completed'], placed: params['ad']['placed'], note: params['ad']['note'])
+#      flash[:success] = "Ad updated"
+#      redirect '/'
+#    else
+#      flash[:error] = "Ad update failed"
+#      redirect back
+#    end
   end
 
   get '/view/ad/:id' do
