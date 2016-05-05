@@ -4,12 +4,22 @@
   <form action="/edit/ad/<%= @ad.id %>" method="post" class="col s12">
     <div class="row">
       <div class="input-field col s6">
-        <input type="date" class="datepicker" id="publication_date" name="ad[publication_date]" value="<%= @ad.publication_date %>">
+        <input type="date" class="datepicker" id="publication_date" name="ad[publication_date][0]" value="<%= @ad.publication_date %>">
         <label for="publication_date">Publication date</label>
       </div>
       <div class="input-field col s6">
-        <input type="text" id="publication" name="ad[publication]" value="<%= @ad.publication %>">
-        <label for="publication">Publication</label>
+        <input type="checkbox" class="repeat" id="repeat">
+        <label for="repeat">Repeat?</label>
+      </div>
+    </div>
+    <div class="row" id="repeat-input" style="display:none">
+      <div class="input-field col s6">
+        <input type="date" id="repeat1" class="datepicker" name="ad[publication_date][1]">
+        <label for="repeat1">Repeat Date</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="date" id="repeat2" class="datepicker" name="ad[publication_date][2]">
+        <label for="repeat2">Repeat Date</label>
       </div>
     </div>
     <div class="row">
@@ -37,9 +47,13 @@
         </select>
       </div>
       <div class="row">
-        <div class="input-field col s12">
+        <div class="input-field col s6">
           <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
           <label for="note">Notes</label>
+        </div>
+        <div class="input-field col s6">
+          <input type="text" id="publication" name="ad[publication]" value="<%= @ad.publication %>">
+          <label for="publication">Publication</label>
         </div>
       </div>
     </div>

@@ -75,7 +75,8 @@
 
   <div class="main">
   <div class="container">
-    <span>Logged in as <%= display_user %></span>
+    <% i = env['warden'].user %>
+    <span>Logged in as <%= "#{display_user(i[:id])} : #{display_role(i[:role])} @ #{display_publication(i[:publication])}" %></span>
   <%= yield %>
   </div>
   </div>

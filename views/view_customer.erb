@@ -2,6 +2,9 @@
 <h4><%= @customer.business_name %></h4>
 <p>
   <%= @customer.contact_name %><br />
+  <%= @customer.billing_address %><br />
+  <%= @customer.phone %><br />
+  <%= @customer.mobile %><br />
   <%= @customer.email %>
 </p>
 
@@ -10,10 +13,15 @@
     <% @customer.ads.each do |a| %>
       <li class="collection-item avatar">
         <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil circle"></i></a>
-        <span class="title"><%= a.publication_date %></span>
+        <span class="title"><%= a.publication_date.strftime('%d %b %Y') %></span>
         <p>
           <%= a.size %>
-          <%= a.position %>
+          <%= a.position %><br />
+          <%= display_publication(a.publication) %><br />
+          <%= "Created by #{display_user(a.user[:id])} @ #{display_time(a.created_at)}" %><br />
+          <% if a.updated_by != nil %>
+            <%= "Updated by #{display_user(a.updated_by)} @ #{display_time(a.updated_at)}" %>
+          <% end %>
         </p>
       </li>
     <% end %>

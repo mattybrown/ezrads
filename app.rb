@@ -230,10 +230,11 @@ class EzrAds < Sinatra::Base
 
   post '/edit/ad/:id' do
     ad = Ad.get params['id']
+    user = ad.user[:id]
 
     params['ad']['publication_date'].each do |p|
       if p[1] != ""
-        ad.update(publication_date: p[1], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
+        ad.update(publication_date: p[1], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user)
         ad.save
       end
     end
@@ -366,33 +367,44 @@ class EzrAds < Sinatra::Base
       return arr
     end
 
-    def display_user
-      username = env['warden'].user[:username]
-      role = env['warden'].user[:role]
-      if role == 1
-        role = "admin"
-      elsif role == 2
-        role = "sales"
-      elsif role == 3
-        role = "production"
-      elsif role == 4
-        role = "accounts"
+    def display_role(i)
+      if i == 1
+        return "Admin"
+      elsif i == 2
+        return "Sales"
+      elsif i == 3
+        return "Production"
+      elsif i == 4
+        return "Accounts"
       else
-        role = "No related role found"
+        return "Role not found"
       end
+    end
 
-      publication = env['warden'].user[:publication]
-      if publication == 1
-        publication = "all publications"
-      elsif publication == 2
-        publication = "Blenheim Sun"
-      elsif publication == 3
-        publication = "Wellington"
+    def display_publication(i)
+      if i == 1
+        return "All"
+      elsif i == 2
+        return "Blenheim Sun"
+      elsif i == 3
+        return "Wellington..."
       else
-        publication = "No related publication found"
+        return "Publication not found"
       end
+    end
 
-      return "#{username} : #{role} @ #{publication}"
+    def display_user(i)
+      if i != nil
+        u = User.get i
+        username = u.username
+        return username
+      end
+    end
+
+    def display_time(i)
+      if i
+        return i.strftime('%l:%M%P %d %b %Y')
+      end
     end
   end
 
