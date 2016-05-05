@@ -25,19 +25,19 @@
     <div class="row">
       <div class="input-field col s6">
         <select name="user[role]">
-          <option value="" disabled selected>Role</option>
-          <option value="1">Admin</option>
-          <option value="2">Sales</option>
-          <option value="3">Production</option>
-          <option value="4">Accounts</option>
+          <option value="" disabled>Role</option>
+          <option value="1" <% if @user.role == 1 %>selected<% end %>>Admin</option>
+          <option value="2" <% if @user.role == 2 %>selected<% end %>>Sales</option>
+          <option value="3" <% if @user.role == 3 %>selected<% end %>>Production</option>
+          <option value="4" <% if @user.role == 4 %>selected<% end %>>Accounts</option>
         </select>
       </div>
       <div class="input-field col s6">
         <select name="user[publication]">
           <option value="" disabled selected>Publication</option>
-          <option value="1">All</option>
-          <option value="2">Blenheim Sun</option>
-          <option value="3">Cook Strait News</option>
+          <option value="1" <% if @user.publication == 1 %>selected<% end %>>All</option>
+          <option value="2" <% if @user.publication == 2 %>selected<% end %>>Blenheim Sun</option>
+          <option value="3" <% if @user.publication == 3 %>selected<% end %>>Cook Strait News</option>
         </select>
       </div>
     </div>

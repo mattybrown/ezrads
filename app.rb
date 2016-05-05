@@ -46,13 +46,20 @@ class EzrAds < Sinatra::Base
 
   get '/' do
     env['warden'].authenticate!
+    user_publication = env['warden'].user[:publication]
 
     @s = Date.today
     @e = @s + 28
 
     @role = env['warden'].user[:role]
     @title = "Home"
-    @ads = Ad.all(:publication_date => (@s..@e))
+
+    if user_publication != 1
+      @ads = Ad.all(:publication_date => (@s..@e), :publication => user_publication)
+    else
+      @ads = Ad.all(:publication_date => (@s..@e))
+    end
+
     erb :view_ads
   end
 
@@ -357,6 +364,35 @@ class EzrAds < Sinatra::Base
 
       end
       return arr
+    end
+
+    def display_user
+      username = env['warden'].user[:username]
+      role = env['warden'].user[:role]
+      if role == 1
+        role = "admin"
+      elsif role == 2
+        role = "sales"
+      elsif role == 3
+        role = "production"
+      elsif role == 4
+        role = "accounts"
+      else
+        role = "No related role found"
+      end
+
+      publication = env['warden'].user[:publication]
+      if publication == 1
+        publication = "all publications"
+      elsif publication == 2
+        publication = "Blenheim Sun"
+      elsif publication == 3
+        publication = "Wellington"
+      else
+        publication = "No related publication found"
+      end
+
+      return "#{username} : #{role} @ #{publication}"
     end
   end
 

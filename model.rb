@@ -8,7 +8,7 @@ class User
   property :id, Serial, :key => true
   property :username, String, :length => 3..50
   property :role, Integer #1 admin, 2 sales, 3 production, 4 accounts
-  property :publication, Integer
+  property :publication, Integer #1 all, 2 Blenheim Sun, 3 Wellington?
   property :phone, String
   property :email, String
   property :password, BCryptHash
