@@ -8,7 +8,7 @@ nav{
   bottom:30px;
 }
 table .completed td{
-  background-color: #b2ff59;
+  background-color: #dcedc8;
 }
 .brand-logo{
   margin-left: 10px;
@@ -16,8 +16,14 @@ table .completed td{
   font-style: italic;
 }
 .btn, .btn-floating{
-  background-color: #8bc34a;
+  background-color: #66bb6a;
 }
+
+.btn:hover, .btn-floating:hover{
+  background-color: #388e3c;
+}
+
+
 .custom_search input{
   font-size: 2rem;
   border: .5px solid #9e9e9e;
