@@ -4,13 +4,14 @@ gem 'sinatra'
 gem 'sinatra-flash'
 gem 'bcrypt-ruby'
 gem 'data_mapper'
+gem 'warden'
 
 group :production do
   gem 'pg'
   gem 'dm-postgres-adapter'
 end
 group :development, :test do
-  gem 'warden'
+
   gem 'shotgun'
   gem 'tux'
 
