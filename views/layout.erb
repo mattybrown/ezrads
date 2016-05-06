@@ -19,12 +19,13 @@
 <body>
 
   <nav>
-    <div class="nav-wrapper red darken-4">
+    <div class="nav-wrapper">
       <a href="/" class="brand-logo">EzrAds</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="/">Ads</a></li>
         <li><a href="/view/customers">Customers</a></li>
         <li><a href="/view/users">Users</a></li>
+        <li><a href="/view/tasks">Tasks<span class="badge"><%= display_task_number %></span></a></li>
         <% if env['warden'].user == nil %>
           <li><a href="/auth/login">Login</a></li>
         <% else %>
@@ -38,7 +39,7 @@
     <div class="container">
       <div class="col">
         <% if flash[:success] %>
-          <div class="card light-green accent-2">
+          <div class="card flash-success">
               <div class="card-content">
                 <p>Success: <%= flash[:success] %></p>
                 <button class="btn-floating light-green darken-2 right close-flash"><i class="fa fa-close"></i></button>
@@ -46,7 +47,7 @@
           </div>
         <% end %>
         <% if flash[:error] %>
-          <div class="card red darken-2">
+          <div class="card flash-error">
               <div class="card-content white-text">
                 <p>Error: <%= flash[:error] %></p>
                 <button class="btn-floating red lighten-2 secondary-content close-flash"><i class="fa fa-close"></i></button>
@@ -75,8 +76,9 @@
 
   <div class="main">
   <div class="container">
-    <% i = env['warden'].user %>
-    <span>Logged in as <%= "#{display_user(i[:id])} : #{display_role(i[:role])} @ #{display_publication(i[:publication])}" %></span>
+    <% if i = env['warden'].user %>
+    <div>Logged in as <%= "#{display_user(i[:id])} : #{display_role(i[:role])} @ #{display_publication(i[:publication])}" %></div>
+    <% end %>
   <%= yield %>
   </div>
   </div>

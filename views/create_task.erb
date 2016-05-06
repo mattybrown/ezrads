@@ -1,0 +1,41 @@
+
+<div class="row">
+  <h3>Create task</h3>
+  <form action="/create/task" method="post" class="col s12">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="contact_name" name="task[title]">
+        <label for="title">Title</label>
+      </div>
+      <div class="input-field col s6">
+        <select name="task[user_id]">
+          <option value="" disabled selected>Recipient</option>
+          <% @users.each do |u| %>
+            <option value="<%= u.id %>"><%= u.username %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" class="datepicker" id="deadline" name="task[deadline]" value="Deadline">
+
+      </div>
+      <div class="input-field col s6">
+        <select name="task[priority]">
+          <option value="" disabled selected>Priority</option>
+          <option value="1">Low</option>
+          <option value="2">Medium</option>
+          <option value="3">High</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <textarea name="task[body]" id="body"></textarea>
+        <label for="body">Body</label>
+      </div>
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
+  </form>
+</div>

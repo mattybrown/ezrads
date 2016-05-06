@@ -55,9 +55,9 @@ class EzrAds < Sinatra::Base
     @title = "Home"
 
     if user_publication != 1
-      @ads = Ad.all(:publication_date => (@s..@e), :publication => user_publication)
+      @ads = Ad.all(:publication_date => (@s..@e), :publication => user_publication, :order => [ :publication_date.asc ])
     else
-      @ads = Ad.all(:publication_date => (@s..@e))
+      @ads = Ad.all(:publication_date => (@s..@e), :order => [ :publication_date.asc ])
     end
 
     erb :view_ads
@@ -303,6 +303,65 @@ class EzrAds < Sinatra::Base
     end
   end
 
+  get '/view/tasks' do
+    env['warden'].authenticate!
+    @title = "Tasks"
+    @user_id = env['warden'].user[:id]
+    @tasks = Task.all(:user_id => @user_id)
+
+    erb :view_tasks
+  end
+
+  get '/view/task/:id' do
+    env['warden'].authenticate!
+    @task = Task.get params['id']
+    @title = @task.title
+
+    erb :view_task
+  end
+  get '/task/completed/:id' do
+    t = Task.get params['id']
+    t.completed = true
+    if t.save
+      flash[:success] = "Task completed"
+      redirect '/view/tasks'
+    else
+      flash[:error] = "Something went wrong"
+      redirect back
+    end
+  end
+  get '/task/incomplete/:id' do
+    t = Task.get params['id']
+    t.completed = false
+    if t.save
+      flash[:success] = "Keep working on it"
+      redirect '/view/tasks'
+    else
+      flash[:error] = "Something went wrong"
+      redirect back
+    end
+  end
+
+  get '/create/task' do
+    env['warden'].authenticate!
+    @title = "Create task"
+    @users = User.all
+
+    erb :create_task
+  end
+
+  post '/create/task' do
+    uid = env['warden'].user[:id]
+    t = Task.new(title: params['task']['title'], created_by: uid, created_at: Time.now, deadline: params['task']['deadline'], user_id: params['task']['user_id'], priority: params['task']['priority'], body: params['task']['body'], completed: false)
+
+    if t.save
+      flash[:success] = "Task successfully created..."
+      redirect '/view/tasks'
+    else
+      flash[:error] = "Something went wrong.."
+      redirect back
+    end
+  end
 #Authentication
   get '/auth/login' do
     erb :login
@@ -310,7 +369,7 @@ class EzrAds < Sinatra::Base
 
   post '/auth/login' do
     env['warden'].authenticate!
-
+    @title = "Login"
     flash[:success] = "Successfully logged in"
 
     if session[:return_to].nil?
@@ -404,6 +463,13 @@ class EzrAds < Sinatra::Base
     def display_time(i)
       if i
         return i.strftime('%l:%M%P %d %b %Y')
+      end
+    end
+
+    def display_task_number
+      if env['warden'].user
+        uid = env['warden'].user[:id]
+        return Task.count(:user_id => uid, :completed => false)
       end
     end
   end

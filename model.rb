@@ -59,6 +59,21 @@ class Ad
   belongs_to :customer
 end
 
+class Task
+  include DataMapper::Resource
+
+  property :id, Serial, :key => true
+  property :created_at, DateTime
+  property :created_by, Integer
+  property :deadline, DateTime
+  property :title, String
+  property :priority, Integer
+  property :completed, Boolean
+  property :body, Text
+
+  belongs_to :user
+end
+
 
 DataMapper.finalize
 DataMapper.auto_upgrade!

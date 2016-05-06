@@ -4,6 +4,9 @@ select{
 nav{
   margin-bottom: 10px;
 }
+.nav-wrapper{
+  background-color: #0d47a1;
+}
 .close-flash{
   bottom:30px;
 }
@@ -47,4 +50,15 @@ table .completed td{
 }
 .ui-helper-hidden-accessible{
   display:none;
+}
+.flash-success{
+  background-color: #dcedc8;
+}
+.flash-error{
+  background-color: #e57373;
+}
+.badge{
+  background-color: #448aff;
+  border-radius:2px;
+  color:#fff !important;
 }
