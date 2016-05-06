@@ -1,5 +1,5 @@
 
-DataMapper.setup(:default, "sqlite://#{Dir.pwd}/ezrads.sqlite")
+DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/ezrads.sqlite")
 
 class User
   include DataMapper::Resource

@@ -3,10 +3,15 @@ source 'https://rubygems.org'
 gem 'sinatra'
 gem 'sinatra-flash'
 gem 'bcrypt-ruby'
-
-gem 'warden'
-gem 'shotgun'
-gem 'tux'
-
 gem 'data_mapper'
-gem 'dm-sqlite-adapter'
+
+group :production do
+  gem 'dm-postgres-adapter'
+end
+group :development, :test do
+  gem 'warden'
+  gem 'shotgun'
+  gem 'tux'
+
+  gem 'dm-sqlite-adapter'
+end
