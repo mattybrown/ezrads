@@ -9,6 +9,9 @@
       <th>ID</th>
       <th>Business</th>
       <th>Publication Date</th>
+      <% if @role == 1 || @role == 4 %>
+        <th>Publication</th>
+      <% end %>
       <th>Size</th>
       <th>Position</th>
       <% if @role != 3 %>
@@ -24,6 +27,9 @@
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
 
       <td><%= a.publication_date.strftime('%d %b %Y') %></td>
+      <% if @role == 1 || @role == 4 %>
+        <td><%= display_publication(a.publication) %></td>
+      <% end %>
       <td><%= a.size %></td>
       <td><%= a.position %></td>
       <% if @role != 3 %>

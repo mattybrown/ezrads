@@ -7,9 +7,9 @@
       </div>
       <div class="card-action">
         <% if @task.completed %>
-          <a href="/task/incomplete/<%= @task.id %>">Mark as incomplete</a>
+          <a href="/task/incomplete/<%= @task.id %>" class="btn">Mark as incomplete</a>
         <% else %>
-          <a href="/task/completed/<%= @task.id %>">Mark as complete</a>
+          <a href="/task/completed/<%= @task.id %>" class="btn">Mark as complete</a>
         <% end %>
       </div>
     </div>

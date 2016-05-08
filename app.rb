@@ -131,7 +131,7 @@ class EzrAds < Sinatra::Base
 
   get '/view/customer/:id' do
     env['warden'].authenticate!
-    @customer = Customer.get params['id']
+    @customer = Customer.get(params['id'])
     @title = "Editing #{@customer.business_name}"
 
     erb :view_customer
@@ -464,6 +464,12 @@ class EzrAds < Sinatra::Base
     def display_time(i)
       if i
         return i.strftime('%l:%M%P %d %b %Y')
+      end
+    end
+
+    def display_date(i)
+      if i
+        return i.strftime('%d %b %Y')
       end
     end
 

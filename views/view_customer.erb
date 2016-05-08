@@ -13,7 +13,7 @@
     <% @customer.ads.each do |a| %>
       <li class="collection-item avatar">
         <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil circle"></i></a>
-        <span class="title"><%= a.publication_date.strftime('%d %b %Y') %></span>
+        <span class="title"><%= display_date(a.publication_date) %></span>
         <p>
           <%= a.size %>
           <%= a.position %><br />

@@ -13,6 +13,17 @@
       </div>
     </div>
 
+    <div class="row" id="repeat-input" style="display:none">
+      <div class="input-field col s6">
+        <input type="date" id="repeat1" class="datepicker" name="ad[publication_date][1]">
+        <label for="repeat1">Repeat Date</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="date" id="repeat2" class="datepicker" name="ad[publication_date][2]">
+        <label for="repeat2">Repeat Date</label>
+      </div>
+    </div>
+
     <div class="row">
       <div class="input-field col s6">
         <input type="text" id="size" name="ad[size]">
@@ -29,8 +40,11 @@
         <label for="price">Price</label>
       </div>
       <div class="input-field col s6">
-        <input type="text" id="publication" name="ad[publication]">
-        <label for="publication">Publication</label>
+        <select name="ad[publication]">
+          <option value="" disabled selected>Publication</option>
+          <option value="2">Blenheim Sun</option>
+          <option value="3">Cook Strait News</option>
+        </select>
       </div>
     </div>
     <div class="row">
