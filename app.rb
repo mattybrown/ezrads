@@ -67,6 +67,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @title = "Users"
     @user = User.all
+    @role = env['warden'].user[:role]
 
     erb :view_users
   end

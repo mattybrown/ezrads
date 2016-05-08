@@ -1,4 +1,4 @@
-<a href="/create/user" class="btn">Create user</a>
+<% if @role == 1 %><a href="/create/user" class="btn">Create user</a><% end %>
 <ul class="collection">
 <% @user.each do |u| %>
   <li class="collection-item avatar">
@@ -6,8 +6,11 @@
     <span class="title"><%= u.username %></span>
     <p><%= u.phone %><br />
     <%= u.email %></p>
+
+    <% if @role == 1 %>
     <a class="btn" href="/edit/user/<%= u.id %>"><i class="fa fa-edit"></i> Edit</a>
     <a class="btn-floating red secondary-content" href="/delete/user/<%= u.id %>"><i class="fa fa-trash"></i></a>
+    <% end %>
   </li>
 <% end %>
 </ul>
