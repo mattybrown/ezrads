@@ -62,3 +62,7 @@ table .completed td{
   border-radius:2px;
   color:#fff !important;
 }
+.align-top{
+  margin-top:20px;
+  margin-right: 10px;
+}

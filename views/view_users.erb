@@ -3,7 +3,7 @@
 <% @user.each do |u| %>
   <li class="collection-item avatar">
     <i class="fa fa-male circle"></i>
-    <span class="title"><%= u.username %></span>
+    <span class="title"><%= u.username.capitalize %></span>
     <p><%= u.phone %><br />
     <%= u.email %></p>
 

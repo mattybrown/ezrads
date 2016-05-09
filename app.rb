@@ -32,7 +32,7 @@ class EzrAds < Sinatra::Base
     end
 
     def authenticate!
-      user = User.first(username: params['user']['username'])
+      user = User.first(username: params['user']['username'].downcase)
       if user.nil?
         throw(:warden, message: "The username you entered does not exist")
       elsif user.authenticate(params['user']['password'])
@@ -80,7 +80,7 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/user' do
-    user = User.new(created_at: Time.now, username: params['user']['username'], role: params['user']['role'], publication: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'], password: params['user']['password'])
+    user = User.new(created_at: Time.now, username: params['user']['username'].downcase, role: params['user']['role'], publication: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'], password: params['user']['password'])
     if user.save
       flash[:success] = "User created"
       redirect '/view/users'
@@ -257,6 +257,19 @@ class EzrAds < Sinatra::Base
     @title = "Viewing ad"
 
     erb :view_ad
+  end
+
+  post '/view/ads-by-date' do
+    env['warden'].authenticate!
+    @role = env['warden'].user[:role]
+    user_publication = env['warden'].user[:publication]
+    if @role != 1
+      @ads = Ad.all(:publication_date => (params['ad']['viewdate']), :publication => user_publication)
+    else
+      @ads = Ad.all(:publication_date => (params['ad']['viewdate']))
+    end
+
+    erb :view_ads_by_date
   end
 
   get '/ad/completed/:id' do
@@ -456,7 +469,7 @@ class EzrAds < Sinatra::Base
     def display_user(i)
       if i != nil
         u = User.get i
-        username = u.username
+        username = u.username.capitalize
         return username
       end
     end
