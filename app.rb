@@ -269,6 +269,7 @@ class EzrAds < Sinatra::Base
       @ads = Ad.all(:publication_date => (params['ad']['viewdate']))
     end
 
+    @title = "Viewing ads"
     erb :view_ads_by_date
   end
 

@@ -46,7 +46,7 @@ table .completed td{
   padding:6px;
 }
 .ui-autocomplete li:hover{
-  background-color: #ff8a80;
+  background-color: #bbdefb;
 }
 .ui-helper-hidden-accessible{
   display:none;
