@@ -48,17 +48,11 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     user_publication = env['warden'].user[:publication]
 
-    @s = Date.today
-    @e = @s + 28
 
     @role = env['warden'].user[:role]
     @title = "Home"
 
-    if user_publication != 1
-      @ads = Ad.all(:publication_date => (@s..@e), :publication => user_publication, :order => [ :publication_date.asc ])
-    else
-      @ads = Ad.all(:publication_date => (@s..@e), :order => [ :publication_date.asc ])
-    end
+    @ads = Ad.all
 
     erb :view_ads
   end
@@ -189,6 +183,9 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customers = Customer.all
     @title = "Create ad"
+
+    user_pub = env['warden'].user[:publication]
+    @publications = Publication.all(:publication_id => user_pub)
 
     erb :create_ad
   end
@@ -382,10 +379,28 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
 
     @title = "Viewing publications"
-    @publications = Publication.all(:order => [:date.asc])
-
+    user_pub = env['warden'].user[:publication]
+    if user_pub != 1
+      @publications = Publication.all(:publication_id => user_pub, :order => [:date.asc])
+    else
+      @publications = Publication.all(:order => [:date.asc])
+    end
     erb :view_publications
   end
+
+  get '/create/publication' do
+    env['warden'].authenticate!
+
+    @title = "Create publication"
+
+    erb :create_publication
+  end
+
+  post '/create/multiple_publications' do
+    sd = params['publication']['start_date']
+    ed = params['publication']['end_date']
+  end
+
 #Authentication
   get '/auth/login' do
     erb :login
@@ -492,7 +507,7 @@ class EzrAds < Sinatra::Base
 
     def display_date(i)
       if i
-        return i.strftime('%d %b %Y')
+        return i.strftime('%A %d %b %Y')
       end
     end
 

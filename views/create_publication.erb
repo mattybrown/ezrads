@@ -8,8 +8,17 @@
         <label for="name">Publication name</label>
       </div>
       <div class="input-field col s6">
-        <input type="text" id="date" name="publication[date]">
-        <label for="date">Publication date</label>
+        <input type="date" id="date" class="datepicker" name="publication[date]" value="Publication date">
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select name="publication[publication_id]">
+          <option value="" disabled selected>User assignment</option>
+          <option value="1">Admin Users</option>
+          <option value="2">Blenheim</option>
+          <option value="3">Wellington</option>
+        </select>
       </div>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
@@ -21,18 +30,26 @@
   <form action="/create/multiple_publications" method="post" class="col s12">
     <div class="row">
       <div class="input-field col s6">
-        <input type="date" id="name" class="datepicker" name="publication[name]">
-        <label for="name">Publication name</label>
+        <input type="text" id="mname" name="publication[name]">
+        <label for="mname">Publication name</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <input type="date" id="start_date" class="datepicker" name="publication[start_date]">
-        <label for="start_date">First publication date</label>
+        <input type="date" id="start_date" class="datepicker" name="publication[start_date]" value="First publication date">
       </div>
       <div class="input-field col s6">
-        <input type="date" id="end_date" class="datepicker" name="publication[end_date]">
-        <label for="end_date">Last publication date</label>
+        <input type="date" id="end_date" class="datepicker" name="publication[end_date]" value="Last publication date">
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select name="publication[publication_id]">
+          <option value="" disabled selected>User assignment</option>
+          <option value="1">Admin Users</option>
+          <option value="2">Blenheim</option>
+          <option value="3">Wellington</option>
+        </select>
       </div>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>

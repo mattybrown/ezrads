@@ -1,4 +1,4 @@
-<p><%= "Today is #{@s.strftime('%A %d %b %Y')}... Showing ads up to #{@e.strftime('%A %d %b %Y')}" %></p>
+<p><%= "Today is #{(Date.today).strftime('%A %d %b %Y')}" %></p>
 <div class="row">
 
   <a href="/create/ad" class="btn col s2 align-top"><i class="fa fa-plus-circle"></i> Create ad</a>

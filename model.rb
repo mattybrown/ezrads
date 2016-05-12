@@ -46,7 +46,6 @@ class Ad
   property :created_at, DateTime
   property :updated_at, DateTime
   property :updated_by, Integer
-  property :publication_date, Date
   property :publication, Integer
   property :size, String
   property :position, String
@@ -80,6 +79,7 @@ class Publication
 
   property :id, Serial, :key => true
   property :name, String
+  property :publication_id, Integer
   property :date, Date
 
   has n, :ads
