@@ -57,6 +57,7 @@ class Ad
 
   belongs_to :user
   belongs_to :customer
+  belongs_to :publication
 end
 
 class Task
@@ -72,6 +73,16 @@ class Task
   property :body, Text
 
   belongs_to :user
+end
+
+class Publication
+  include DataMapper::Resource
+
+  property :id, Serial, :key => true
+  property :name, String
+  property :date, Date
+
+  has n, :ads
 end
 
 

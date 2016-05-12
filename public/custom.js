@@ -17,5 +17,7 @@ $(document).ready(function(){
   $('#repeat').click(function(){
     $('#repeat-input').toggle(this.checked);
   });
+  
+  $(".button-collapse").sideNav();
 
 });

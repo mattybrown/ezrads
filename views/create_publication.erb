@@ -1,0 +1,40 @@
+
+<div class="row">
+  <h3>Create single publication</h3>
+  <form action="/create/single_publication" method="post" class="col s12">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="name" name="publication[name]">
+        <label for="name">Publication name</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="date" name="publication[date]">
+        <label for="date">Publication date</label>
+      </div>
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
+  </form>
+</div>
+
+<div class="row">
+  <h3>Create multiple publications</h3>
+  <form action="/create/multiple_publications" method="post" class="col s12">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="date" id="name" class="datepicker" name="publication[name]">
+        <label for="name">Publication name</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="date" id="start_date" class="datepicker" name="publication[start_date]">
+        <label for="start_date">First publication date</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="date" id="end_date" class="datepicker" name="publication[end_date]">
+        <label for="end_date">Last publication date</label>
+      </div>
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
+  </form>
+</div>

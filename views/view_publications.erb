@@ -1,0 +1,26 @@
+<div class="row">
+
+  <a href="/create/publication" class="btn col s2 align-top"><i class="fa fa-plus-circle"></i> Create Publication</a>
+
+
+</div>
+<table class="publication_table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+<% if @publications %>
+  <% @publications.each do |p| %>
+    <tr>
+      <td><%= p.id %></td>
+      <td><a href="view/publication/<%= p.id %>"><%= p.name %></a></td>
+      <td><%= display_date(p.date) %></td>
+    </tr>
+  <% end %>
+<% end %>
+  </tbody>
+</table>

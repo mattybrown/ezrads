@@ -377,6 +377,15 @@ class EzrAds < Sinatra::Base
       redirect back
     end
   end
+
+  get '/view/publications' do
+    env['warden'].authenticate!
+
+    @title = "Viewing publications"
+    @publications = Publication.all(:order => [:date.asc])
+
+    erb :view_publications
+  end
 #Authentication
   get '/auth/login' do
     erb :login
