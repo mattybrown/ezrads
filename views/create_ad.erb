@@ -5,19 +5,21 @@
 
     <div class="row">
       <div class="input-field col s6">
-        <input type="text" id="size" name="ad[size]">
-        <label for="size">Size</label>
+        <input type="text" id="height" name="ad[height]">
+        <label for="size">Height</label>
       </div>
       <div class="input-field col s6">
-        <input type="text" id="position" name="ad[position]">
-        <label for="position">Position</label>
+        <input type="text" id="columns" name="ad[columns]">
+        <label for="columns">Columns</label>
       </div>
     </div>
     <div class="row">
-      <div class="input-field col s6">
-        <input type="text" id="price" name="ad[price]">
-        <label for="price">Price</label>
-      </div>
+      <select name="ad[feature]">
+        <option value="" disabled selected>Feature</option>
+        <% @features.each do |f| %>
+          <option value="<%= f.id %>"><%= f.name %></option>
+        <% end %>
+      </select>
       <div class="input-field col s6">
         <select name="ad[publication]">
           <option value="" disabled selected>Publication</option>
@@ -41,7 +43,16 @@
         </select>
       </div>
     </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="position" name="ad[position]">
+        <label for="position">Position</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="price" name="ad[price]">
+        <label for="price">Price</label>
+      </div>
+    </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
 </div>
-User publication: <%= @user_pub %>

@@ -183,9 +183,15 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customers = Customer.all
     @title = "Create ad"
+    today = Date.today
+    @features = Features.all
 
     user_pub = env['warden'].user[:publication]
-    @publications = Publication.all(:publication_id => user_pub)
+    if user_pub != 1
+      @publications = Publication.all(:publication_id => user_pub, :date.gt => today)
+    else
+      @publications = Publication.all(:date.gt => today)
+    end
 
     erb :create_ad
   end
@@ -193,27 +199,14 @@ class EzrAds < Sinatra::Base
   post '/create/ad' do
     ad_user = env['warden'].user[:id]
 
-    params['ad']['publication_date'].each do |p|
-      if p[1] != ""
-        ad = Ad.new(created_at: Time.now, publication_date: p[1], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
-        ad.save
-      end
+    ad = Ad.new(created_at: Time.now, publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
+    if ad.save
+      flash[:success] = "Ad booked"
+      redirect '/'
+    else
+      flash[:error] = "Something went wrong #{ad.errors.inspect}"
+      redirect back
     end
-    redirect '/'
-    flash[:success] = "Ad booked"
-  #  ad = Ad.new(created_at: Time.now, publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
-#    if ad.save
-#      flash[:success] = "Ad successfully created"
-#      redirect '/'
-##      arr = []
-  #    arr << ad_user
-  #    params['ad'].each do |p|
-  #      arr << p
-  #      flash[:error] = arr
-  #    end
-  #    redirect back
-  #  end
-
   end
 
   get '/edit/ad/:id' do
@@ -239,13 +232,6 @@ class EzrAds < Sinatra::Base
     redirect '/'
     flash[:success] = "Ad updated"
 
-#    if ad.update(publication_date: params['ad']['publication_date'], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], completed: params['ad']['completed'], placed: params['ad']['placed'], note: params['ad']['note'])
-#      flash[:success] = "Ad updated"
-#      redirect '/'
-#    else
-#      flash[:error] = "Ad update failed"
-#      redirect back
-#    end
   end
 
   get '/view/ad/:id' do
@@ -396,9 +382,29 @@ class EzrAds < Sinatra::Base
     erb :create_publication
   end
 
+  post '/create/single_publication' do
+    p = Publication.new(name: params['publication']['name'], date: params['publication']['date'], publication_id: params['publication']['publication_id'])
+    if p.save
+      flash[:success] = "Successfully created publication"
+      redirect '/view/publications'
+    else
+      flash[:error] = "Something went wrong"
+      redirect back
+    end
+  end
+
   post '/create/multiple_publications' do
-    sd = params['publication']['start_date']
-    ed = params['publication']['end_date']
+    sd = Date.parse(params['publication']['start_date'])
+    ed = Date.parse(params['publication']['end_date'])
+
+    (sd..ed).each do |d|
+      if d.wday == sd.wday
+        p = Publication.new(name: params['publication']['name'], date: d, publication_id: params['publication']['publication_id'])
+        p.save
+      end
+    end
+    flash[:success] = "Successfully created publications"
+    redirect '/view/publications'
   end
 
 #Authentication

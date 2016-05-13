@@ -1,6 +1,6 @@
 
 <div class="row">
-  <h3>Create single publication</h3>
+  <h4>Create single publication</h4>
   <form action="/create/single_publication" method="post" class="col s12">
     <div class="row">
       <div class="input-field col s6">
@@ -15,18 +15,18 @@
       <div class="input-field col s6">
         <select name="publication[publication_id]">
           <option value="" disabled selected>User assignment</option>
-          <option value="1">Admin Users</option>
           <option value="2">Blenheim</option>
           <option value="3">Wellington</option>
         </select>
       </div>
     </div>
-    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
+    <button type="submit" class="btn"><i class="fa fa-plus"></i> Create</button>
   </form>
 </div>
 
 <div class="row">
-  <h3>Create multiple publications</h3>
+  <h4>Create multiple publications</h4>
+  <p>This will create a publication starting on the first publication date and on every day of the week that is the same as the first publication date until the end publication date.</p>
   <form action="/create/multiple_publications" method="post" class="col s12">
     <div class="row">
       <div class="input-field col s6">
@@ -46,12 +46,11 @@
       <div class="input-field col s6">
         <select name="publication[publication_id]">
           <option value="" disabled selected>User assignment</option>
-          <option value="1">Admin Users</option>
           <option value="2">Blenheim</option>
           <option value="3">Wellington</option>
         </select>
       </div>
     </div>
-    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
+    <button type="submit" class="btn"><i class="fa fa-plus"></i> Create</button>
   </form>
 </div>

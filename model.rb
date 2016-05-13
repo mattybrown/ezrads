@@ -46,8 +46,8 @@ class Ad
   property :created_at, DateTime
   property :updated_at, DateTime
   property :updated_by, Integer
-  property :publication, Integer
-  property :size, String
+  property :height, Integer
+  property :columns, Integer
   property :position, String
   property :price, Float
   property :completed, Boolean
@@ -83,6 +83,17 @@ class Publication
   property :date, Date
 
   has n, :ads
+  has n, :features
+end
+
+class Feature
+  include DataMapper::Resource
+
+  property :id, Serial, :key => true
+  property :name, String
+  property :rate, Float
+
+  belongs_to :publication
 end
 
 
