@@ -14,6 +14,7 @@ class User
   property :password, BCryptHash
 
   has n, :ads
+  belongs_to :paper
 
   def authenticate(attempted_password)
     if self.password == attempted_password
@@ -83,7 +84,7 @@ class Publication
   property :date, Date
 
   has n, :ads
-  has n, :features
+  belongs_to :paper
 end
 
 class Feature
@@ -93,7 +94,18 @@ class Feature
   property :name, String
   property :rate, Float
 
-  belongs_to :publication
+  belongs_to :paper
+end
+
+class Paper
+  include DataMapper::Resource
+
+  property :id, Serial, :key => true
+  property :name, String
+
+  has n, :publications
+  has n, :features
+  has n, :users
 end
 
 

@@ -92,7 +92,7 @@
   <div class="main">
   <div class="container">
     <% if i = env['warden'].user %>
-    <div>Logged in as <%= "#{display_user(i[:id])} : #{display_role(i[:role])} @ #{display_publication(i[:publication])}" %></div>
+    <div>Logged in as <%= "#{display_user(i[:id])} : #{display_role(i[:role])} @ #{i.paper[:name]}" %></div>
     <% end %>
   <%= yield %>
   </div>

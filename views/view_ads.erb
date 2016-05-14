@@ -26,7 +26,8 @@
       <% if @role == 1 || @role == 4 %>
         <th>Publication</th>
       <% end %>
-      <th>Height x Columns</th>
+      <th>Height x Columns</th>e
+
       <th>Position</th>
       <% if @role != 3 %>
         <th>Price</th>
@@ -42,7 +43,7 @@
       <td><%= a.user[:username].capitalize %></td>
       <td><%= a.publication[:date] %></td>
       <% if @role == 1 || @role == 4 %>
-        <td><%= display_publication(a.publication) %></td>
+        <td><%= a.publication[:name] %></td>
       <% end %>
       <td><%= a.height %> x <%= a.columns %></td>
       <td><%= a.position %></td>

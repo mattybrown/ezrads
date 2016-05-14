@@ -46,7 +46,7 @@ class EzrAds < Sinatra::Base
 
   get '/' do
     env['warden'].authenticate!
-    user_publication = env['warden'].user[:publication]
+    user_publication = env['warden'].user.paper[:id]
 
 
     @role = env['warden'].user[:role]
@@ -69,12 +69,13 @@ class EzrAds < Sinatra::Base
   get '/create/user' do
     env['warden'].authenticate!
     @title = "Create user"
+    @papers = Paper.all
 
     erb :create_user
   end
 
   post '/create/user' do
-    user = User.new(created_at: Time.now, username: params['user']['username'].downcase, role: params['user']['role'], publication: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'], password: params['user']['password'])
+    user = User.new(created_at: Time.now, username: params['user']['username'].downcase, role: params['user']['role'], paper_id: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'], password: params['user']['password'])
     if user.save
       flash[:success] = "User created"
       redirect '/view/users'
@@ -94,7 +95,7 @@ class EzrAds < Sinatra::Base
 
   post '/edit/user/:id' do
     user = User.first(id: params['id'])
-    if user.update(username: params['user']['username'], role: params['user']['role'], publication: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'], password: params['user']['password'])
+    if user.update(username: params['user']['username'], role: params['user']['role'], paper_id: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'], password: params['user']['password'])
       flash[:success] = "User updated"
       redirect '/view/users'
     else
@@ -378,12 +379,13 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
 
     @title = "Create publication"
+    @papers = Paper.all
 
     erb :create_publication
   end
 
   post '/create/single_publication' do
-    p = Publication.new(name: params['publication']['name'], date: params['publication']['date'], publication_id: params['publication']['publication_id'])
+    p = Publication.new(name: params['publication']['name'], date: params['publication']['date'], paper_id: params['publication']['publication_id'])
     if p.save
       flash[:success] = "Successfully created publication"
       redirect '/view/publications'
@@ -399,12 +401,20 @@ class EzrAds < Sinatra::Base
 
     (sd..ed).each do |d|
       if d.wday == sd.wday
-        p = Publication.new(name: params['publication']['name'], date: d, publication_id: params['publication']['publication_id'])
+        p = Publication.new(name: params['publication']['name'], date: d, paper_id: params['publication']['publication_id'])
         p.save
       end
     end
     flash[:success] = "Successfully created publications"
     redirect '/view/publications'
+  end
+
+  get '/create/feature' do
+    env['warden'].authenticate!
+
+    @title = "Create feature"
+
+    erb :create_feature
   end
 
 #Authentication

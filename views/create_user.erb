@@ -35,9 +35,10 @@
       <div class="input-field col s6">
         <select name="user[publication]">
           <option value="" disabled selected>Publication</option>
-          <option value="1">All</option>
-          <option value="2">Blenheim Sun</option>
-          <option value="3">Cook Strait News</option>
+          <% @papers.each do |p| %>
+            <option value="<%= p.id %>"><%= p.name %></option>
+          <% end %>
+
         </select>
       </div>
     </div>

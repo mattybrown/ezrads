@@ -4,20 +4,21 @@
   <form action="/create/single_publication" method="post" class="col s12">
     <div class="row">
       <div class="input-field col s6">
-        <input type="text" id="name" name="publication[name]">
-        <label for="name">Publication name</label>
+        <input type="date" id="date" class="datepicker" name="publication[date]" value="Publication date">
       </div>
       <div class="input-field col s6">
-        <input type="date" id="date" class="datepicker" name="publication[date]" value="Publication date">
+        <select name="publication[publication_id]">
+          <option value="" disabled selected>Paper</option>
+          <% @papers.each do |p| %>
+            <option value="<%= p.id %>"><%= p.name %></option>
+          <% end %>
+        </select>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <select name="publication[publication_id]">
-          <option value="" disabled selected>User assignment</option>
-          <option value="2">Blenheim</option>
-          <option value="3">Wellington</option>
-        </select>
+        <input type="text" id="name" name="publication[name]">
+        <label for="name">Publication Name</label>
       </div>
     </div>
     <button type="submit" class="btn"><i class="fa fa-plus"></i> Create</button>
@@ -30,12 +31,6 @@
   <form action="/create/multiple_publications" method="post" class="col s12">
     <div class="row">
       <div class="input-field col s6">
-        <input type="text" id="mname" name="publication[name]">
-        <label for="mname">Publication name</label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s6">
         <input type="date" id="start_date" class="datepicker" name="publication[start_date]" value="First publication date">
       </div>
       <div class="input-field col s6">
@@ -45,10 +40,15 @@
     <div class="row">
       <div class="input-field col s6">
         <select name="publication[publication_id]">
-          <option value="" disabled selected>User assignment</option>
-          <option value="2">Blenheim</option>
-          <option value="3">Wellington</option>
+          <option value="" disabled selected>Paper</option>
+          <% @papers.each do |p| %>
+            <option value="<%= p.id %>"><%= p.name %></option>
+          <% end %>
         </select>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="name" name="publication[name]">
+        <label for="name">Publication Name</label>
       </div>
     </div>
     <button type="submit" class="btn"><i class="fa fa-plus"></i> Create</button>
