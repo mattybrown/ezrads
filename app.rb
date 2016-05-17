@@ -46,7 +46,7 @@ class EzrAds < Sinatra::Base
 
   get '/' do
     env['warden'].authenticate!
-    user_publication = env['warden'].user.paper[:id]
+    @user_publication = env['warden'].user.paper[:id]
 
 
     @role = env['warden'].user[:role]
@@ -185,7 +185,7 @@ class EzrAds < Sinatra::Base
     @customers = Customer.all
     @title = "Create ad"
     today = Date.today
-    @features = Features.all
+    @features = Feature.all
 
     user_pub = env['warden'].user[:publication]
     if user_pub != 1
@@ -413,8 +413,20 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
 
     @title = "Create feature"
+    @papers = Paper.all
 
     erb :create_feature
+  end
+
+  post '/create/feature' do
+    f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: params['feature']['paper'])
+    if f.save
+      flash[:success] = "Feature created"
+      redirect '/'
+    else
+      flash[:error] = "Something went wrong..."
+      redirect '/'
+    end
   end
 
 #Authentication
