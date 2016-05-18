@@ -13,11 +13,12 @@
     <% @customer.ads.each do |a| %>
       <li class="collection-item avatar">
         <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil circle"></i></a>
-        <span class="title"><%= display_date(a.publication_date) %></span>
+        <span class="title"><%= display_date(a.publication[:date]) %></span>
         <p>
-          <%= a.size %>
-          <%= a.position %><br />
-          <%= display_publication(a.publication) %><br />
+          <%= "#{a.height} x #{a.columns}" %>
+          <%= a.feature[:name] %><br />
+          <%= a.publication[:name] %><br />
+          <%= display_date(a.publication[:date]) %><br />
           <%= "Created by #{display_user(a.user[:id])} @ #{display_time(a.created_at)}" %><br />
           <% if a.updated_by != nil %>
             <%= "Updated by #{display_user(a.updated_by)} @ #{display_time(a.updated_at)}" %>

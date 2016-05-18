@@ -58,6 +58,7 @@ class Ad
   belongs_to :user
   belongs_to :customer
   belongs_to :publication
+  belongs_to :feature
 end
 
 class Task
@@ -95,6 +96,7 @@ class Feature
   property :rate, Float
 
   belongs_to :paper
+  has n, :ads
 end
 
 class Paper

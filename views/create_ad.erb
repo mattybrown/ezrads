@@ -22,13 +22,14 @@
           <% end %>
         </select>
       </div>
-      <div class="input-field col s6">
+      <div class="input-field col s6 publication-dates">
         <select name="ad[publication]">
           <option value="" disabled selected>Publication</option>
           <% @publications.each do |p| %>
             <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
           <% end %>
         </select>
+        <a href="#" class="btn ad-repeat">Add repeat date</a>
       </div>
     </div>
     <div class="row">
@@ -45,16 +46,6 @@
         </select>
       </div>
     </div>
-    <!--<div class="row">
-      <div class="input-field col s6">
-        <input type="text" id="position" name="ad[position]">
-        <label for="position">Position</label>
-      </div>
-      <div class="input-field col s6">
-        <input type="text" id="price" name="ad[price]">
-        <label for="price">Price</label>
-      </div>
-    </div>-->
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
 </div>

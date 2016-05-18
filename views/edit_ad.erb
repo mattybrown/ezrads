@@ -1,62 +1,49 @@
-
 <div class="row">
   <h3>Edit ad</h3>
   <form action="/edit/ad/<%= @ad.id %>" method="post" class="col s12">
-    <div class="row">
-      <div class="input-field col s6">
-        <input type="date" class="datepicker" id="publication_date" name="ad[publication_date][0]" value="<%= @ad.publication_date %>">
-        <label for="publication_date">Publication date</label>
-      </div>
-      <div class="input-field col s6">
-        <input type="checkbox" class="repeat" id="repeat">
-        <label for="repeat">Repeat?</label>
-      </div>
-    </div>
-    <div class="row" id="repeat-input" style="display:none">
-      <div class="input-field col s6">
-        <input type="date" id="repeat1" class="datepicker" name="ad[publication_date][1]">
-        <label for="repeat1">Repeat Date</label>
-      </div>
-      <div class="input-field col s6">
-        <input type="date" id="repeat2" class="datepicker" name="ad[publication_date][2]">
-        <label for="repeat2">Repeat Date</label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s6">
-        <input type="text" id="size" name="ad[size]" value="<%= @ad.size %>">
-        <label for="size">Size</label>
-      </div>
-      <div class="input-field col s6">
-        <input type="text" id="position" name="ad[position]" value="<%= @ad.position %>">
-        <label for="position">Position</label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s6">
-        <input type="text" id="price" name="ad[price]" value="<%= @ad.price %>">
-        <label for="price">Price</label>
-      </div>
 
-      <div class="input-field col 26">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="height" name="ad[height]" value="<%= @ad.height %>">
+        <label for="size">Height</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" id="columns" name="ad[columns]" value="<%= @ad.columns %>">
+        <label for="columns">Columns</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select name="ad[feature]">
+          <option value="<%= @ad.feature[:id] %>" selected><%= @ad.feature[:name] %></option>
+          <% @features.each do |f| %>
+            <option value="<%= f.id %>"><%= f.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col s6">
+        <select name="ad[publication]">
+          <option value="<%= @ad.publication[:id] %>" selected><%= "#{display_date(@ad.publication[:date])} - #{@ad.publication[:name]}" %></option>
+          <% @publications.each do |p| %>
+            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
+        <label for="note">Notes</label>
+      </div>
+      <div class="input-field col s6">
         <select name="ad[customer]">
-          <option value="<%= @ad.customer.id %>" selected><%= @ad.customer.business_name %></option>
+          <option value="<%= @ad.customer[:id] %>" selected><%= @ad.customer[:business_name] %></option>
           <% @customers.each do |c| %>
             <option value="<%= c.id %>"><%= c.business_name %></option>
           <% end %>
         </select>
       </div>
-      <div class="row">
-        <div class="input-field col s6">
-          <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
-          <label for="note">Notes</label>
-        </div>
-        <div class="input-field col s6">
-          <input type="text" id="publication" name="ad[publication]" value="<%= @ad.publication %>">
-          <label for="publication">Publication</label>
-        </div>
-      </div>
     </div>
-    <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
 </div>

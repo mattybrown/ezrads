@@ -200,7 +200,7 @@ class EzrAds < Sinatra::Base
   post '/create/ad' do
     ad_user = env['warden'].user[:id]
 
-    ad = Ad.new(created_at: Time.now, publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], note: params['ad']['note'])
+    ad = Ad.new(created_at: Time.now, publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
     if ad.save
       flash[:success] = "Ad booked"
       redirect '/'
@@ -215,6 +215,8 @@ class EzrAds < Sinatra::Base
     @title = "Edit ad"
     @ad = Ad.get params['id']
     @customers = Customer.all
+    @features = Feature.all
+    @publications = Publication.all
 
     erb :edit_ad
 
@@ -535,7 +537,7 @@ class EzrAds < Sinatra::Base
 
     def display_date(i)
       if i
-        return i.strftime('%A %d %b %Y')
+        return i.strftime('%d %b %Y')
       end
     end
 
@@ -544,6 +546,10 @@ class EzrAds < Sinatra::Base
         uid = env['warden'].user[:id]
         return Task.count(:user_id => uid, :completed => false)
       end
+    end
+
+    def display_price(h, w, r)
+      return h * w * r
     end
   end
 

@@ -41,14 +41,14 @@
       <td><%= a.id %></td>
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
       <td><%= a.user[:username].capitalize %></td>
-      <td><%= a.publication[:date] %></td>
+      <td><%= display_date(a.publication[:date]) %></td>
       <% if @role == 1 || @role == 4 %>
         <td><%= a.publication[:name] %></td>
       <% end %>
       <td><%= a.height %> x <%= a.columns %></td>
-      <td><%= a.position %></td>
+      <td><%= a.feature[:name] %></td>
       <% if @role != 3 %>
-        <td>$<%= a.price %></td>
+        <td>$<%= display_price(a.height, a.columns, a.feature[:rate]) %></td>
       <% end %>
 
       <td>
