@@ -46,13 +46,16 @@ class EzrAds < Sinatra::Base
 
   get '/' do
     env['warden'].authenticate!
-    @user_publication = env['warden'].user.paper[:id]
-
-
+    today = Date.today
+    user_publication = env['warden'].user.paper[:id]
     @role = env['warden'].user[:role]
+
     @title = "Home"
 
-    @ads = Ad.all
+    paper = Paper.all(:id => user_publication)
+    pub = paper.publications(:order => [:date.desc]) - paper.publications(:date.lt => today)
+
+    @ads = pub.last.ads
 
     erb :view_ads
   end
@@ -199,14 +202,23 @@ class EzrAds < Sinatra::Base
 
   post '/create/ad' do
     ad_user = env['warden'].user[:id]
-
-    ad = Ad.new(created_at: Time.now, publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
-    if ad.save
-      flash[:success] = "Ad booked"
+    arr = []
+    if params['ad']['repeat']
+      params['ad']['publication'].each do |a|
+        ad = Ad.new(created_at: Time.now, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
+        ad.save
+      end
+      flash[:success] = "Ads booked"
       redirect '/'
     else
-      flash[:error] = "Something went wrong #{ad.errors.inspect}"
-      redirect back
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
+      if ad.save
+        flash[:success] = "Ad booked"
+        redirect '/'
+      else
+        flash[:error] = "Something went wrong #{ad.errors.inspect}"
+        redirect back
+      end
     end
   end
 
@@ -226,14 +238,14 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     user = ad.user[:id]
 
-    params['ad']['publication_date'].each do |p|
-      if p[1] != ""
-        ad.update(publication_date: p[1], publication: params['ad']['publication'], size: params['ad']['size'], position: params['ad']['position'], price: params['ad']['price'], customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user)
-        ad.save
-      end
+    ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user)
+    if ad.save
+      flash[:success] = "Ad updated"
+      redirect '/'
+    else
+      flash[:error] = "Something went wrong #{ad.errors.inspect}"
+      redirect back
     end
-    redirect '/'
-    flash[:success] = "Ad updated"
 
   end
 
@@ -424,10 +436,10 @@ class EzrAds < Sinatra::Base
     f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: params['feature']['paper'])
     if f.save
       flash[:success] = "Feature created"
-      redirect '/'
+      redirect '/view/publications'
     else
       flash[:error] = "Something went wrong..."
-      redirect '/'
+      redirect back
     end
   end
 

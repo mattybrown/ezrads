@@ -12,6 +12,11 @@ $(document).ready(function(){
     $('.completed').toggle();
   });
 
+  $('#repeat').click(function(){
+    $('#repeat-dates').toggle();
+    $('.single-publication').toggle();
+  });
+
   $('.toggle-note').leanModal();
 
   $(".button-collapse").sideNav();

@@ -1,7 +1,7 @@
 
 <div class="row">
   <h3>Create new ad</h3>
-  <form action="/create/ad" method="post" class="col s12">
+  <form action="/create/ad" method="POST" class="col s12">
 
     <div class="row">
       <div class="input-field col s6">
@@ -11,25 +11,6 @@
       <div class="input-field col s6">
         <input type="text" id="columns" name="ad[columns]">
         <label for="columns">Columns</label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-field col s6">
-        <select name="ad[feature]">
-          <option value="" disabled selected>Feature</option>
-          <% @features.each do |f| %>
-            <option value="<%= f.id %>"><%= f.name %></option>
-          <% end %>
-        </select>
-      </div>
-      <div class="input-field col s6 publication-dates">
-        <select name="ad[publication]">
-          <option value="" disabled selected>Publication</option>
-          <% @publications.each do |p| %>
-            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
-          <% end %>
-        </select>
-        <a href="#" class="btn ad-repeat">Add repeat date</a>
       </div>
     </div>
     <div class="row">
@@ -45,6 +26,39 @@
           <% end %>
         </select>
       </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select name="ad[feature]">
+          <option value="" disabled selected>Feature</option>
+          <% @features.each do |f| %>
+            <option value="<%= f.id %>"><%= f.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col s4 single-publication">
+        <select name="ad[single-publication]">
+          <option value="" disabled selected>Publication</option>
+          <% @publications.each do |p| %>
+            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col s2">
+        <input type="checkbox" name="ad[repeat]" id="repeat" value="repeat">
+        <label for="repeat">Is this a repeat ad?</label>
+      </div>
+    </div>
+    <div class="row" id="repeat-dates" style="display:none;">
+      <h4>Publication dates</h4>
+      <% count = 0 %>
+      <% @publications.each do |p| %>
+        <div class="input-field col s3">
+          <input type="checkbox" id="repeat<%= count %>" name="ad[publication][<%= p.id %>]">
+          <label for="repeat<%= count %>"><%= "#{display_date(p.date)} - #{p.name}" %></label>
+        </div>
+        <% count += 1 %>
+      <% end %>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
