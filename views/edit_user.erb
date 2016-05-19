@@ -35,9 +35,9 @@
       <div class="input-field col s6">
         <select name="user[publication]">
           <option value="" disabled selected>Publication</option>
-          <option value="1" <% if @user.publication == 1 %>selected<% end %>>All</option>
-          <option value="2" <% if @user.publication == 2 %>selected<% end %>>Blenheim Sun</option>
-          <option value="3" <% if @user.publication == 3 %>selected<% end %>>Cook Strait News</option>
+          <% @papers.each do |p| %>
+            <option value="<%= p.id %>"><%= p.name %></option>
+          <% end %>
         </select>
       </div>
     </div>

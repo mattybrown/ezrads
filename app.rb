@@ -92,6 +92,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @user = User.first(id: params['id'])
     @title = "Edit User"
+    @papers = Paper.all
 
     erb :edit_user
   end
@@ -228,7 +229,7 @@ class EzrAds < Sinatra::Base
     @ad = Ad.get params['id']
     @customers = Customer.all
     @features = Feature.all
-    @publications = Publication.all
+    @publications = Publication.all(:order => [:date.asc])
 
     erb :edit_ad
 
@@ -391,6 +392,10 @@ class EzrAds < Sinatra::Base
 
   get '/create/publication' do
     env['warden'].authenticate!
+    if env['warden'].user[:role] != 1
+      flash[:error] = "Only Admins can go there"
+      redirect back
+    end
 
     @title = "Create publication"
     @papers = Paper.all
