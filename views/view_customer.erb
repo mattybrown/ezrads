@@ -8,10 +8,25 @@
   <%= @customer.email %>
 </p>
 
+<form action="/delete/customer/<%= @customer.id %>" method="post">
+  <div class="input-field col s2">
+    <input type="checkbox" name="customer[showdelete]" id="deletecheck" value="delete">
+    <label for="deletecheck">Delete this customer?</label>
+  </div>
+  <div class="input-field col s2" id="delete" style="display:none;">
+    <div class="card flash-error">
+      <div class="card-content">
+        <p>WARNING - this will delete <%= @customer.ads.count %> ads...</p>
+      </div>
+    </div>
+    <input type="submit" class="btn red hidden" name="customer[delete]" value="delete">
+  </div>
+</form>
+
 <ul class="collection">
 
     <% @customer.ads.each do |a| %>
-      <li class="collection-item avatar">
+      <li class="collection-item avatar <%= a.completed ? 'c-completed' : 'incomplete' %>">
         <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil circle"></i></a>
         <span class="title"><%= display_date(a.publication[:date]) %></span>
         <p>
@@ -24,6 +39,9 @@
             <%= "Updated by #{display_user(a.updated_by)} @ #{display_time(a.updated_at)}" %>
           <% end %>
         </p>
+        <% if @role == 1 %>
+          <a class="btn-floating red secondary-content" href="/delete/ad/<%= a.id %>"><i class="fa fa-trash"></i></a>
+        <% end %>
       </li>
     <% end %>
 

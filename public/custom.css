@@ -13,6 +13,9 @@ nav{
 table .completed td{
   background-color: #dcedc8;
 }
+.c-completed{
+  background-color: #dcedc8 !important;
+}
 .brand-logo{
   margin-left: 10px;
   font-weight: bold;

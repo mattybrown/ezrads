@@ -18,7 +18,7 @@
   <% @publications.each do |p| %>
     <tr>
       <td><%= p.id %></td>
-      <td><a href="view/publication/<%= p.id %>"><%= p.name %></a></td>
+      <td><a href="/view/publication/<%= p.id %>"><%= p.name %></a></td>
       <td><%= display_date(p.date) %></td>
     </tr>
   <% end %>

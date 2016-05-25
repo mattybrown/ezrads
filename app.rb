@@ -53,9 +53,29 @@ class EzrAds < Sinatra::Base
     @title = "Home"
 
     paper = Paper.all(:id => user_publication)
-    pub = paper.publications(:order => [:date.desc]) - paper.publications(:date.lt => today)
+    pub = paper.publications(:date.gt => today) & paper.publications(:order => [:date.desc])
 
+    @publications = paper.publications(:order => [:date.asc])
     @ads = pub.last.ads
+    @pub = pub.last
+
+    erb :view_ads
+  end
+
+  post '/' do
+    env['warden'].authenticate!
+    today = Date.today
+    user_publication = env['warden'].user.paper[:id]
+    @role = env['warden'].user[:role]
+
+    @title = "Home"
+
+    paper = Paper.all(:id => user_publication)
+    pub = paper.publications(:id => params['view']['publication'])
+
+    @publications = paper.publications(:order => [:date.asc])
+    @ads = pub.ads
+    @pub = pub.last
 
     erb :view_ads
   end
@@ -132,6 +152,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customer = Customer.get(params['id'])
     @title = "Editing #{@customer.business_name}"
+    @role = env['warden'].user['role']
 
     erb :view_customer
   end
@@ -161,12 +182,15 @@ class EzrAds < Sinatra::Base
     end
   end
 
-  get '/delete/customer/:id' do
+  post '/delete/customer/:id' do
     env['warden'].authenticate!
     customer = Customer.get params['id']
-    if customer.destroy
+    customer.ads.each do |a|
+      a.destroy
+    end
+    if customer.destroy!
       flash[:success] = "User deleted"
-      redirect back
+      redirect '/'
     else
       flash[:error] = "Deletion failed"
       redirect back
@@ -205,14 +229,18 @@ class EzrAds < Sinatra::Base
     ad_user = env['warden'].user[:id]
     arr = []
     if params['ad']['repeat']
+      feature = Feature.get(params['ad']['feature'])
+      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
+        ad = Ad.new(created_at: Time.now, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
         ad.save
       end
       flash[:success] = "Ads booked"
       redirect '/'
     else
-      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
+      feature = Feature.get(params['ad']['feature'])
+      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
       if ad.save
         flash[:success] = "Ad booked"
         redirect '/'
@@ -248,6 +276,20 @@ class EzrAds < Sinatra::Base
       redirect back
     end
 
+  end
+
+  get '/delete/ad/:id' do
+    env['warden'].authenticate!
+
+    if env['warden'].user['role'] != 1
+      flash[:error] = "Sorry, you don't have permission to do that"
+    else
+      ad = Ad.get params['id']
+      if ad.destroy
+        flash[:success] = "Ad deleted"
+        redirect back
+      end
+    end
   end
 
   get '/view/ad/:id' do
@@ -388,6 +430,17 @@ class EzrAds < Sinatra::Base
       @publications = Publication.all(:order => [:date.asc])
     end
     erb :view_publications
+  end
+
+  get '/view/publication/:id' do
+    env['warden'].authenticate!
+    if @publication = Publication.get(params['id'])
+      @title = "Viewing publication #{@publication.name} - #{display_date(@publication.date)}"
+      erb :view_publication
+    else
+      flash[:error] = "Couldn't find that publication..."
+      redirect back
+    end
   end
 
   get '/create/publication' do

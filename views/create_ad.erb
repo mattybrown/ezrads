@@ -5,11 +5,11 @@
 
     <div class="row">
       <div class="input-field col s6">
-        <input type="text" id="height" name="ad[height]">
+        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number">
         <label for="size">Height</label>
       </div>
       <div class="input-field col s6">
-        <input type="text" id="columns" name="ad[columns]">
+        <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number">
         <label for="columns">Columns</label>
       </div>
     </div>
@@ -19,7 +19,7 @@
         <label for="note">Notes</label>
       </div>
       <div class="input-field col s6">
-        <select name="ad[customer]">
+        <select name="ad[customer]" class="validate" required>
           <option value="" disabled selected>Customer</option>
           <% @customers.each do |c| %>
             <option value="<%= c.id %>"><%= c.business_name %></option>
@@ -29,7 +29,7 @@
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <select name="ad[feature]">
+        <select name="ad[feature]" class="validate" required>
           <option value="" disabled selected>Feature</option>
           <% @features.each do |f| %>
             <option value="<%= f.id %>"><%= f.name %></option>
@@ -37,7 +37,7 @@
         </select>
       </div>
       <div class="input-field col s4 single-publication">
-        <select name="ad[single-publication]">
+        <select name="ad[single-publication]" class="validate">
           <option value="" disabled selected>Publication</option>
           <% @publications.each do |p| %>
             <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>

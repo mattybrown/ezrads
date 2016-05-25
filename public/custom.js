@@ -17,6 +17,10 @@ $(document).ready(function(){
     $('.single-publication').toggle();
   });
 
+  $('#deletecheck').click(function(){
+    $('#delete').toggle();
+  });
+
   $('.toggle-note').leanModal();
 
   $(".button-collapse").sideNav();
