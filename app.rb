@@ -59,6 +59,14 @@ class EzrAds < Sinatra::Base
     @ads = pub.last.ads
     @pub = pub.last
 
+    @gross = 0
+    @count = 0
+    @ads.each do |a|
+      @gross += a.price
+      @count += 1
+    end
+
+
     erb :view_ads
   end
 
@@ -152,7 +160,17 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customer = Customer.get(params['id'])
     @title = "Editing #{@customer.business_name}"
+    @ads = Ad.all(:customer_id => params['id'], :order => (:created_at.desc))
     @role = env['warden'].user['role']
+
+    @price = 0
+    @count = 0
+    @ads.each do |a|
+      if a.created_at.mon == Date.today.mon
+        @price += a.price
+        @count += 1
+      end
+    end
 
     erb :view_customer
   end
@@ -359,13 +377,24 @@ class EzrAds < Sinatra::Base
     end
   end
 
-  get '/view/tasks' do
+  get '/me' do
     env['warden'].authenticate!
     @title = "Tasks"
-    @user_id = env['warden'].user[:id]
-    @tasks = Task.all(:user_id => @user_id)
+    @user = env['warden'].user
+    @tasks = Task.all(:user_id => @user.id, :completed => false)
+    @ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
 
-    erb :view_tasks
+    price = 0
+    count = 0
+    @ads.each do |a|
+      if a.created_at.mon == Date.today.mon
+        price += a.price
+        count += 1
+      end
+    end
+    @price = price
+    @count = count
+    erb :me
   end
 
   get '/view/task/:id' do
@@ -380,7 +409,7 @@ class EzrAds < Sinatra::Base
     t.completed = true
     if t.save
       flash[:success] = "Task completed"
-      redirect '/view/tasks'
+      redirect back
     else
       flash[:error] = "Something went wrong"
       redirect back
@@ -391,7 +420,7 @@ class EzrAds < Sinatra::Base
     t.completed = false
     if t.save
       flash[:success] = "Keep working on it"
-      redirect '/view/tasks'
+      redirect back
     else
       flash[:error] = "Something went wrong"
       redirect back
@@ -412,7 +441,7 @@ class EzrAds < Sinatra::Base
 
     if t.save
       flash[:success] = "Task successfully created..."
-      redirect '/view/tasks'
+      redirect back
     else
       flash[:error] = "Something went wrong.."
       redirect back
@@ -594,14 +623,13 @@ class EzrAds < Sinatra::Base
     def display_user(i)
       if i != nil
         u = User.get i
-        username = u.username.capitalize
-        return username
+        return u.username.capitalize
       end
     end
 
     def display_time(i)
       if i
-        return i.strftime('%l:%M%P %d %b %Y')
+        return i.strftime('%l:%M%P, %d %b %Y')
       end
     end
 

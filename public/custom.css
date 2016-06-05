@@ -1,6 +1,4 @@
-select{
-  display: block;
-}
+
 nav{
   margin-bottom: 10px;
 }
@@ -68,4 +66,7 @@ table .completed td{
 .align-top{
   margin-top:20px;
   margin-right: 10px;
+}
+.user{
+  display:inline-block;
 }

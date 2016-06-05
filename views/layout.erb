@@ -19,20 +19,48 @@
 <body>
 
   <nav>
+    <ul id="customer-dropdown" class="dropdown-content">
+      <li><a href="/create/customer">Create new</a></li>
+    </ul>
+    <ul id="ads-dropdown" class="dropdown-content">
+      <li><a href="/create/ad">Create new</a></li>
+    </ul>
+    <ul id="users-dropdown" class="dropdown-content">
+      <li><a href="/create/user">Create new</a></li>
+    </ul>
+    <ul id="me-dropdown" class="dropdown-content">
+      <li><a href="/create/task">Create task</a></li>
+    </ul>
+
+    <ul id="publications-dropdown" class="dropdown-content">
+      <li><a href="/create/publication">Create publication</a></li>
+      <li><a href="/view/features">View features</a></li>
+      <li><a href="/create/feature">Create feature</a></li>
+    </ul>
+
     <div class="nav-wrapper">
       <a href="/" class="brand-logo">EzrAds</a>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="fa fa-navicon"></i></a>
       <ul id="nav" class="right hide-on-med-and-down">
-        <li><a href="/">Ads</a></li>
-        <li><a href="/view/customers">Customers</a></li>
-        <li><a href="/view/users">Users</a></li>
-        <li><a href="/view/publications">Publications</a></li>
-        <li><a href="/view/tasks">Tasks<span class="badge"><%= display_task_number %></span></a></li>
+        <li><a href="/" class="dropdown-button" data-activates="ads-dropdown">Ads <i class="fa fa-angle-down"></i></a></li>
+        <li><a href="/view/customers" class="dropdown-button" data-activates="customer-dropdown">Customers <i class="fa fa-angle-down"></i></a></li>
+        <li><a href="/view/users" <% if env['warden'].user.role == 1 %>
+          class="dropdown-button" data-activates="users-dropdown">Users <i class="fa fa-angle-down"></i></a></li>
+          <% else %>
+          >Users</a></li>
+          <% end %>
+        <li><a href="/view/publications" class="dropdown-button" data-activates="publications-dropdown">Publications <i class="fa fa-angle-down"></i></a></li>
+
+        <% if i = env['warden'].user %>
+        <li><a href="/me" class="dropdown-button" data-activates="me-dropdown"><i class="fa fa-user"></i> <%= "#{env['warden'].user.username.capitalize}" %> <span class="badge"><%= display_task_number %></span></a></li>
+        <% end %>
+        <li><a href="#" class="datepicker"><i class="fa fa-calendar"></i> <%= "#{display_date(Date.today)}" %></a></li>
         <% if env['warden'].user == nil %>
           <li><a href="/auth/login">Login</a></li>
         <% else %>
           <li><a href="/auth/logout">Logout</a></li>
         <% end %>
+
       </ul>
       <ul id="nav-mobile" class="side-nav">
         <li><a href="/">Ads</a></li>
@@ -73,14 +101,6 @@
     </div>
   </div>
 
-  <div class="container">
-    <form action="/search">
-      <div class="input-field custom_search">
-        <input id="search" type="search" name="search[query]" required>
-        <label for="search"><i class="fa fa-search"></i></label>
-      </div>
-    </form>
-  </div>
   <script>
     $(document).ready(function(){
       $('#search').autocomplete({
@@ -91,9 +111,6 @@
 
   <div class="main">
   <div class="container">
-    <% if i = env['warden'].user %>
-    <div>Logged in as <%= "#{display_user(i[:id])} : #{display_role(i[:role])} @ #{i.paper[:name]}" %></div>
-    <% end %>
   <%= yield %>
   </div>
   </div>

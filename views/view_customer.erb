@@ -1,49 +1,77 @@
-
-<h4><%= @customer.business_name %></h4>
-<p>
-  <%= @customer.contact_name %><br />
-  <%= @customer.billing_address %><br />
-  <%= @customer.phone %><br />
-  <%= @customer.mobile %><br />
-  <%= @customer.email %>
-</p>
-
-<form action="/delete/customer/<%= @customer.id %>" method="post">
-  <div class="input-field col s2">
-    <input type="checkbox" name="customer[showdelete]" id="deletecheck" value="delete">
-    <label for="deletecheck">Delete this customer?</label>
+<div class="row">
+  <h4><%= @customer.business_name %></h4>
+</div>
+<div class="row">
+  <div class="col s12 m8">
+    <p>
+      <%= @customer.contact_name %><br />
+      <%= @customer.billing_address %><br />
+      <%= @customer.phone %><br />
+      <%= @customer.mobile %><br />
+      <%= @customer.email %>
+    </p>
   </div>
-  <div class="input-field col s2" id="delete" style="display:none;">
-    <div class="card flash-error">
-      <div class="card-content">
-        <p>WARNING - this will delete <%= @customer.ads.count %> ads...</p>
-      </div>
+  <div class="col s12 m4">
+    <p>Monthly spend: <%= @price %></p>
+    <p>Ads booked this month: <%= @count %></p>
+  </div>
+</div>
+<div class="row">
+  <form action="/delete/customer/<%= @customer.id %>" method="post">
+    <div class="input-field col s2">
+      <input type="checkbox" name="customer[showdelete]" id="deletecheck" value="delete">
+      <label for="deletecheck">Delete this customer?</label>
     </div>
-    <input type="submit" class="btn red hidden" name="customer[delete]" value="delete">
-  </div>
-</form>
+    <div class="input-field col s2" id="delete" style="display:none;">
+      <div class="card flash-error">
+        <div class="card-content">
+          <p>WARNING - this will delete <%= @customer.ads.count %> ads...</p>
+        </div>
+      </div>
+      <input type="submit" class="btn red hidden" name="customer[delete]" value="delete">
+    </div>
+  </form>
+</div>
+<table class="ad_table tablesorter highlight">
+  <thead>
+    <tr>
+      <th>Created at</th>
+      <th>Sales rep</th>
+      <th>Publication Date</th>
+      <% if @role == 1 || @role == 4 %>
+        <th>Publication</th>
+      <% end %>
+      <th>Height x Columns</th>
 
-<ul class="collection">
+      <th>Position</th>
+      <% if @role != 3 %>
+        <th>Price</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+<% if @ads %>
+<% @ads.each do |a| %>
+    <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
+      <td><%= display_time(a.created_at) %></td>
+      <td><%= a.user[:username].capitalize %></td>
+      <td><%= display_date(a.publication[:date]) %></td>
+      <% if @role == 1 || @role == 4 %>
+        <td><%= a.publication[:name] %></td>
+      <% end %>
+      <td><%= a.height %> x <%= a.columns %></td>
+      <td><%= a.feature[:name] %></td>
+      <% if @role != 3 %>
+        <td>$<%= a.price %></td>
+      <% end %>
 
-    <% @customer.ads.each do |a| %>
-      <li class="collection-item avatar <%= a.completed ? 'c-completed' : 'incomplete' %>">
-        <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil circle"></i></a>
-        <span class="title"><%= display_date(a.publication[:date]) %></span>
-        <p>
-          <%= "#{a.height} x #{a.columns}" %>
-          <%= a.feature[:name] %><br />
-          <%= a.publication[:name] %><br />
-          <%= display_date(a.publication[:date]) %><br />
-          <%= "Created by #{display_user(a.user[:id])} @ #{display_time(a.created_at)}" %><br />
-          <% if a.updated_by != nil %>
-            <%= "Updated by #{display_user(a.updated_by)} @ #{display_time(a.updated_at)}" %>
-          <% end %>
-        </p>
-        <% if @role == 1 %>
-          <a class="btn-floating red secondary-content" href="/delete/ad/<%= a.id %>"><i class="fa fa-trash"></i></a>
-        <% end %>
-      </li>
-    <% end %>
+      <td>
+          <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil-square-o"></i></a>
+      </td>
 
+    </tr>
 
-</ul>
+<% end %>
+<% end %>
+</tbody>
+</table>

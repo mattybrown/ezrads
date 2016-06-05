@@ -25,4 +25,9 @@ $(document).ready(function(){
 
   $(".button-collapse").sideNav();
 
+  $(".dropdown-button").dropdown({ hover: true, belowOrigin: true, constrain_width: false });
+
+  $('select').material_select();
+
+
 });

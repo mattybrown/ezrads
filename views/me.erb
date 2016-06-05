@@ -1,0 +1,61 @@
+<div class="row">
+  <% @tasks.each do |t| %>
+      <div class="col s12 m4">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title"><%= t.title %></span>
+            <p class="grey-text text-darken-2">Deadline: <%= display_date(t.deadline) %></p>
+            <p class="grey-text text-darken-2">Task created at: <%= display_time(t.created_at) %></p>
+            <p class="grey-text text-darken-2">Issued by: <%= display_user(t.created_by) %></p>
+            <p><%= t.body %></p>
+          </div>
+          <div class="card-action">
+            <a href="/task/completed/<%= t.id %>">Done</a>
+          </div>
+        </div>
+      </div>
+  <% end %>
+</div>
+<p>Monthly gross to date: $<%= @price %></p>
+<p>Ads booked this month: <%= @count %></p>
+<table class="ad_table tablesorter highlight">
+  <thead>
+    <tr>
+      <th>Created at</th>
+      <th>Publication Date</th>
+      <% if @role == 1 || @role == 4 %>
+        <th>Publication</th>
+      <% end %>
+      <th>Height x Columns</th>
+
+      <th>Position</th>
+      <% if @role != 3 %>
+        <th>Price</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+<% if @ads %>
+<% @ads.each do |a| %>
+    <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
+      <td><%= display_time(a.created_at) %></td>
+      <td><%= display_date(a.publication[:date]) %></td>
+      <% if @role == 1 || @role == 4 %>
+        <td><%= a.publication[:name] %></td>
+      <% end %>
+      <td><%= a.height %> x <%= a.columns %></td>
+      <td><%= a.feature[:name] %></td>
+      <% if @role != 3 %>
+        <td>$<%= a.price %></td>
+      <% end %>
+
+      <td>
+          <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil-square-o"></i></a>
+      </td>
+
+    </tr>
+
+<% end %>
+<% end %>
+</tbody>
+</table>

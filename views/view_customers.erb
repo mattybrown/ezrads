@@ -1,4 +1,11 @@
-<a href="/create/customer" class="btn">Create customer</a>
+<div class="container">
+  <form action="/search">
+    <div class="input-field custom_search">
+      <input id="search" type="search" name="search[query]" required>
+      <label for="search"><i class="fa fa-search"></i></label>
+    </div>
+  </form>
+</div>
 <ul class="collection">
 <% @customers.each do |c| %>
   <li class="collection-item avatar">
@@ -10,7 +17,7 @@
     <%= c.email %></p>
 
     <a class="btn" href="/edit/customer/<%= c.id %>"><i class="fa fa-edit"></i> Edit</a>
-  
+
   </li>
 <% end %>
 </ul>
