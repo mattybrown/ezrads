@@ -44,10 +44,13 @@
       <ul id="nav" class="right hide-on-med-and-down">
         <li><a href="/" class="dropdown-button" data-activates="ads-dropdown">Ads <i class="fa fa-angle-down"></i></a></li>
         <li><a href="/view/customers" class="dropdown-button" data-activates="customer-dropdown">Customers <i class="fa fa-angle-down"></i></a></li>
-        <li><a href="/view/users" <% if env['warden'].user.role == 1 %>
-          class="dropdown-button" data-activates="users-dropdown">Users <i class="fa fa-angle-down"></i></a></li>
+        <li><a href="/view/users"
+          <% if env['warden'].user %>
+            <% if env['warden'].user.role == 1 %>
+              class="dropdown-button" data-activates="users-dropdown">Users <i class="fa fa-angle-down"></i></a></li>
+            <% end %>
           <% else %>
-          >Users</a></li>
+            >Users</a></li>
           <% end %>
         <li><a href="/view/publications" class="dropdown-button" data-activates="publications-dropdown">Publications <i class="fa fa-angle-down"></i></a></li>
 
