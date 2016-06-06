@@ -1,0 +1,21 @@
+<div class="row">
+  <form action="/search" method="post" class="col s12">
+    <div class="row">
+      <div class="col s6">
+        <p>
+          <input type="radio" id="customer" name="search[type]" class="with-gap">
+          <label for="customer">Customer</label>
+        </p>
+        <p>
+          <input type="radio" id="ad" name="search[type]" class="with-gap">
+          <label for="ad">Ad</label>
+        </p>
+
+      </div>
+      <div class="col s6">
+        <input type="text" id="search" name="search[query]">
+        <label for="search"><i class="fa fa-search prefix"></i> Search</label>
+      </div>
+    </div>
+  </form>
+</div>

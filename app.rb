@@ -83,6 +83,14 @@ class EzrAds < Sinatra::Base
 
     @publications = paper.publications(:order => [:date.asc])
     @ads = pub.ads
+
+    @gross = 0
+    @count = 0
+    @ads.each do |a|
+      @gross += a.price
+      @count += 1
+    end
+
     @pub = pub.last
 
     erb :view_ads
@@ -284,8 +292,10 @@ class EzrAds < Sinatra::Base
   post '/edit/ad/:id' do
     ad = Ad.get params['id']
     user = ad.user[:id]
+    f = Feature.get params['ad']['feature']
+    price = params['ad']['height'].to_f * params['ad']['columns'].to_f * f.rate
 
-    ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: params['ad']['price'], customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user)
+    ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user)
     if ad.save
       flash[:success] = "Ad updated"
       redirect '/'
@@ -569,9 +579,10 @@ class EzrAds < Sinatra::Base
 
   #search
   get '/search' do
-    @search = params['search']['query']
+    env['warden'].authenticate!
+    @title = "Search"
 
-    dbsearch(Customer, @search)
+    erb :search
   end
 
   helpers do

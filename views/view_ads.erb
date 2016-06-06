@@ -22,7 +22,7 @@
     <div class="card-panel blue darken-4">
       <span class="white-text"><%= "Viewing ads for #{@pub.name} - #{display_date(@pub.date)}" %></span>
       <% if env['warden'].user.role == 1 %>
-      <span class="white-text right">Publication gross: $<%= @gross %> || Ads booked: <%= @count %></span>
+      <span class="white-text right">Publication gross: $<%= @gross %> / Ads booked: <%= @count %></span>
       <% end %>
     </div>
   </div>
