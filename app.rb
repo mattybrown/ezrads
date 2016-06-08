@@ -199,7 +199,7 @@ class EzrAds < Sinatra::Base
 
   post '/edit/customer/:id' do
     customer = Customer.get params['id']
-    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'])
+    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'])
       flash[:success] = "Customer updated"
       redirect '/view/customers'
     else
@@ -224,7 +224,7 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/customer' do
-    customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'])
+    customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'])
     if customer.save
       flash[:success] = "Customer created"
       redirect '/view/customers'
@@ -256,7 +256,12 @@ class EzrAds < Sinatra::Base
     arr = []
     if params['ad']['repeat']
       feature = Feature.get(params['ad']['feature'])
-      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+      customer = Customer.get(params['ad']['customer'])
+      if customer.custom_rate != nil && customer.custom_rate > 0
+        price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
+      else
+        price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+      end
       params['ad']['publication'].each do |a|
         ad = Ad.new(created_at: Time.now, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
         ad.save
@@ -265,7 +270,11 @@ class EzrAds < Sinatra::Base
       redirect '/'
     else
       feature = Feature.get(params['ad']['feature'])
-      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+      if customer.custom_rate > 0
+        price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
+      else
+        price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+      end
       ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
       if ad.save
         flash[:success] = "Ad booked"
@@ -292,8 +301,13 @@ class EzrAds < Sinatra::Base
   post '/edit/ad/:id' do
     ad = Ad.get params['id']
     user = ad.user[:id]
-    f = Feature.get params['ad']['feature']
-    price = params['ad']['height'].to_f * params['ad']['columns'].to_f * f.rate
+    feature = Feature.get params['ad']['feature']
+    customer = ad.customer
+    if customer.custom_rate > 0
+      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
+    else
+      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+    end
 
     ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user)
     if ad.save

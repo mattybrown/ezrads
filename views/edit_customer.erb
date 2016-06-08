@@ -25,11 +25,17 @@
     <div class="row">
       <div class="input-field col s6">
         <input type="text" id="mobile" name="customer[mobile]" value="<%= @customer.mobile %>">
-        <label for="mobile">Email</label>
+        <label for="mobile">Mobile</label>
       </div>
       <div class="input-field col s6">
         <input type="text" id="email" name="customer[email]" value="<%= @customer.email %>">
         <label for="email">Email</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="number" id="custom-rate" name="customer[custom_rate]" value="<%= @customer.custom_rate %>" min="0" step="0.01">
+        <label for="custom-rate">Custom Rate</label>
       </div>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>

@@ -6,18 +6,34 @@
     </div>
   </form>
 </div>-->
-<ul class="collection">
-<% @customers.each do |c| %>
-  <li class="collection-item avatar">
-    <i class="fa fa-briefcase circle"></i>
-    <span class="title"><a href="/view/customer/<%= c.id %>"><%= c.business_name %></a></span>
-    <p><%= c.contact_name %><br />
-    <%= c.billing_address %><br />
-    <%= c.phone %><br />
-    <%= c.email %></p>
 
-    <a class="btn" href="/edit/customer/<%= c.id %>"><i class="fa fa-edit"></i> Edit</a>
+<table class="ad_table tablesorter highlight">
+  <thead>
+    <tr>
+      <th>Business name</th>
+      <th>Contact name</th>
+      <th>Phone</th>
+      <th>Mobile</th>
+      <th>Email</th>
+      <th># of ads</th>
+      <th>Custom rate</th>
+    </tr>
+  </thead>
+  <tbody>
+<% if @customers %>
+<% @customers.each do |a| %>
+    <tr>
+      <td><a href="/view/customer/<%= a.id %>"><%= a.business_name %></a></td>
+      <td><%= a.contact_name %></td>
+      <td><%= a.phone %></td>
+      <td><%= a.mobile %></td>
+      <td><%= a.email %></td>
+      <td><%= a.ads.count %></td>
+      <td><%= a.custom_rate ? true : false %></td>
+      <td><a href="/edit/customer/<%= a.id %>"><i class="fa fa-edit"></i></a></td>
+    </tr>
 
-  </li>
 <% end %>
-</ul>
+<% end %>
+  </tbody>
+</table>
