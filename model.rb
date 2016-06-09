@@ -48,6 +48,7 @@ class Ad
   property :created_at, DateTime
   property :updated_at, DateTime
   property :updated_by, Integer
+  property :repeat_date, DateTime
   property :height, Integer
   property :columns, Integer
   property :position, String

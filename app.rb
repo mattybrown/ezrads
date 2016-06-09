@@ -254,23 +254,30 @@ class EzrAds < Sinatra::Base
   post '/create/ad' do
     ad_user = env['warden'].user[:id]
     arr = []
+    customer = Customer.get(params['ad']['customer'])
     if params['ad']['repeat']
       feature = Feature.get(params['ad']['feature'])
-      customer = Customer.get(params['ad']['customer'])
+      repeat_publication = Publication.get(params['ad']['publication'].first[0])
+      repeat_date = repeat_publication.date
       if customer.custom_rate != nil && customer.custom_rate > 0
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
       else
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
       end
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
-        ad.save
+        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
+        if ad.save
+          flash[:success] = "Ad booked"
+        else
+          ad.errors.each do |e|
+            flash[:error] = e
+          end
+        end
       end
-      flash[:success] = "Ads booked"
       redirect '/'
     else
       feature = Feature.get(params['ad']['feature'])
-      if customer.custom_rate > 0
+      if customer.custom_rate != nil && customer.custom_rate > 0
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
       else
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate

@@ -41,6 +41,7 @@
       <th>Columns</th>
 
       <th>Position</th>
+      <th>Repeat date</th>
       <% if @role != 3 %>
         <th>Price</th>
       <% end %>
@@ -62,6 +63,7 @@
       <td><%= a.height %></td>
       <td><%= a.columns %></td>
       <td><%= a.feature[:name] %></td>
+      <td><%= display_date(a.repeat_date) %>
       <% if @role != 3 %>
         <td>$<%= a.price %></td>
       <% end %>
