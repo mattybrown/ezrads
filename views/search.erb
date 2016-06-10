@@ -1,21 +1,10 @@
 <div class="row">
   <form action="/search" method="get" class="col s12">
     <div class="row">
-      <div class="col s6">
-        <div class="col s6">
-          <input type="radio" id="customer" name="search[type]" value="customer" class="with-gap">
-          <label for="customer">Customer</label>
-        </div>
-        <div class="col s6">
-          <input type="radio" id="booking" name="search[type]" value="booking" class="with-gap">
-          <label for="booking">Booking</label>
-        </div>
-      </div>
-    </div>
-    <div class="row">
       <div class="col s6 customer-search">
-        <input type="text" id="search" name="search[query]">
-        <label for="customer-search"><i class="fa fa-search prefix"></i> Search</label>
+        <h4>Search customers</h4>
+        <input type="text" id="customer-search" name="customer-search[query]">
+        <label for="customer-search"><i class="fa fa-search prefix"></i> Business name or contact name</label>
       </div>
     </div>
   <div class="row">
@@ -23,10 +12,63 @@
   </div>
   </form>
 </div>
+
+<div class="row">
+  <form action="/search" method="get" class="col s12">
+    <div class="row">
+      <h4>Search bookings</h4>
+      <div class="input-field col s6">
+        <select name="ad-search[feature]">
+          <option value="" disabled selected>Feature</option>
+          <% @features.each do |f| %>
+            <option value="<%= f.id %>"><%= f.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col s3">
+        <input type="number" name="ad-search[height]" id="height">
+        <label for="height">Height</label>
+      </div>
+      <div class="input-field col s3">
+        <input type="number" name="ad-search[width]" id="width">
+        <label for="width">Column width</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select name="ad-search[user]">
+          <option value="" disabled selected>Rep</option>
+          <% @users.each do |u| %>
+            <option value="<%= u.id %>"><%= u.username %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col s6">
+        <select name="ad-search[customer]">
+          <option value="" disabled selected>Customer</option>
+          <% @customers.each do |c| %>
+            <option value="<%= c.id %>"><%= c.business_name %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <button type="submit" class="btn">Search</button>
+    </div>
+  </form>
+</div>
+
 <% if @customer %>
   <h4>Search results:</h4>
   <p><%= @results %></p>
   <% @customer.each do |c| %>
   <p><a href="/view/customer/<%= c.id %>"><%= c.business_name %></a></p>
+  <% end %>
+<% end %>
+<% if @ads %>
+  <h4>Search results:</h4>
+  <p><%= @results %></p>
+  <% @ads.each do |a| %>
+  <p><a href="/view/ad/<%= a.id %>"><%= "#{a.customer['business_name']} #{a.height}x#{a.columns} #{a.publication['date']}" %></a></p>
   <% end %>
 <% end %>

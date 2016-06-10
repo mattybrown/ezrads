@@ -604,15 +604,97 @@ class EzrAds < Sinatra::Base
   get '/search' do
     env['warden'].authenticate!
     @title = "Search"
-    if params['search']
-      if params['search']['type'] == "customer"
-        if @customer = Customer.all(:business_name.like => "%#{params['search']['query']}%")
+    @features = Feature.all
+    @users = User.all
+    @customers = Customer.all
+    if params['customer-search']
+      if params['customer-search']['query']
+        if @customer = Customer.all(:business_name.like => "%#{params['customer-search']['query']}%") | Customer.all(:contact_name.like => "%#{params['customer-search']['query']}%")
           if @customer.count == 1
             @results = "1 record found"
           else
             @results = "#{@customer.count} records found"
           end
         end
+      end
+    end
+
+    if params['ad-search']
+      if params['ad-search']['feature'] != ""
+        feature = params['ad-search']['feature']
+      end
+      if params['ad-search']['width'] != ""
+        width = params['ad-search']['width']
+      end
+      if params['ad-search']['height'] != ""
+        height = params['ad-search']['height']
+      end
+      if params['ad-search']['user'] != ""
+        user = params['ad-search']['user']
+      end
+      if params['ad-search']['customer'] != ""
+        customer = params['ad-search']['customer']
+      end
+
+      if feature && width && height && user && customer
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer)
+      elsif feature && width && height && user
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user)
+      elsif feature && width && height && customer
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:customer_id => customer)
+      elsif feature && width && user && customer
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer)
+      elsif width && height && user && customer
+        @ads = Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer)
+      elsif feature && height && user && customer
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer)
+      elsif feature && height && user
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:height => height) & Ad.all(:user_id => user)
+      elsif feature && height && customer
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:height => height) & Ad.all(:customer_id => customer)
+      elsif feature && height && width
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:height => height) & Ad.all(:columns => width)
+      elsif feature && customer && user
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:customer_id => customer) & Ad.all(:user_id => user)
+      elsif feature && customer && width
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:customer_id => customer) & Ad.all(:columns => width)
+      elsif feature && user && width
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:user_id => user) & Ad.all(:columns => width)
+      elsif height && user && width
+        @ads = Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:columns => width)
+      elsif height && customer && width
+        @ads = Ad.all(:height => height) & Ad.all(:customer_id => customer) & Ad.all(:columns => width)
+      elsif height && customer
+        @ads = Ad.all(:height => height) & Ad.all(:customer_id => customer)
+      elsif height && width
+        @ads = Ad.all(:height => height) & Ad.all(:columns => width)
+      elsif customer && width
+        @ads = Ad.all(:customer_id => customer) & Ad.all(:columns => width)
+      elsif customer && user
+        @ads = Ad.all(:customer_id => customer) & Ad.all(:user_id => user)
+      elsif customer && feature
+        @ads = Ad.all(:customer_id => customer) & Ad.all(:feature_id => feature)
+      elsif feature && width
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width)
+      elsif feature && user
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:user_id => user)
+      elsif feature
+        @ads = Ad.all(:feature_id => feature)
+      elsif customer
+        @ads = Ad.all(:customer_id => customer)
+      elsif user
+        @ads = Ad.all(:user_id => user)
+      elsif width
+        @ads = Ad.all(:columns => width)
+      elsif height
+        @ads = Ad.all(:height => height)
+      end
+
+
+      if @ads.count == 1
+        @results = "1 record found"
+      else
+        @results = "#{@ads.count} records found"
       end
     end
 
