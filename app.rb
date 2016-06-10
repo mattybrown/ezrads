@@ -310,7 +310,9 @@ class EzrAds < Sinatra::Base
     user = ad.user[:id]
     feature = Feature.get params['ad']['feature']
     customer = ad.customer
-    if customer.custom_rate > 0
+    if params['ad']['price'] != ""
+      price = params['ad']['price']
+    elsif customer.custom_rate != nil && customer.custom_rate > 0
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
     else
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
@@ -602,6 +604,17 @@ class EzrAds < Sinatra::Base
   get '/search' do
     env['warden'].authenticate!
     @title = "Search"
+    if params['search']
+      if params['search']['type'] == "customer"
+        if @customer = Customer.all(:business_name.like => "%#{params['search']['query']}%")
+          if @customer.count == 1
+            @results = "1 record found"
+          else
+            @results = "#{@customer.count} records found"
+          end
+        end
+      end
+    end
 
     erb :search
   end

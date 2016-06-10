@@ -1,21 +1,32 @@
 <div class="row">
-  <form action="/search" method="post" class="col s12">
+  <form action="/search" method="get" class="col s12">
     <div class="row">
       <div class="col s6">
-        <p>
-          <input type="radio" id="customer" name="search[type]" class="with-gap">
+        <div class="col s6">
+          <input type="radio" id="customer" name="search[type]" value="customer" class="with-gap">
           <label for="customer">Customer</label>
-        </p>
-        <p>
-          <input type="radio" id="ad" name="search[type]" class="with-gap">
-          <label for="ad">Ad</label>
-        </p>
-
-      </div>
-      <div class="col s6">
-        <input type="text" id="search" name="search[query]">
-        <label for="search"><i class="fa fa-search prefix"></i> Search</label>
+        </div>
+        <div class="col s6">
+          <input type="radio" id="booking" name="search[type]" value="booking" class="with-gap">
+          <label for="booking">Booking</label>
+        </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col s6 customer-search">
+        <input type="text" id="search" name="search[query]">
+        <label for="customer-search"><i class="fa fa-search prefix"></i> Search</label>
+      </div>
+    </div>
+  <div class="row">
+    <button type="submit" class="btn">Search</button>
+  </div>
   </form>
 </div>
+<% if @customer %>
+  <h4>Search results:</h4>
+  <p><%= @results %></p>
+  <% @customer.each do |c| %>
+  <p><a href="/view/customer/<%= c.id %>"><%= c.business_name %></a></p>
+  <% end %>
+<% end %>

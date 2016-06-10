@@ -44,6 +44,12 @@
         </select>
       </div>
     </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="number" name="ad[price]" id="price" value="<%= @ad.price %>" validate data-error="Please enter a number" <%= env['warden'].user['role'] != 1 ? 'disabled' : '' %> min="0" step="0.01">
+        <label for="price">Price</label>
+      </div>
+    </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
 </div>
