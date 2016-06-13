@@ -310,7 +310,7 @@ class EzrAds < Sinatra::Base
     user = ad.user[:id]
     feature = Feature.get params['ad']['feature']
     customer = ad.customer
-    if params['ad']['price'] != ""
+    if params['ad']['price'] != "" && env['warden'].user['role'] == 1
       price = params['ad']['price']
     elsif customer.custom_rate != nil && customer.custom_rate > 0
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
@@ -676,8 +676,14 @@ class EzrAds < Sinatra::Base
         @ads = Ad.all(:customer_id => customer) & Ad.all(:feature_id => feature)
       elsif feature && width
         @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width)
+      elsif feature && height
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:height => height)
       elsif feature && user
         @ads = Ad.all(:feature_id => feature) & Ad.all(:user_id => user)
+      elsif width && user
+        @ads = Ad.all(:columns => width) & Ad.all(:user_id => user)
+      elsif height && user
+        @ads = Ad.all(:height => height) & Ad.all(:user_id => user)
       elsif feature
         @ads = Ad.all(:feature_id => feature)
       elsif customer

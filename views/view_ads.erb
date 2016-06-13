@@ -30,39 +30,31 @@
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
-      <th>ID</th>
       <th>Business</th>
-      <th>Sales rep</th>
-      <th>Publication Date</th>
-      <% if @role == 1 || @role == 4 %>
-        <th>Publication</th>
-      <% end %>
+      <th>Rep</th>
       <th>Height</th>
       <th>Columns</th>
-
+      <th>Feature</th>
       <th>Position</th>
       <th>Repeat date</th>
       <% if @role != 3 %>
         <th>Price</th>
       <% end %>
-      <td></td>
-      <td><a href="#" class="toggle-completed"><i class="fa fa-eye"></i></a></td>
+      <th>Notes</th>
+      <th>Complete</th>
+      <th>Published</th>
     </tr>
   </thead>
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-    <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
-      <td><%= a.id %></td>
+    <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %>">
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
       <td><%= a.user[:username].capitalize %></td>
-      <td><%= display_date(a.publication[:date]) %></td>
-      <% if @role == 1 || @role == 4 %>
-        <td><%= a.publication[:name] %></td>
-      <% end %>
       <td><%= a.height %></td>
       <td><%= a.columns %></td>
       <td><%= a.feature[:name] %></td>
+      <td><%= a.position %></td>
       <td><%= display_date(a.repeat_date) %>
       <% if @role != 3 %>
         <td>$<%= a.price %></td>
@@ -79,16 +71,16 @@
       </td>
       <td>
         <% if a.completed == true %>
-          <a href="/ad/incomplete/<%= a.id %>"><i class="fa fa-check"></i></a>
+          <a href="/ad/incomplete/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
         <% else %>
-          <a href="/ad/completed/<%= a.id %>"><i class="fa fa-eraser"></i></a>
+          <a href="/ad/completed/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
         <% end %>
       </td>
       <td>
         <% if a.placed == true %>
-          <a href="/ad/unplace/<%= a.id %>"><i class="fa fa-newspaper-o"></i></a>
+          <a href="/ad/unplace/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
         <% else %>
-          <a href="/ad/place/<%= a.id %>"><i class="fa fa-minus"></i></a>
+          <a href="/ad/place/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
         <% end %>
       </td>
     </tr>
