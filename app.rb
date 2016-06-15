@@ -203,7 +203,9 @@ class EzrAds < Sinatra::Base
       flash[:success] = "Customer updated"
       redirect '/view/customers'
     else
-      flash[:error] = "Update failed"
+      customer.errors.each do |e|
+        flash[:error] = "Update failed - #{e}"
+      end
       redirect back
     end
   end
@@ -229,7 +231,9 @@ class EzrAds < Sinatra::Base
       flash[:success] = "Customer created"
       redirect '/view/customers'
     else
-      flash[:error] = "Customer creation failed"
+      customer.errors.each do |e|
+        flash[:error] = "Create customer failed - #{e}"
+      end
       redirect back
     end
   end
