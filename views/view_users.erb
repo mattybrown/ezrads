@@ -1,15 +1,23 @@
-<ul class="collection">
-<% @user.each do |u| %>
-  <li class="collection-item avatar">
-    <i class="fa fa-male circle"></i>
-    <span class="title"><%= u.username.capitalize %></span>
-    <p><%= u.phone %><br />
-    <%= u.email %></p>
-
-    <% if @role == 1 %>
-    <a class="btn" href="/edit/user/<%= u.id %>"><i class="fa fa-edit"></i> Edit</a>
-    <a class="btn-floating red secondary-content" href="/delete/user/<%= u.id %>"><i class="fa fa-trash"></i></a>
-    <% end %>
-  </li>
+<table class="highlight">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Publication</th>
+      <th>Phone</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+<% @users.each do |u| %>
+    <tr>
+      <td><%= u.username.capitalize %></td>
+      <td><%= @roleArr[u.role] %></td>
+      <td><%= u.paper.name %></td>
+      <td><%= u.phone %></td>
+      <td><%= u.email %></td>
+      <td><a href="/edit/user/<%= u.id %>"><i class="fa fa-edit"></i></a></td>
+    </tr>
 <% end %>
-</ul>
+</tbody>
+</table>

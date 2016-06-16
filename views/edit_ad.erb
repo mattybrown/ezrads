@@ -14,7 +14,7 @@
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <select name="ad[feature]">
+        <select class="browser-default selectize" name="ad[feature]">
           <option value="<%= @ad.feature[:id] %>" selected><%= @ad.feature[:name] %></option>
           <% @features.each do |f| %>
             <option value="<%= f.id %>"><%= f.name %></option>
@@ -22,7 +22,7 @@
         </select>
       </div>
       <div class="input-field col s6">
-        <select name="ad[publication]">
+        <select class="browser-default selectize" name="ad[publication]">
           <option value="<%= @ad.publication[:id] %>" selected><%= "#{display_date(@ad.publication[:date])} - #{@ad.publication[:name]}" %></option>
           <% @publications.each do |p| %>
             <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
@@ -36,7 +36,7 @@
         <label for="note">Notes</label>
       </div>
       <div class="input-field col s6">
-        <select name="ad[customer]">
+        <select class="browser-default selectize" name="ad[customer]">
           <option value="<%= @ad.customer[:id] %>" selected><%= @ad.customer[:business_name] %></option>
           <% @customers.each do |c| %>
             <option value="<%= c.id %>"><%= c.business_name %></option>

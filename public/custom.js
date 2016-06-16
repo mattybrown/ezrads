@@ -32,4 +32,8 @@ $(document).ready(function(){
     sortField: 'text'
   });
 
+  $(document).ready(function() {
+  $('select').material_select();
+  });
+
 });

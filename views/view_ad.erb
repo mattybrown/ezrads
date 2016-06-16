@@ -7,7 +7,9 @@
       <th>Columns</th>
       <th>Feature</th>
       <th>Position</th>
-      <th>Repeat date</th>
+      <th>Publication</th>
+      <th>Publication date</th>
+      <th>Repeat</th>
       <% if @role != 3 %>
         <th>Price</th>
       <% end %>
@@ -22,6 +24,8 @@
       <td><%= @ad.columns %></td>
       <td><%= @ad.feature[:name] %></td>
       <td><%= @ad.position %></td>
+      <td><%= @ad.publication[:name] %></td>
+      <td><%= display_date(@ad.publication[:date]) %></td>
       <td><%= display_date(@ad.repeat_date) %>
       <% if @role != 3 %>
         <td>$<%= @ad.price %></td>

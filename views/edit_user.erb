@@ -8,7 +8,7 @@
         <label for="username">Username</label>
       </div>
       <div class="input-field col s6">
-        <input type="password" id="password" name="user[password]">
+        <input type="password" id="password" name="user[password]" value="yourasneakybastard" disabled>
         <label for="password">Password</label>
       </div>
     </div>
@@ -36,7 +36,11 @@
         <select name="user[publication]">
           <option value="" disabled selected>Publication</option>
           <% @papers.each do |p| %>
-            <option value="<%= p.id %>"><%= p.name %></option>
+            <% if @user.paper_id == p.id %>
+              <option value="<%= p.id %>" selected><%= p.name %></option>
+            <% else %>
+              <option value="<%= p.id %>"><%= p.name %></option>
+            <% end %>
           <% end %>
         </select>
       </div>

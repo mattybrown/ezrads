@@ -39,6 +39,7 @@ class Customer
   property :custom_rate, Float, :default => 0
 
   has n, :ads
+  belongs_to :paper
 end
 
 class Ad

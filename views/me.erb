@@ -22,12 +22,14 @@
   <thead>
     <tr>
       <th>Created at</th>
+      <th>Business</th>
       <th>Publication Date</th>
       <% if @role == 1 || @role == 4 %>
         <th>Publication</th>
       <% end %>
       <th>Height x Columns</th>
 
+      <th>Feature</th>
       <th>Position</th>
       <% if @role != 3 %>
         <th>Price</th>
@@ -39,20 +41,23 @@
 <% @ads.each do |a| %>
     <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
       <td><%= display_time(a.created_at) %></td>
-      <td><%= display_date(a.publication[:date]) %></td>
+      <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
+      <td><a href="/view/publication/<%= a.publication.id %>"><%= display_date(a.publication[:date]) %></a></td>
       <% if @role == 1 || @role == 4 %>
         <td><%= a.publication[:name] %></td>
       <% end %>
       <td><%= a.height %> x <%= a.columns %></td>
       <td><%= a.feature[:name] %></td>
+      <td><%= a.position %></td>
       <% if @role != 3 %>
         <td>$<%= a.price %></td>
       <% end %>
-
+      <td>
+        <a href="/view/ad/<%= a.id %>"><i class="fa fa-eye"></i></a></td>
+      </td>
       <td>
           <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil-square-o"></i></a>
       </td>
-
     </tr>
 
 <% end %>

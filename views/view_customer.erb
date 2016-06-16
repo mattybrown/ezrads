@@ -37,10 +37,9 @@
     <tr>
       <th>Created at</th>
       <th>Sales rep</th>
-      <th>Publication Date</th>
-      <% if @role == 1 || @role == 4 %>
-        <th>Publication</th>
-      <% end %>
+      <th>Publication date</th>
+      <th>Repeat</th>
+      <th>Publication</th>
       <th>Height x Columns</th>
 
       <th>Position</th>
@@ -56,19 +55,19 @@
       <td><%= display_time(a.created_at) %></td>
       <td><%= a.user[:username].capitalize %></td>
       <td><%= display_date(a.publication[:date]) %></td>
-      <% if @role == 1 || @role == 4 %>
-        <td><%= a.publication[:name] %></td>
-      <% end %>
+      <td><%= display_date(a.repeat_date) %></td>
+      <td><%= a.publication[:name] %></td>
       <td><%= a.height %> x <%= a.columns %></td>
       <td><%= a.feature[:name] %></td>
       <% if @role != 3 %>
         <td>$<%= a.price %></td>
       <% end %>
-
+      <td>
+        <a href="/view/ad/<%= a.id %>"><i class="fa fa-eye"></i></a>
+      </td>
       <td>
           <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil-square-o"></i></a>
       </td>
-
     </tr>
 
 <% end %>

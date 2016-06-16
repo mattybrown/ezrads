@@ -44,7 +44,7 @@
         </select>
       </div>
       <div class="input-field col s6">
-        <select name="ad-search[customer]">
+        <select class="browser-default selectize" name="ad-search[customer]">
           <option value="" disabled selected>Customer</option>
           <% @customers.each do |c| %>
             <option value="<%= c.id %>"><%= c.business_name %></option>

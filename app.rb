@@ -73,12 +73,13 @@ class EzrAds < Sinatra::Base
   post '/' do
     env['warden'].authenticate!
     today = Date.today
-    user_publication = env['warden'].user.paper[:id]
-    @role = env['warden'].user[:role]
+    user = env['warden'].user
+    user_paper = user.paper_id
+    @role = user.role
 
     @title = "Home"
 
-    paper = Paper.all(:id => user_publication)
+    paper = Paper.all(:id => user_paper)
     pub = paper.publications(:id => params['view']['publication'])
 
     @publications = paper.publications(:order => [:date.asc])
@@ -99,7 +100,8 @@ class EzrAds < Sinatra::Base
   get '/view/users' do
     env['warden'].authenticate!
     @title = "Users"
-    @user = User.all
+    @users = User.all
+    @roleArr = ['poo', 'Admin', 'Sales', 'Production', 'Accounts']
     @role = env['warden'].user[:role]
 
     erb :view_users
@@ -135,7 +137,7 @@ class EzrAds < Sinatra::Base
 
   post '/edit/user/:id' do
     user = User.first(id: params['id'])
-    if user.update(username: params['user']['username'], role: params['user']['role'], paper_id: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'], password: params['user']['password'])
+    if user.update(username: params['user']['username'], role: params['user']['role'], paper_id: params['user']['publication'], phone: params['user']['phone'], email: params['user']['email'])
       flash[:success] = "User updated"
       redirect '/view/users'
     else
@@ -227,9 +229,9 @@ class EzrAds < Sinatra::Base
 
   post '/create/customer' do
     if params['customer']['custom_rate'] = ""
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0')
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id)
     else
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'])
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id)
     end
     if customer.save
       flash[:success] = "Customer created"
@@ -377,7 +379,6 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.completed = true
     if ad.save
-      flash[:success] = "Ad completed"
       redirect '/'
     else
       flash[:error] = "Something went wrong"
@@ -388,7 +389,6 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.completed = false
     if ad.save
-      flash[:success] = "Ad still needs work eh?"
       redirect '/'
     else
       flash[:error] = "Something went wrong"
@@ -399,7 +399,6 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.placed = true
     if ad.save
-      flash[:success] = "Ad placed"
       redirect '/'
     else
       flash[:error] = "Something went wrong"
@@ -410,7 +409,6 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.placed = false
     if ad.save
-      flash[:success] = "Ad not placed"
       redirect '/'
     else
       flash[:error] = "Something went wrong"
@@ -493,12 +491,8 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
 
     @title = "Viewing publications"
-    user_pub = env['warden'].user[:publication]
-    if user_pub != 1
-      @publications = Publication.all(:publication_id => user_pub, :order => [:date.asc])
-    else
-      @publications = Publication.all(:order => [:date.asc])
-    end
+    user_pub = env['warden'].user.paper_id
+    @publications = Publication.all(:paper_id => user_pub, :order => [:date.asc])
     erb :view_publications
   end
 
@@ -506,6 +500,10 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     if @publication = Publication.get(params['id'])
       @title = "Viewing publication #{@publication.name} - #{display_date(@publication.date)}"
+      @gross = 0
+      @publication.ads.each do |a|
+        @gross += a.price
+      end
       erb :view_publication
     else
       flash[:error] = "Couldn't find that publication..."
@@ -544,10 +542,15 @@ class EzrAds < Sinatra::Base
     (sd..ed).each do |d|
       if d.wday == sd.wday
         p = Publication.new(name: params['publication']['name'], date: d, paper_id: params['publication']['publication_id'])
-        p.save
+        if p.save
+          flash[:success] = "Publications created"
+        else
+          p.errors.each do |e|
+            flash[:error] = "Error: #{e}"
+          end
+        end
       end
     end
-    flash[:success] = "Successfully created publications"
     redirect '/view/publications'
   end
 
