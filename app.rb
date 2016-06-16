@@ -426,7 +426,7 @@ class EzrAds < Sinatra::Base
     price = 0
     count = 0
     @ads.each do |a|
-      if a.created_at.mon == Date.today.mon
+      if a.publication.date.mon == Date.today.mon
         price += a.price
         count += 1
       end
