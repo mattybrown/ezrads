@@ -7,12 +7,14 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
   <link rel="stylesheet" href="<%= url('/style.css') %>" type="text/css">
+  <link rel="stylesheet" href="<%= url('/selectize.css') %>" type="text/css">
   <link rel="stylesheet" href="<%= url('/custom.css') %>" type="text/css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
   <script type="text/javascript" src="<%= url('/jquery.tablesorter.min.js') %>"></script>
+  <script type="text/javascript" src="<%= url('/selectize.js') %>"></script>
   <script type="text/javascript" src="<%= url('/custom.js') %>"></script>
 
 </head>
@@ -42,7 +44,7 @@
       <a href="/" class="brand-logo">EzrAds</a>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="fa fa-navicon"></i></a>
       <ul id="nav" class="right hide-on-med-and-down">
-        <li><a href="/" class="dropdown-button" data-activates="ads-dropdown">Ads <i class="fa fa-angle-down"></i></a></li>
+        <li><a href="/" class="dropdown-button" data-activates="ads-dropdown">Bookings <i class="fa fa-angle-down"></i></a></li>
         <li><a href="/view/customers" class="dropdown-button" data-activates="customer-dropdown">Customers <i class="fa fa-angle-down"></i></a></li>
         <li><a href="/view/users"
           <% if env['warden'].user %>

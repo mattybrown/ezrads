@@ -36,7 +36,7 @@ class Customer
   property :phone, String
   property :mobile, String
   property :email, String
-  property :custom_rate, Float
+  property :custom_rate, Float, :default => 0
 
   has n, :ads
 end

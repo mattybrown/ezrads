@@ -27,7 +27,9 @@ $(document).ready(function(){
 
   $(".dropdown-button").dropdown({ hover: true, belowOrigin: true, constrain_width: false });
 
-  $('select').material_select();
-
+  $(".selectize").selectize({
+    create: false,
+    sortField: 'text'
+  });
 
 });

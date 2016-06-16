@@ -226,7 +226,11 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/customer' do
-    customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'])
+    if params['customer']['custom_rate'] = ""
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0')
+    else
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'])
+    end
     if customer.save
       flash[:success] = "Customer created"
       redirect '/view/customers'
@@ -263,7 +267,7 @@ class EzrAds < Sinatra::Base
       feature = Feature.get(params['ad']['feature'])
       repeat_publication = Publication.get(params['ad']['publication'].first[0])
       repeat_date = repeat_publication.date
-      if customer.custom_rate != nil && customer.custom_rate > 0
+      if customer.custom_rate > 0
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
       else
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
@@ -562,7 +566,9 @@ class EzrAds < Sinatra::Base
       flash[:success] = "Feature created"
       redirect '/view/publications'
     else
-      flash[:error] = "Something went wrong..."
+      f.errors.each do |f|
+        flash[:error] = "Something went wrong... #{f}"
+      end
       redirect back
     end
   end

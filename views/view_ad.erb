@@ -1,18 +1,50 @@
-<ul class="collection">
-  <li class="collection-item avatar">
-    <i class="fa fa-male circle"></i>
+<table class="ad_table highlight">
+  <thead>
+    <tr>
+      <th>Business</th>
+      <th>Rep</th>
+      <th>Height</th>
+      <th>Columns</th>
+      <th>Feature</th>
+      <th>Position</th>
+      <th>Repeat date</th>
+      <% if @role != 3 %>
+        <th>Price</th>
+      <% end %>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="<% if @ad.placed == true %>completed<% else %>incomplete<% end %>">
+      <td><a href="/view/customer/<%= @ad.customer.id %>"><%= @ad.customer.business_name %></a></td>
+      <td><%= @ad.user[:username].capitalize %></td>
+      <td><%= @ad.height %></td>
+      <td><%= @ad.columns %></td>
+      <td><%= @ad.feature[:name] %></td>
+      <td><%= @ad.position %></td>
+      <td><%= display_date(@ad.repeat_date) %>
+      <% if @role != 3 %>
+        <td>$<%= @ad.price %></td>
+      <% end %>
 
-    <span class="title"><%= @ad.customer.business_name %></span>
+      <td>
+        <% if @ad.note != "" %>
+          <a href="#note<%= @ad.id %>" class="toggle-note"><i class="fa fa-clipboard"></i></a>
+        <% else %>
+          <i class="fa fa-clipboard"></i>
+        <% end %>
 
-    <p><%= @ad.id %><br />
-    <%= "#{@ad.height}x#{@ad.columns}" %></p>
-    <a class="btn-floating right red modal-trigger" href="/delete/ad/<%= @ad.id %>"><i class="fa fa-close"></i></a>
-    <a class="btn-floating right blue lighten-2" href="/edit/ad/<%= @ad.id %>"><i class="fa fa-edit"></i></a>
-    <% if @ad.completed != true %>
-      <a class="btn-floating right" href="/ad/completed/<%= @ad.id %>"><i class="fa fa-check"></i></a>
-    <% else %>
-      <a class="btn-floating right" href="/ad/incomplete/<%= @ad.id %>"><i class="fa fa-eraser"></i></a>
-    <% end %>
+      </td>
+    </tr>
+    <div id="note<%= @ad.id %>" class="modal">
+      <div class="modal-content">
+        <h4>Notes</h4>
+        <p><%= @ad.note %></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+      </div>
+    </div>
 
-  </li>
-</ul>
+  </tbody>
+</table>
