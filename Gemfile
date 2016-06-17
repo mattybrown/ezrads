@@ -5,6 +5,7 @@ gem 'sinatra-flash'
 gem 'bcrypt-ruby'
 gem 'data_mapper'
 gem 'warden'
+gem 'chartkick'
 
 group :production do
   gem 'pg'

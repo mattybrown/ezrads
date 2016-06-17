@@ -6,6 +6,7 @@ GEM
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     bond (0.5.1)
+    chartkick (2.0.0)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
@@ -101,6 +102,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
+  chartkick
   data_mapper
   dm-postgres-adapter
   dm-sqlite-adapter
@@ -112,4 +114,4 @@ DEPENDENCIES
   warden
 
 BUNDLED WITH
-   1.10.6
+   1.12.5
