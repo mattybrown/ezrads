@@ -493,7 +493,10 @@ class EzrAds < Sinatra::Base
     @title = "Viewing publications"
     user_pub = env['warden'].user.paper_id
     @publications = Publication.all(:paper_id => user_pub, :order => [:date.asc])
-    
+    @data = {}
+    @publications.each do |p|
+      @data[p.date] = p.ads.count
+    end
     erb :view_publications
   end
 

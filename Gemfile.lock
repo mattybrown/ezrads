@@ -1,6 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (4.2.6)
+      i18n (~> 0.7)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
     addressable (2.4.0)
     bcrypt (3.1.11)
     bcrypt-ruby (3.1.5)
@@ -61,8 +67,12 @@ GEM
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
     fastercsv (1.5.5)
+    groupdate (3.0.0)
+      activesupport (>= 3)
+    i18n (0.7.0)
     json (1.8.3)
     json_pure (1.8.3)
+    minitest (5.9.0)
     multi_json (1.12.0)
     pg (0.18.4)
     rack (1.6.4)
@@ -87,12 +97,15 @@ GEM
     sinatra-flash (0.3.0)
       sinatra (>= 1.0.0)
     stringex (1.5.1)
+    thread_safe (0.3.5)
     tilt (2.0.2)
     tux (0.3.0)
       ripl (>= 0.3.5)
       ripl-multi_line (>= 0.2.4)
       ripl-rack (>= 0.2.0)
       sinatra (>= 1.2.1)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
     uuidtools (2.1.5)
     warden (1.2.6)
       rack (>= 1.0)
@@ -106,6 +119,7 @@ DEPENDENCIES
   data_mapper
   dm-postgres-adapter
   dm-sqlite-adapter
+  groupdate
   pg
   shotgun
   sinatra

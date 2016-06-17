@@ -6,6 +6,7 @@ gem 'bcrypt-ruby'
 gem 'data_mapper'
 gem 'warden'
 gem 'chartkick'
+gem 'groupdate'
 
 group :production do
   gem 'pg'
