@@ -16,6 +16,11 @@
       </div>
   <% end %>
 </div>
+
+<div class="row">
+  <%= column_chart @data %>
+</div>
+
 <p>Monthly gross to date: $<%= @price %></p>
 <p>Ads booked this month: <%= @count %></p>
 <table class="ad_table tablesorter highlight">

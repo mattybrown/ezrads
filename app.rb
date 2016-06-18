@@ -176,7 +176,7 @@ class EzrAds < Sinatra::Base
     @price = 0
     @count = 0
     @ads.each do |a|
-      if a.created_at.mon == Date.today.mon
+      if a.publication.date.mon == Date.today.mon
         @price += a.price
         @count += 1
       end
@@ -265,6 +265,16 @@ class EzrAds < Sinatra::Base
     ad_user = env['warden'].user[:id]
     arr = []
     customer = Customer.get(params['ad']['customer'])
+    if params['ad']['repeat_date']
+      repeat_date = params['ad']['repeat_date']
+    else
+      repeat_date = nil
+    end
+    if params['ad']['updated_by']
+      updated_by = params['ad']['updated_by']
+    else
+      updated_by = nil
+    end
     if params['ad']['repeat']
       feature = Feature.get(params['ad']['feature'])
       repeat_publication = Publication.get(params['ad']['publication'].first[0])
@@ -292,7 +302,7 @@ class EzrAds < Sinatra::Base
       else
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
       end
-      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'])
       if ad.save
         flash[:success] = "Ad booked"
         redirect '/'
@@ -356,6 +366,8 @@ class EzrAds < Sinatra::Base
   get '/view/ad/:id' do
     env['warden'].authenticate!
     @ad = Ad.get params['id']
+    @users = User.all(:paper_id => @ad.publication.paper_id)
+    @publications = Publication.all(:paper_id => @ad.publication.paper_id)
     @title = "Viewing ad"
 
     erb :view_ad
@@ -422,6 +434,37 @@ class EzrAds < Sinatra::Base
     @user = env['warden'].user
     @tasks = Task.all(:user_id => @user.id, :completed => false)
     @ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
+    @data = {}
+    this_month_total = 0
+    last_month_total = 0
+    next_month_total = 0
+    @ads.each do |a|
+      present = Date.today.mon
+      if present == 12
+        next_month == 1
+      else
+        next_month = present + 1
+      end
+
+      if present == 1
+        last_month = 12
+      else
+        last_month = present - 1
+      end
+
+      @data.update("Last month" => last_month_total)
+      if a.publication.date.mon == next_month
+        next_month_total += a.price
+      end
+      if a.publication.date.mon == present
+        this_month_total += a.price
+      end
+      @data.update("This month" => this_month_total)
+      if a.publication.date.mon == last_month
+        last_month_total += a.price
+      end
+      @data.update("Next month" => next_month_total)
+    end
 
     price = 0
     count = 0
@@ -493,10 +536,18 @@ class EzrAds < Sinatra::Base
     @title = "Viewing publications"
     user_pub = env['warden'].user.paper_id
     @publications = Publication.all(:paper_id => user_pub, :order => [:date.asc])
-    @data = {}
+    @ads_booked = {}
+    @ads_gross = {}
+
     @publications.each do |p|
-      @data[p.date] = p.ads.count
+      total = 0
+      @ads_booked[p.date] = p.ads.count
+      p.ads.each do |a|
+        total += a.price
+      end
+      @ads_gross[p.date] = total
     end
+
     erb :view_publications
   end
 
@@ -507,6 +558,17 @@ class EzrAds < Sinatra::Base
       @gross = 0
       @publication.ads.each do |a|
         @gross += a.price
+      end
+      u = User.all(:paper_id => @publication.paper_id)
+      @data = {}
+      u.each do |u|
+        total = 0
+        u.ads.each do |a|
+          if a.publication_id == @publication.id
+            total += a.price
+          end
+        end
+        @data.update(u.username.capitalize => total)
       end
       erb :view_publication
     else
@@ -767,6 +829,16 @@ class EzrAds < Sinatra::Base
         return "Wellington..."
       else
         return "Publication not found"
+      end
+    end
+
+    def display_payment(i)
+      if i == 1
+        return "Account"
+      elsif i == 2
+        return "Cash"
+      elsif i == 3
+        return "Eftpos"
       end
     end
 

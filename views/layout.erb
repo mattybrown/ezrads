@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="<%= url('/style.css') %>" type="text/css">
   <link rel="stylesheet" href="<%= url('/selectize.css') %>" type="text/css">
   <link rel="stylesheet" href="<%= url('/custom.css') %>" type="text/css">
+  <link rel="stylesheet" href="<%= url('/print.css') %>" type="text/css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
@@ -66,6 +67,11 @@
           <li><a href="/auth/login">Login</a></li>
         <% else %>
           <li><a href="/auth/logout">Logout</a></li>
+        <% end %>
+        <% if env['warden'].user %>
+          <% if env['warden'].user.role == 1 %>
+            <li><a href="/settings"><i class="fa fa-cog"></i></a></li>
+          <% end %>
         <% end %>
 
       </ul>

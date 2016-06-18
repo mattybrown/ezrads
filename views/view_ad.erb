@@ -52,3 +52,34 @@
 
   </tbody>
 </table>
+<hr />
+<h4>Repeat ad</h4>
+<form action="/create/ad" method="POST" class="col s12">
+  <input type="hidden" name="ad[height]" value="<%= @ad.height %>">
+  <input type="hidden" name="ad[columns]" value="<%= @ad.columns %>">
+  <input type="hidden" name="ad[note]" value="<%= @ad.note %>">
+  <input type="hidden" name="ad[customer]" value="<%= @ad.customer_id %>">
+  <input type="hidden" name="ad[feature]" value="<%= @ad.feature_id %>">
+  <input type="hidden" name="ad[position]" value="<%= @ad.position %>">
+  <input type="hidden" name="ad[repeat_date]" value="<%= @ad.publication.date %>">
+  <input type="hidden" name="ad[updated_by]" value="<%= env['warden'].user.id %>">
+  <input type="hidden" name="ad[payment]" value="<%= @ad.payment %>">
+  <div class="row">
+    <div class="input-field col s4">
+      <select name="ad[user]">
+        <% @users.each do |u| %>
+          <option value="<%= u.id %>"><%= u.username.capitalize %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="input-field col s4 single-publication">
+      <select class="browser-default selectize" name="ad[single-publication]" class="validate">
+        <option value="" disabled selected>Publication</option>
+        <% @publications.each do |p| %>
+          <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+        <% end %>
+      </select>
+    </div>
+  </div>
+  <button class="btn waves-effect waves-light" type="submit">Repeat</button>
+</form>

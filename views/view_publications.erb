@@ -1,4 +1,7 @@
-<%= line_chart @data, ytitle: "Ads booked" %>
+<%= line_chart [
+  {name: "Ads booked", data: @ads_booked},
+  {name: "Gross", data: @ads_gross}
+  ] %>
 <table class="publication_table">
   <thead>
     <tr>
