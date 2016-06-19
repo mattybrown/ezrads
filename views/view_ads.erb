@@ -1,3 +1,6 @@
+<% if @pub.class == String %>
+  <p><%= @pub %></p>
+<% else %>
 <div class="row view-pub">
   <form action="/" method="post" class="col s12">
     <div class="row">
@@ -112,3 +115,4 @@
 <% end %>
   </tbody>
 </table>
+<% end %>

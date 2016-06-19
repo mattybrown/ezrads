@@ -1,0 +1,28 @@
+<div class="row">
+  <h3>Setup</h3>
+  <form action="/setup" method="POST" class="col s12">
+
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="paper_name" name="paper[name]" class="validate" required>
+        <label for="height">Paper name</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="number" id="gst" name="paper[gst]" class="validate" required data-error="Please enter a number" min="0" step="0.01">
+        <label for="columns">GST rate</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" class="validate" id="username" name="user[username]" required>
+        <label for="username">User name</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="password" class="validate" id="password" name="user[password]" required>
+        <label for="password">Password</label>
+      </div>
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
+  </form>
+</div>

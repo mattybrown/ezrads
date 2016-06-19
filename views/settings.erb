@@ -1,0 +1,17 @@
+<div class="row">
+  <h3>Paper settings</h3>
+  <form action="/edit/paper" method="POST" class="col s12">
+
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="paper_name" name="paper[name]" class="validate" value="<%= @paper.name %>" required>
+        <label for="height">Paper name</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="number" id="gst" name="paper[gst]" class="validate" required data-error="Please enter a number" min="0" step="0.01" value="<%= @paper.gst %>">
+        <label for="columns">GST rate</label>
+      </div>
+    </div>
+    <button type="submit" class="btn"><i class="fa fa-plus"></i> Save</button>
+  </form>
+</div>

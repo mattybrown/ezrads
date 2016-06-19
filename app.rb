@@ -55,15 +55,21 @@ class EzrAds < Sinatra::Base
     paper = Paper.all(:id => user_publication)
     pub = paper.publications(:date.gt => today) & paper.publications(:order => [:date.desc])
 
-    @publications = paper.publications(:order => [:date.asc])
-    @ads = pub.last.ads
-    @pub = pub.last
+    if @publications = paper.publications.count >= 1
+      @publications = paper.publications(:order => [:date.asc])
+      @ads = pub.last.ads
+      @pub = pub.last
+    else
+      @pub = "No publications found - <a href='/create/publication'>Click here to create one</a>"
+    end
 
     @gross = 0
     @count = 0
-    @ads.each do |a|
-      @gross += a.price
-      @count += 1
+    if @ads.class != String
+      @ads.each do |a|
+        @gross += a.price
+        @count += 1
+      end
     end
 
 
@@ -253,7 +259,7 @@ class EzrAds < Sinatra::Base
 
     user_pub = env['warden'].user[:publication]
     if user_pub != 1
-      @publications = Publication.all(:publication_id => user_pub, :date.gt => today)
+      @publications = Publication.all(:publication_id => user_pub, :date.gt => today, :order => [:date.asc])
     else
       @publications = Publication.all(:date.gt => today)
     end
@@ -559,8 +565,22 @@ class EzrAds < Sinatra::Base
       @publication.ads.each do |a|
         @gross += a.price
       end
+
+      @pub_data = {}
+      past_publications = Publication.all(:date.lt => @publication.date, :order => [:date.asc], :limit => 5)
+      past_publications.each do |p|
+        total = 0
+        p.ads.each do |a|
+          total += a.price
+        end
+        @pub_data.update(display_date(p.date) => total)
+      end
+      @pub_data.update(display_date(@publication.date) => @gross)
+
+      @gst = @gross * @publication.paper.gst / 100.0
+
       u = User.all(:paper_id => @publication.paper_id)
-      @data = {}
+      @repdata = {}
       u.each do |u|
         total = 0
         u.ads.each do |a|
@@ -568,8 +588,9 @@ class EzrAds < Sinatra::Base
             total += a.price
           end
         end
-        @data.update(u.username.capitalize => total)
+        @repdata.update(u.username.capitalize => total)
       end
+
       erb :view_publication
     else
       flash[:error] = "Couldn't find that publication..."
@@ -637,6 +658,44 @@ class EzrAds < Sinatra::Base
     else
       f.errors.each do |f|
         flash[:error] = "Something went wrong... #{f}"
+      end
+      redirect back
+    end
+  end
+
+  get '/settings' do
+    if Paper.all.count < 1
+      erb :setup
+    else
+      env['warden'].authenticate!
+      @paper = Paper.get(env['warden'].user.paper_id)
+      erb :settings
+    end
+  end
+
+  post '/setup' do
+    p = Paper.new(name: params['paper']['name'], gst: params['paper']['gst'])
+    if p.save
+      u = User.new(username: params['user']['username'], password: params['user']['password'], role: 1, paper_id: p.id)
+      if u.save
+        flash[:success] = "Paper and user set"
+        redirect '/'
+      else
+        u.errors.each do |u|
+          flash[:error] = "Something went wrong... #{u}"
+          redirect back
+        end
+      end
+    end
+  end
+
+  post '/edit/paper' do
+    if p = Paper.update(name: params['paper']['name'], gst: params['paper']['gst'])
+      flash[:success] = "Paper updated"
+      redirect '/'
+    else
+      p.errors.each do |p|
+        flash[:error] = "Something went wrong... #{p}"
       end
       redirect back
     end

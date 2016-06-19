@@ -108,6 +108,7 @@ class Paper
 
   property :id, Serial, :key => true
   property :name, String
+  property :gst, Float
 
   has n, :publications
   has n, :features
