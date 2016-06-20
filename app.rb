@@ -291,7 +291,7 @@ class EzrAds < Sinatra::Base
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
       end
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'])
+        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'])
         if ad.save
           flash[:success] = "Ad booked"
         else
@@ -344,8 +344,7 @@ class EzrAds < Sinatra::Base
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
     end
 
-    ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user)
-    if ad.save
+    if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user, payment: params['ad']['payment'])
       flash[:success] = "Ad updated"
       redirect '/'
     else
@@ -562,8 +561,13 @@ class EzrAds < Sinatra::Base
     if @publication = Publication.get(params['id'])
       @title = "Viewing publication #{@publication.name} - #{display_date(@publication.date)}"
       @gross = 0
+      @paid = 0
       @publication.ads.each do |a|
-        @gross += a.price
+        if a.payment == 1
+          @gross += a.price
+        else
+          @paid += a.price
+        end
       end
 
       @pub_data = {}
@@ -577,7 +581,7 @@ class EzrAds < Sinatra::Base
       end
       @pub_data.update(display_date(@publication.date) => @gross)
 
-      @gst = @gross * @publication.paper.gst / 100.0
+      @gst = (@gross + @paid) * @publication.paper.gst / 100.0
 
       u = User.all(:paper_id => @publication.paper_id)
       @repdata = {}

@@ -5,8 +5,24 @@
     <p><%= "Ads booked: #{@publication.ads.count}" %></p>
   </div>
   <div class="col m6">
-    <p><%= "Gross: $#{@gross}" %></p>
-    <p><%= "GST: $#{@gst}" %></p>
+    <table>
+      <tr>
+        <td>Gross</td>
+        <td><%= "$#{@gross}" %></td>
+      </tr>
+      <tr>
+        <td>Paid</td>
+        <td><%= "$#{@paid}" %></td>
+      </tr>
+      <tr>
+        <td>GST</td>
+        <td><%= "$#{@gst}" %></td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td><%= @gross + @paid + @gst %></td>
+      </tr>
+    </table>
   </div>
 </div>
 <div class="row">
