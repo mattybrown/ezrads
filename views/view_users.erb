@@ -16,7 +16,9 @@
       <td><%= u.paper.name %></td>
       <td><%= u.phone %></td>
       <td><%= u.email %></td>
+      <% if env['warden'].user.role == 1 %>
       <td><a href="/edit/user/<%= u.id %>"><i class="fa fa-edit"></i></a></td>
+      <% end %>
     </tr>
 <% end %>
 </tbody>

@@ -57,7 +57,11 @@
               >Users</a></li>
             <% end %>
           <% end %>
-        <li><a href="/view/publications" class="dropdown-button" data-activates="publications-dropdown">Publications <i class="fa fa-angle-down"></i></a></li>
+        <% if env['warden'].user %>
+          <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
+            <li><a href="/view/publications" class="dropdown-button" data-activates="publications-dropdown">Publications <i class="fa fa-angle-down"></i></a></li>
+          <% end %>
+        <% end %>
         <li><a href="/search"><i class="fa fa-search"></i> Search</a></li>
         <% if i = env['warden'].user %>
         <li><a href="/me" class="dropdown-button" data-activates="me-dropdown"><i class="fa fa-user"></i> <%= "#{env['warden'].user.username.capitalize}" %> <span class="badge"><%= display_task_number %></span></a></li>

@@ -134,10 +134,14 @@ class EzrAds < Sinatra::Base
 
   get '/edit/user/:id' do
     env['warden'].authenticate!
-    @user = User.first(id: params['id'])
-    @title = "Edit User"
-    @papers = Paper.all
-
+    if env['warden'].user.role == 1
+      @user = User.first(id: params['id'])
+      @title = "Edit User"
+      @papers = Paper.all
+    else
+      flash[:error] = "You do not have permission to view this page"
+      redirect back
+    end
     erb :edit_user
   end
 
@@ -165,7 +169,7 @@ class EzrAds < Sinatra::Base
   end
 
   get '/view/customers' do
-    env['warden'].authenticate!/create/cust
+    env['warden'].authenticate!
     @customers = Customer.all
     @title = "View customers"
 
@@ -537,67 +541,76 @@ class EzrAds < Sinatra::Base
 
   get '/view/publications' do
     env['warden'].authenticate!
+    if env['warden'].user.role == 1 || env['warden'].user.role == 4
+      @title = "Viewing publications"
+      user_pub = env['warden'].user.paper_id
+      @publications = Publication.all(:paper_id => user_pub, :order => [:date.asc])
+      @ads_booked = {}
+      @ads_gross = {}
 
-    @title = "Viewing publications"
-    user_pub = env['warden'].user.paper_id
-    @publications = Publication.all(:paper_id => user_pub, :order => [:date.asc])
-    @ads_booked = {}
-    @ads_gross = {}
-
-    @publications.each do |p|
-      total = 0
-      @ads_booked[p.date] = p.ads.count
-      p.ads.each do |a|
-        total += a.price
+      @publications.each do |p|
+        total = 0
+        @ads_booked[p.date] = p.ads.count
+        p.ads.each do |a|
+          total += a.price
+        end
+        @ads_gross[p.date] = total
       end
-      @ads_gross[p.date] = total
-    end
 
-    erb :view_publications
+      erb :view_publications
+    else
+      flash[:error] = "You do not have permission to view this page"
+      redirect back
+    end
   end
 
   get '/view/publication/:id' do
     env['warden'].authenticate!
-    if @publication = Publication.get(params['id'])
-      @title = "Viewing publication #{@publication.name} - #{display_date(@publication.date)}"
-      @gross = 0
-      @paid = 0
-      @publication.ads.each do |a|
-        if a.payment == 1
-          @gross += a.price
-        else
-          @paid += a.price
-        end
-      end
-
-      @pub_data = {}
-      past_publications = Publication.all(:date.lt => @publication.date, :order => [:date.asc], :limit => 5)
-      past_publications.each do |p|
-        total = 0
-        p.ads.each do |a|
-          total += a.price
-        end
-        @pub_data.update(display_date(p.date) => total)
-      end
-      @pub_data.update(display_date(@publication.date) => @gross)
-
-      @gst = (@gross + @paid) * @publication.paper.gst / 100.0
-
-      u = User.all(:paper_id => @publication.paper_id)
-      @repdata = {}
-      u.each do |u|
-        total = 0
-        u.ads.each do |a|
-          if a.publication_id == @publication.id
-            total += a.price
+    if env['warden'].user.role == 1 || env['warden'].user.role == 4
+      if @publication = Publication.get(params['id'])
+        @title = "Viewing publication #{@publication.name} - #{display_date(@publication.date)}"
+        @gross = 0
+        @paid = 0
+        @publication.ads.each do |a|
+          if a.payment == 1
+            @gross += a.price
+          else
+            @paid += a.price
           end
         end
-        @repdata.update(u.username.capitalize => total)
-      end
 
-      erb :view_publication
+        @pub_data = {}
+        past_publications = Publication.all(:date.lt => @publication.date, :order => [:date.asc], :limit => 5)
+        past_publications.each do |p|
+          total = 0
+          p.ads.each do |a|
+            total += a.price
+          end
+          @pub_data.update(display_date(p.date) => total)
+        end
+        @pub_data.update(display_date(@publication.date) => (@gross + @paid))
+
+        @gst = (@gross + @paid) * @publication.paper.gst / 100.0
+
+        u = User.all(:paper_id => @publication.paper_id)
+        @repdata = {}
+        u.each do |u|
+          total = 0
+          u.ads.each do |a|
+            if a.publication_id == @publication.id
+              total += a.price
+            end
+          end
+          @repdata.update(u.username.capitalize => total)
+        end
+
+        erb :view_publication
+      else
+        flash[:error] = "Couldn't find that publication..."
+        redirect back
+      end
     else
-      flash[:error] = "Couldn't find that publication..."
+      flash[:error] = "You do not have permission to view this page"
       redirect back
     end
   end
@@ -670,10 +683,13 @@ class EzrAds < Sinatra::Base
   get '/settings' do
     if Paper.all.count < 1
       erb :setup
-    else
+    elsif env['warden'].user.role == 1
       env['warden'].authenticate!
       @paper = Paper.get(env['warden'].user.paper_id)
       erb :settings
+    else
+      flash[:error] = "You do not have permission to view this page"
+      redirect back
     end
   end
 

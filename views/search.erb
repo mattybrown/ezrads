@@ -1,3 +1,23 @@
+
+<% if @customer %>
+  <div class="row">
+    <h4>Search results:</h4>
+    <p><%= @results %></p>
+    <% @customer.each do |c| %>
+    <p><a href="/view/customer/<%= c.id %>"><%= c.business_name %></a></p>
+  <div>
+  <% end %>
+<% end %>
+<% if @ads %>
+  <div class="row">
+    <h4>Search results:</h4>
+    <p><%= @results %></p>
+    <% @ads.each do |a| %>
+    <p><a href="/view/ad/<%= a.id %>"><%= "#{a.customer['business_name']} #{a.height}x#{a.columns} #{a.publication['date']}" %></a></p>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="row">
   <form action="/search" method="get" class="col s12">
     <div class="row">
@@ -57,18 +77,3 @@
     </div>
   </form>
 </div>
-
-<% if @customer %>
-  <h4>Search results:</h4>
-  <p><%= @results %></p>
-  <% @customer.each do |c| %>
-  <p><a href="/view/customer/<%= c.id %>"><%= c.business_name %></a></p>
-  <% end %>
-<% end %>
-<% if @ads %>
-  <h4>Search results:</h4>
-  <p><%= @results %></p>
-  <% @ads.each do |a| %>
-  <p><a href="/view/ad/<%= a.id %>"><%= "#{a.customer['business_name']} #{a.height}x#{a.columns} #{a.publication['date']}" %></a></p>
-  <% end %>
-<% end %>
