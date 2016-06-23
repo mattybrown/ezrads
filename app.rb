@@ -76,7 +76,7 @@ class EzrAds < Sinatra::Base
     erb :view_ads
   end
 
-  post '/' do
+  get '/ads/publication/' do
     env['warden'].authenticate!
     today = Date.today
     user = env['warden'].user
@@ -165,7 +165,7 @@ class EzrAds < Sinatra::Base
   end
 
   get '/view/customers' do
-    env['warden'].authenticate!
+    env['warden'].authenticate!/create/cust
     @customers = Customer.all
     @title = "View customers"
 
@@ -234,10 +234,10 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/customer' do
-    if params['customer']['custom_rate'] = ""
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id)
+    if params['customer']['custom_rate'] == ""
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'])
     else
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id)
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'])
     end
     if customer.save
       flash[:success] = "Customer created"
@@ -396,7 +396,7 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.completed = true
     if ad.save
-      redirect '/'
+      redirect back
     else
       flash[:error] = "Something went wrong"
       redirect back
@@ -406,7 +406,7 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.completed = false
     if ad.save
-      redirect '/'
+      redirect back
     else
       flash[:error] = "Something went wrong"
       redirect back
@@ -416,7 +416,7 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.placed = true
     if ad.save
-      redirect '/'
+      redirect back
     else
       flash[:error] = "Something went wrong"
       redirect back
@@ -426,7 +426,7 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     ad.placed = false
     if ad.save
-      redirect '/'
+      redirect back
     else
       flash[:error] = "Something went wrong"
       redirect back

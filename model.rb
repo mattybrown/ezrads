@@ -31,12 +31,15 @@ class Customer
   property :id, Serial, :key => true
   property :created_at, DateTime
   property :contact_name, String
+  property :alt_contact_name, String
   property :business_name, String
   property :billing_address, String
   property :phone, String
+  property :alt_contact_phone, String
   property :mobile, String
   property :email, String
   property :custom_rate, Float, :default => 0
+  property :notes, Text
 
   has n, :ads
   belongs_to :paper

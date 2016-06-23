@@ -8,7 +8,13 @@
       <%= @customer.billing_address %><br />
       <%= @customer.phone %><br />
       <%= @customer.mobile %><br />
-      <%= @customer.email %>
+      <%= @customer.email %><br />
+      <%= "Alternate contact: #{@customer.alt_contact_name}" %><br />
+      <%= "Alternate contact phone: #{@customer.alt_contact_phone}" %>
+    </p>
+    <p>
+      <h5>Notes</h5>
+      <%= @customer.notes %>
     </p>
   </div>
   <div class="col s12 m4">
