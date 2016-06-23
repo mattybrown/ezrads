@@ -170,7 +170,7 @@ class EzrAds < Sinatra::Base
 
   get '/view/customers' do
     env['warden'].authenticate!
-    @customers = Customer.all
+    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @title = "View customers"
 
     erb :view_customers
@@ -256,10 +256,10 @@ class EzrAds < Sinatra::Base
 
   get '/create/ad' do
     env['warden'].authenticate!
-    @customers = Customer.all
+    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @title = "Create ad"
     today = Date.today
-    @features = Feature.all
+    @features = Feature.all(:paper_id => env['warden'].user.paper_id)
 
     user_pub = env['warden'].user[:publication]
     if user_pub != 1
@@ -580,7 +580,7 @@ class EzrAds < Sinatra::Base
         end
 
         @pub_data = {}
-        past_publications = Publication.all(:date.lt => @publication.date, :order => [:date.asc], :limit => 5)
+        past_publications = Publication.all(:date.lt => @publication.date, :order => [:date.asc], :limit => 5, :paper_id => env['warden'].user.paper_id)
         past_publications.each do |p|
           total = 0
           p.ads.each do |a|
@@ -592,7 +592,7 @@ class EzrAds < Sinatra::Base
 
         @gst = (@gross + @paid) * @publication.paper.gst / 100.0
 
-        u = User.all(:paper_id => @publication.paper_id)
+        u = User.all
         @repdata = {}
         u.each do |u|
           total = 0
@@ -712,6 +712,19 @@ class EzrAds < Sinatra::Base
   post '/edit/paper' do
     if p = Paper.update(name: params['paper']['name'], gst: params['paper']['gst'])
       flash[:success] = "Paper updated"
+      redirect '/'
+    else
+      p.errors.each do |p|
+        flash[:error] = "Something went wrong... #{p}"
+      end
+      redirect back
+    end
+  end
+
+  post '/create/paper' do
+    p = Paper.new(name: params['paper']['name'], gst: params['paper']['gst'])
+    if p.save
+      flash[:success] = "Paper created"
       redirect '/'
     else
       p.errors.each do |p|
