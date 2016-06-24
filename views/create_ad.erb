@@ -5,20 +5,21 @@
 
     <div class="row">
       <div class="input-field col s6">
+        <span class="label">Height</span>
         <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number">
-        <label for="height">Height</label>
       </div>
       <div class="input-field col s6">
+        <span class="label">Columns</span>
         <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number">
-        <label for="columns">Columns</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
+        <span class="label">Notes</span>
         <textarea name="ad[note]" id="note"></textarea>
-        <label for="note">Notes</label>
       </div>
       <div class="input-field col s6">
+        <span class="label">Customer</span>
         <select class="browser-default selectize" name="ad[customer]" class="validate" required>
           <option value="" disabled selected>Customer</option>
           <% @customers.each do |c| %>
@@ -29,6 +30,7 @@
     </div>
     <div class="row">
       <div class="input-field col s6">
+        <span class="label">Feature</span>
         <select class="browser-default selectize" name="ad[feature]" class="validate" required>
           <option value="" disabled selected>Feature</option>
           <% @features.each do |f| %>
@@ -37,20 +39,21 @@
         </select>
       </div>
       <div class="input-field col s6">
+        <span class="label">Position</span>
         <input type="text" name="ad[position]" id="position">
-        <label for="position">Position</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
+        <span class="label">Payment type</span>
         <select name="ad[payment]" required>
-          <option value="" disabled selected>Payment type</option>
           <option value="1">Account</option>
           <option value="2">Cash</option>
           <option value="3">Eftpos</option>
         </select>
       </div>
       <div class="input-field col s4 single-publication">
+        <span class="label">Publication</span>
         <select class="browser-default selectize" name="ad[single-publication]" class="validate">
           <option value="" disabled selected>Publication</option>
           <% @publications.each do |p| %>

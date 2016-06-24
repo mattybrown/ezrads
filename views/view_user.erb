@@ -1,0 +1,52 @@
+<div class="row">
+  <h3><%= @user.username.capitalize %></h3>
+</div>
+<div class="row">
+  <%= column_chart @data %>
+</div>
+
+<p>Monthly gross to date: $<%= @price %></p>
+<p>Ads booked this month: <%= @count %></p>
+<table class="ad_table tablesorter highlight">
+  <thead>
+    <tr>
+      <th>Created at</th>
+      <th>Business</th>
+      <th>Publication Date</th>
+      <th>Publication</th>
+      <th>Height x Columns</th>
+
+      <th>Feature</th>
+      <th>Position</th>
+      <% if @role != 3 %>
+        <th>Price</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+<% if @ads %>
+<% @ads.each do |a| %>
+    <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
+      <td><%= display_time(a.created_at) %></td>
+      <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
+      <td><a href="/view/publication/<%= a.publication.id %>"><%= display_date(a.publication[:date]) %></a></td>
+      <td><%= a.publication[:name] %></td>
+      <td><%= a.height %> x <%= a.columns %></td>
+      <td><%= a.feature[:name] %></td>
+      <td><%= a.position %></td>
+      <td>$<%= a.price %></td>
+      <td>
+        <a href="/view/ad/<%= a.id %>"><i class="fa fa-eye"></i></a></td>
+      </td>
+      <td>
+        <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil-square-o"></i></a>
+      </td>
+      <td>
+        <a href="/delete/ad/<%= a.id %>" style="color:red" class="delete-ad"><i class="fa fa-trash"></i></a>
+      </td>
+    </tr>
+
+<% end %>
+<% end %>
+</tbody>
+</table>

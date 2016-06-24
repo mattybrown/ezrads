@@ -110,7 +110,91 @@ class EzrAds < Sinatra::Base
     @roleArr = ['poo', 'Admin', 'Sales', 'Production', 'Accounts']
     @role = env['warden'].user[:role]
 
+    @this_month = {}
+    @last_month = {}
+
+    @users.each do |u|
+      this_month_total = 0
+      last_month_total = 0
+      u.ads.each do |a|
+        present = Date.today.mon
+        if present == 1
+          last_month = 12
+        else
+          last_month = present - 1
+        end
+
+        if a.publication.date.mon == present
+          this_month_total += a.price
+        end
+        @this_month.update(u.username.capitalize => this_month_total)
+
+        if a.publication.date.mon == last_month
+          last_month_total += a.price
+        end
+        @last_month.update(u.username.capitalize => last_month_total)
+      end
+    end
+
     erb :view_users
+  end
+
+  get '/view/user/:id' do
+    env['warden'].authenticate!
+    if env['warden'].user.role == 1 || env['warden'].user.role == 4
+
+      @user = User.get params['id']
+      @title = "Viewing #{@user.username}"
+
+      @ads = Ad.all(:user_id => @user.id, :order => (Ad.publication.date.desc))
+      @data = {}
+      this_month_total = 0
+      last_month_total = 0
+      next_month_total = 0
+      @ads.each do |a|
+        present = Date.today.mon
+        if present == 12
+          next_month == 1
+        else
+          next_month = present + 1
+        end
+
+        if present == 1
+          last_month = 12
+        else
+          last_month = present - 1
+        end
+
+        @data.update("Last month" => last_month_total)
+        if a.publication.date.mon == next_month
+          next_month_total += a.price
+        end
+        if a.publication.date.mon == present
+          this_month_total += a.price
+        end
+        @data.update("This month" => this_month_total)
+        if a.publication.date.mon == last_month
+          last_month_total += a.price
+        end
+        @data.update("Next month" => next_month_total)
+      end
+
+      price = 0
+      count = 0
+      @ads.each do |a|
+        if a.publication.date.mon == Date.today.mon
+          price += a.price
+          count += 1
+        end
+      end
+      @price = price
+      @count = count
+
+      erb :view_user
+    else
+      flash[:error] = "You do not have permission to view this page"
+      redirect back
+    end
   end
 
   get '/create/user' do
@@ -180,7 +264,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customer = Customer.get(params['id'])
     @title = "Editing #{@customer.business_name}"
-    @ads = Ad.all(:customer_id => params['id'], :order => (:created_at.desc))
+    @ads = Ad.all(:customer_id => params['id'], :order => (Ad.publication.date.desc))
     @role = env['warden'].user['role']
 
     @price = 0
@@ -272,7 +356,11 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/ad' do
-    ad_user = env['warden'].user[:id]
+    if params['ad']['user']
+      ad_user = params['ad']['user']
+    else
+      ad_user = env['warden'].user[:id]
+    end
     arr = []
     customer = Customer.get(params['ad']['customer'])
     if params['ad']['repeat_date']

@@ -36,3 +36,6 @@ table .completed td{
 .user{
   display:inline-block;
 }
+.label{
+  color:#757575;
+}

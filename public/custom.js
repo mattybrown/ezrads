@@ -28,12 +28,12 @@ $(document).ready(function(){
   $(".dropdown-button").dropdown({ hover: true, belowOrigin: true, constrain_width: false });
 
   $(".selectize").selectize({
-    create: false,
-    sortField: 'text'
+    create: false
   });
 
-  $(document).ready(function() {
   $('select').material_select();
-  });
 
+  $('.delete-ad').click(function(){
+    return confirm('Are you sure you want to delete this booking?');
+  });
 });
