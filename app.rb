@@ -146,7 +146,7 @@ class EzrAds < Sinatra::Base
       @user = User.get params['id']
       @title = "Viewing #{@user.username}"
 
-      @ads = Ad.all(:user_id => @user.id, :order => (Ad.publication.date.desc))
+      @ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
       @data = {}
       this_month_total = 0
       last_month_total = 0
@@ -264,7 +264,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customer = Customer.get(params['id'])
     @title = "Editing #{@customer.business_name}"
-    @ads = Ad.all(:customer_id => params['id'], :order => (Ad.publication.date.desc))
+    @ads = Ad.all(:customer_id => params['id'], :order => (:created_at.desc))
     @role = env['warden'].user['role']
 
     @price = 0
