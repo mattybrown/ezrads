@@ -24,6 +24,9 @@ table .completed td{
 .flash-error{
   background-color: #e57373;
 }
+.flash-notice{
+  background-color: #bbdefb;
+}
 .badge{
   background-color: #448aff;
   border-radius:2px;
@@ -38,4 +41,17 @@ table .completed td{
 }
 .label{
   color:#757575;
+}
+.total{
+  border-top:1px solid #9e9e9e;
+}
+.button-collapse{
+  margin-left:10px;
+}
+.side-nav a{
+  font-weight: bold;
+}
+.sublink a{
+  margin-left: 27px;
+  font-weight: normal;
 }

@@ -25,7 +25,7 @@
     <div class="card-panel blue darken-4">
       <div class="white-text"><%= "#{@pub.name} - #{display_date(@pub.date)}" %> </div>
       <% if env['warden'].user.role == 1 %>
-      <div class="white-text">Publication gross: $<%= @gross %> / Ads booked: <%= @count %></div>
+      <div class="white-text">Feature gross: $<%= @gross %> / Ads booked: <%= @count %></div>
       <% end %>
     </div>
   </div>
@@ -69,7 +69,7 @@
       <td><%= a.user[:username].capitalize %></td>
       <td><%= a.height %></td>
       <td><%= a.columns %></td>
-      <td><a href="/view/publication/feature/<%= a.feature.id %>"><%= a.feature[:name] %></a></td>
+      <td><%= a.feature[:name] %></td>
       <td><%= a.position %></td>
       <td><%= a.repeat_date != a.publication.date ? display_date(a.repeat_date) : "" %></td>
       <td><%= display_payment(a.payment) %></td>

@@ -72,8 +72,38 @@ class EzrAds < Sinatra::Base
       end
     end
 
-
     erb :view_ads
+  end
+
+  get '/view/publication/feature/:id' do
+    env['warden'].authenticate!
+    today = Date.today
+    user_publication = env['warden'].user.paper[:id]
+    @role = env['warden'].user[:role]
+
+    @title = "Home"
+
+    paper = Paper.all(:id => user_publication)
+    pub = paper.publications(:date.gt => today) & paper.publications(:order => [:date.desc])
+
+    if @publications = paper.publications.count >= 1
+      @publications = paper.publications(:order => [:date.asc])
+      @pub = pub.last
+      @ads = Ad.all(:publication_id => @pub.id, :feature_id => params['id'])
+    else
+      @pub = "No publications found - <a href='/create/publication'>Click here to create one</a>"
+    end
+
+    @gross = 0
+    @count = 0
+    if @ads.class != String
+      @ads.each do |a|
+        @gross += a.price
+        @count += 1
+      end
+    end
+
+    erb :view_publication_feature
   end
 
   get '/ads/publication/' do
@@ -522,8 +552,8 @@ class EzrAds < Sinatra::Base
 
   get '/me' do
     env['warden'].authenticate!
-    @title = "Tasks"
     @user = env['warden'].user
+    @title = "#{@user.username.capitalize}'s bookings"
     @tasks = Task.all(:user_id => @user.id, :completed => false)
     @ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
     @data = {}
@@ -633,6 +663,7 @@ class EzrAds < Sinatra::Base
 
       @publications.each do |p|
         total = 0
+        feature_total = 0
         @ads_booked[p.date] = p.ads.count
         p.ads.each do |a|
           total += a.price
@@ -815,6 +846,19 @@ class EzrAds < Sinatra::Base
       end
       redirect back
     end
+  end
+
+  get '/quote' do
+    env['warden'].authenticate!
+    @title = "Quote calculator"
+    @features = Feature.all(:paper_id => env['warden'].user.paper_id)
+    erb :quote
+  end
+  post '/quote' do
+    feature = Feature.get params['quote']['feature']
+    quote = params['quote']['height'].to_f * params['quote']['columns'].to_f * feature.rate
+    flash[:notice] = "$#{quote}"
+    redirect back
   end
 
 #Authentication
