@@ -4,21 +4,21 @@
   <form action="/create/ad" method="POST" class="col s12">
 
     <div class="row">
-      <div class="input-field col s6">
+      <div class="input-field col m6 s12">
         <span class="label">Height</span>
         <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number">
       </div>
-      <div class="input-field col s6">
+      <div class="input-field col m6 s12">
         <span class="label">Columns</span>
         <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number">
       </div>
     </div>
     <div class="row">
-      <div class="input-field col s6">
+      <div class="input-field col m6 s12">
         <span class="label">Notes</span>
         <textarea name="ad[note]" id="note"></textarea>
       </div>
-      <div class="input-field col s6">
+      <div class="input-field col m6 s12">
         <span class="label">Customer</span>
         <select class="browser-default selectize" name="ad[customer]" class="validate" required>
           <option value="" disabled selected>Customer</option>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="input-field col s6">
+      <div class="input-field col m6 s12">
         <span class="label">Feature</span>
         <select class="browser-default selectize" name="ad[feature]" class="validate" required>
           <option value="" disabled selected>Feature</option>
@@ -38,13 +38,13 @@
           <% end %>
         </select>
       </div>
-      <div class="input-field col s6">
+      <div class="input-field col m6 s12">
         <span class="label">Position</span>
         <input type="text" name="ad[position]" id="position">
       </div>
     </div>
     <div class="row">
-      <div class="input-field col s6">
+      <div class="input-field col m6 s12">
         <span class="label">Payment type</span>
         <select name="ad[payment]" required>
           <option value="1">Account</option>
@@ -52,7 +52,7 @@
           <option value="3">Eftpos</option>
         </select>
       </div>
-      <div class="input-field col s4 single-publication">
+      <div class="input-field col m4 s8 single-publication">
         <span class="label">Publication</span>
         <select class="browser-default selectize" name="ad[single-publication]" class="validate">
           <option value="" disabled selected>Publication</option>
@@ -61,7 +61,7 @@
           <% end %>
         </select>
       </div>
-      <div class="input-field col s2">
+      <div class="input-field col m2 s4">
         <input type="checkbox" name="ad[repeat]" id="repeat" value="repeat">
         <label for="repeat">Repeat</label>
       </div>
@@ -71,7 +71,7 @@
       <h4>Publication dates</h4>
       <% count = 0 %>
       <% @publications.each do |p| %>
-        <div class="input-field col s3">
+        <div class="input-field col m3 s6">
           <input type="checkbox" id="repeat<%= count %>" name="ad[publication][<%= p.id %>]">
           <label for="repeat<%= count %>"><%= "#{display_date(p.date)} - #{p.name}" %></label>
         </div>

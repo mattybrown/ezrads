@@ -106,7 +106,7 @@ class EzrAds < Sinatra::Base
   get '/view/users' do
     env['warden'].authenticate!
     @title = "Users"
-    @users = User.all
+    @users = User.all(:paper_id => env['warden'].user.paper_id)
     @roleArr = ['poo', 'Admin', 'Sales', 'Production', 'Accounts']
     @role = env['warden'].user[:role]
 
@@ -966,6 +966,24 @@ class EzrAds < Sinatra::Base
     erb :search
   end
 
+  get '/paper/:id' do
+    env['warden'].authenticate!
+    if env['warden'].user.role == 1
+      @user = User.get env['warden'].user.id
+      if @user.update(:paper_id => params['id'])
+        flash[:success] = "Changed papers"
+        redirect back
+      else
+        flash[:error] = "Something went wrong"
+        redirect back
+      end
+    else
+      flash[:error] = "You do not have permission to view this page"
+      redirect back
+    end
+
+  end
+
   helpers do
     def dbsearch(dbmodel, query)
       if c = dbmodel.first(:business_name => query)
@@ -1050,6 +1068,10 @@ class EzrAds < Sinatra::Base
 
     def display_price(h, w, r)
       return h * w * r
+    end
+
+    def display_papers
+      @papers = Paper.all
     end
   end
 
