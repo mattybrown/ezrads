@@ -1,0 +1,15 @@
+<% if @features %>
+  <div class="row">
+    <h4>Features</h4>
+    <ul class="collection">
+    <% @features.each do |f| %>
+      <li class="collection-item">
+        <%= "#{f.name}: $#{format_price(f.rate)} per column centimetre" %>
+        <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
+          <a href="/edit/feature/<%= f.id %>" class="secondary-content"><i class="fa fa-edit"></i></a>
+        <% end %>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>

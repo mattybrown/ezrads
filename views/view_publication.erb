@@ -8,19 +8,19 @@
     <table>
       <tr>
         <td>Gross</td>
-        <td class="right"><%= "$#{@gross}" %></td>
+        <td class="right"><%= "$#{format_price(@gross)}" %></td>
       </tr>
       <tr>
         <td>Paid</td>
-        <td class="right"><%= "$#{@paid}" %></td>
+        <td class="right"><%= "$#{format_price(@paid)}" %></td>
       </tr>
       <tr>
         <td>GST</td>
-        <td class="right"><%= "$#{@gst}" %></td>
+        <td class="right"><%= "$#{format_price(@gst)}" %></td>
       </tr>
       <tr class="total">
         <td>Total</td>
-        <td class="right">$<%= @gross + @paid + @gst %></td>
+        <td class="right">$<%= format_price(@gross + @paid + @gst) %></td>
       </tr>
     </table>
   </div>

@@ -325,7 +325,7 @@ class EzrAds < Sinatra::Base
 
   post '/edit/customer/:id' do
     customer = Customer.get params['id']
-    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'])
+    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'])
       flash[:success] = "Customer updated"
       redirect '/view/customers'
     else
@@ -776,16 +776,47 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
 
     @title = "Create feature"
-    @papers = Paper.all
+
 
     erb :create_feature
   end
 
   post '/create/feature' do
-    f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: params['feature']['paper'])
+    f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: env['warden'].user.paper_id)
     if f.save
       flash[:success] = "Feature created"
       redirect '/view/publications'
+    else
+      f.errors.each do |f|
+        flash[:error] = "Something went wrong... #{f}"
+      end
+      redirect back
+    end
+  end
+
+  get '/view/features' do
+    env['warden'].authenticate!
+
+    @title = "Viewing features"
+    @features = Feature.all(paper_id: env['warden'].user.paper_id)
+
+    erb :view_features
+  end
+
+  get '/edit/feature/:id' do
+    env['warden'].authenticate!
+
+    @feature = Feature.get params['id']
+    @title = "Editing feature #{@feature.name}"
+
+    erb :edit_feature
+  end
+
+  post '/edit/feature/:id' do
+    f = Feature.get params['id']
+    if f.update(name: params['feature']['name'], rate: params['feature']['rate'])
+      flash[:success] = "Feature updated"
+      redirect '/view/features'
     else
       f.errors.each do |f|
         flash[:error] = "Something went wrong... #{f}"
@@ -1024,23 +1055,8 @@ class EzrAds < Sinatra::Base
   end
 
   helpers do
-    def dbsearch(dbmodel, query)
-      if c = dbmodel.first(:business_name => query)
-        redirect "/view/customer/#{c.id}"
-      else
-        flash[:error] = "No record found..."
-        redirect back
-      end
-    end
-
-    def dblist()
-      arr = []
-      m = Customer.all
-      m.each do |n|
-        arr << n.business_name
-
-      end
-      return arr
+    def format_price(i)
+      return sprintf "%.2f", i
     end
 
     def display_role(i)

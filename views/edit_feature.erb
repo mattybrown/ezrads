@@ -1,0 +1,17 @@
+
+<div class="row">
+  <h4>Edit feature</h4>
+  <form action="/edit/feature/<%= @feature.id %>" method="post" class="col s12">
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" id="name" name="feature[name]" value="<%= @feature.name %>">
+        <label for="name">Feature Name</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="number" id="rate" name="feature[rate]" value="<%= @feature.rate %>" min="0" step="0.1">
+        <label for="rate">Charge rate (col x cm)</label>
+      </div>
+    </div>
+    <button type="submit" class="btn"><i class="fa fa-plus"></i> Update</button>
+  </form>
+</div>
