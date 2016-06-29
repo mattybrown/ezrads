@@ -66,7 +66,7 @@
       <td><%= a.height %> x <%= a.columns %></td>
       <td><%= a.feature[:name] %></td>
       <% if @role != 3 %>
-        <td>$<%= a.price %></td>
+        <td>$<%= format_price(a.price) %></td>
       <% end %>
       <td>
         <a href="/view/ad/<%= a.id %>"><i class="fa fa-eye"></i></a>

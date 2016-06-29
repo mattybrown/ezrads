@@ -74,7 +74,7 @@
       <td><%= a.repeat_date != a.publication.date ? display_date(a.repeat_date) : "" %></td>
       <td><%= display_payment(a.payment) %></td>
       <% if @role != 3 %>
-        <td>$<%= a.price %></td>
+        <td>$<%= format_price(a.price) %></td>
       <% end %>
 
       <td class="hide-print">
