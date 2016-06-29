@@ -101,6 +101,7 @@ class Feature
   property :id, Serial, :key => true
   property :name, String
   property :rate, Float
+  property :type, Integer
 
   belongs_to :paper
   has n, :ads

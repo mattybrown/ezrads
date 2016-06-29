@@ -294,7 +294,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customer = Customer.get(params['id'])
     @title = "Editing #{@customer.business_name}"
-    @ads = Ad.all(:customer_id => params['id'], :order => (:created_at.desc))
+    @ads = Ad.all(:customer_id => params['id'], :order => (Ad.publication.date.desc))
     @role = env['warden'].user['role']
 
     @price = 0
@@ -373,7 +373,7 @@ class EzrAds < Sinatra::Base
     @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @title = "Create ad"
     today = Date.today
-    @features = Feature.all(:paper_id => env['warden'].user.paper_id)
+    @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 1)
 
     @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
 
@@ -386,13 +386,8 @@ class EzrAds < Sinatra::Base
     else
       ad_user = env['warden'].user[:id]
     end
-    arr = []
     customer = Customer.get(params['ad']['customer'])
-    if params['ad']['repeat_date']
-      repeat_date = params['ad']['repeat_date']
-    else
-      repeat_date = nil
-    end
+
     if params['ad']['updated_by']
       updated_by = params['ad']['updated_by']
     else
@@ -495,18 +490,52 @@ class EzrAds < Sinatra::Base
     erb :view_ad
   end
 
-  post '/view/ads-by-date' do
+  get '/create/runon' do
     env['warden'].authenticate!
-    @role = env['warden'].user[:role]
-    user_publication = env['warden'].user[:publication]
-    if @role != 1
-      @ads = Ad.all(:publication_date => (params['ad']['viewdate']), :publication => user_publication)
+    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+    @title = "Create ad"
+    today = Date.today
+    @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 2)
+
+    @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
+
+    erb :create_runon
+  end
+
+  post '/create/runon' do
+    feature = Feature.get params['runon']['feature']
+    words = params['runon']['words'].to_i
+
+    if words > feature.rate
+      price = (words - feature.rate) * 0.5 + 10
     else
-      @ads = Ad.all(:publication_date => (params['ad']['viewdate']))
+      price = 10
     end
 
-    @title = "Viewing ads"
-    erb :view_ads_by_date
+    if params['runon']['repeat']
+      repeat_publication = Publication.get(params['ad']['publication'].first[0])
+      repeat_date = repeat_publication.date
+
+      params['runon']['publication'].each do |p|
+        runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p.id, price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'])
+        if runon.save
+          flash[:success] = "Run on created"
+        else
+          flash[:error] = "Something went wrong #{runon.errors.inspect}"
+          redirect back
+        end
+      end
+      redirect '/'
+    else
+      runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'])
+      if runon.save
+        flash[:success] = "Run on created"
+        redirect '/'
+      else
+        flash[:error] = "Something went wrong #{runon.errors.inspect}"
+        redirect back
+      end
+    end
   end
 
   get '/ad/completed/:id' do
@@ -718,6 +747,8 @@ class EzrAds < Sinatra::Base
           @repdata.update(u.username.capitalize => total)
         end
 
+        @features = @publication.ads.feature
+
         erb :view_publication
       else
         flash[:error] = "Couldn't find that publication..."
@@ -782,7 +813,7 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/feature' do
-    f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: env['warden'].user.paper_id)
+    f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: env['warden'].user.paper_id, type: params['feature']['type'])
     if f.save
       flash[:success] = "Feature created"
       redirect '/view/publications'
@@ -814,7 +845,7 @@ class EzrAds < Sinatra::Base
 
   post '/edit/feature/:id' do
     f = Feature.get params['id']
-    if f.update(name: params['feature']['name'], rate: params['feature']['rate'])
+    if f.update(name: params['feature']['name'], rate: params['feature']['rate'], type: params['feature']['type'])
       flash[:success] = "Feature updated"
       redirect '/view/features'
     else

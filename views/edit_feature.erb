@@ -9,7 +9,16 @@
       </div>
       <div class="input-field col s6">
         <input type="number" id="rate" name="feature[rate]" value="<%= @feature.rate %>" min="0" step="0.1">
-        <label for="rate">Charge rate (col x cm)</label>
+        <label for="rate">Charge rate (col x cm) or word limit if run on</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select name="feature[type]">
+          <option value="" disabled>Feature type</option>
+          <option value="1" <%= @feature.type == 1 ? "selected" : "" %>>ROP</option>
+          <option value="2" <%= @feature.type == 2 ? "selected" : "" %>>Run on</option>
+        </select>
       </div>
     </div>
     <button type="submit" class="btn"><i class="fa fa-plus"></i> Update</button>

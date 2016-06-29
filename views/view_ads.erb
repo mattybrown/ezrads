@@ -24,7 +24,7 @@
   <div class="col m12 s12">
     <div class="card-panel blue darken-4">
       <div class="white-text"><%= "#{@pub.name} - #{display_date(@pub.date)}" %> </div>
-      <% if env['warden'].user.role == 1 %>
+      <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
       <div class="white-text">Publication gross: $<%= @gross %> / Ads booked: <%= @count %></div>
       <% end %>
     </div>
@@ -74,7 +74,7 @@
       <td><%= a.repeat_date != a.publication.date ? display_date(a.repeat_date) : "" %></td>
       <td><%= display_payment(a.payment) %></td>
       <% if @role != 3 %>
-        <td>$<%= a.price %></td>
+        <td>$<%= format_price(a.price) %></td>
       <% end %>
 
       <td class="hide-print">

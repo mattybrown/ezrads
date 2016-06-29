@@ -1,0 +1,73 @@
+
+<div class="row">
+  <h3>Create new run on</h3>
+  <form action="/create/runon" method="POST" class="col s12">
+
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <span class="label">Word count</span>
+        <input type="number" id="words" name="runon[words]" class="validate" data-error="Please enter a number">
+      </div>
+      <div class="input-field col m6 s12">
+        <span class="label">Notes</span>
+        <textarea name="runon[note]" id="note"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <span class="label">Customer</span>
+        <select class="browser-default selectize" name="runon[customer]" class="validate" required>
+          <option value="" disabled selected>Customer</option>
+          <% @customers.each do |c| %>
+            <option value="<%= c.id %>"><%= c.business_name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col m6 s12">
+        <span class="label">Payment type</span>
+        <select name="runon[payment]" required>
+          <option value="1">Account</option>
+          <option value="2">Cash</option>
+          <option value="3">Eftpos</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <span class="label">Feature</span>
+        <select class="browser-default selectize" name="runon[feature]" class="validate" required>
+          <option value="" disabled selected>Feature</option>
+          <% @features.each do |f| %>
+            <option value="<%= f.id %>"><%= f.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col m4 s8 single-publication">
+        <span class="label">Publication</span>
+        <select class="browser-default selectize" name="runon[single-publication]" class="validate">
+          <option value="" disabled selected>Publication</option>
+          <% @publications.each do |p| %>
+            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col m2 s4">
+        <input type="checkbox" name="runon[repeat]" id="repeat" value="repeat">
+        <label for="repeat">Repeat</label>
+      </div>
+    </div>
+
+    <div class="row" id="repeat-dates" style="display:none;">
+      <h4>Publication dates</h4>
+      <% count = 0 %>
+      <% @publications.each do |p| %>
+        <div class="input-field col m3 s6">
+          <input type="checkbox" id="repeat<%= count %>" name="runon[publication][<%= p.id %>]">
+          <label for="repeat<%= count %>"><%= "#{display_date(p.date)} - #{p.name}" %></label>
+        </div>
+        <% count += 1 %>
+      <% end %>
+    </div>
+    <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
+  </form>
+</div>
