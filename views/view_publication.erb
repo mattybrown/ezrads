@@ -24,7 +24,11 @@
       </tr>
       <tr class="total">
         <td>Total</td>
-        <td class="right">$<%= format_price(@gross + @paid + @gst) %></td>
+        <td class="right">$<%= format_price(@gross + @paid) %></td>
+      </tr>
+      <tr>
+        <td>Total excl. GST</td>
+        <td class="right"><%= "$#{format_price((@gross + @paid) - @gst)}" %></td>
       </tr>
     </table>
   </div>
