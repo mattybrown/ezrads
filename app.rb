@@ -9,7 +9,7 @@ require './model'
 class EzrAds < Sinatra::Base
   enable :sessions
   register Sinatra::Flash
-  set :session_secret, "change-me-to-environment-variable"
+  set :session_secret, ENV['SESSION_SECRET']
 
   use Warden::Manager do |config|
     config.serialize_into_session{ |user| user.id }
