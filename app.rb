@@ -285,7 +285,7 @@ class EzrAds < Sinatra::Base
   get '/view/customers' do
     env['warden'].authenticate!
     @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
-    @title = "View customers"
+    @title = "Customers"
 
     erb :view_customers
   end
@@ -293,7 +293,7 @@ class EzrAds < Sinatra::Base
   get '/view/customer/:id' do
     env['warden'].authenticate!
     @customer = Customer.get(params['id'])
-    @title = "Editing #{@customer.business_name}"
+    @title = "#{@customer.business_name}"
     @ads = Ad.all(:customer_id => params['id'], :order => (Ad.publication.date.desc))
     @role = env['warden'].user['role']
 
@@ -437,7 +437,8 @@ class EzrAds < Sinatra::Base
     @ad = Ad.get params['id']
     @customers = Customer.all
     @features = Feature.all
-    @publications = Publication.all(:order => [:date.asc])
+    @publications = Publication.all(:order => [:date.asc], :paper_id => env['warden'].user.paper_id)
+    @users = User.all(:paper_id => env['warden'].user.paper_id)
 
     erb :edit_ad
 
@@ -684,7 +685,7 @@ class EzrAds < Sinatra::Base
   get '/view/publications' do
     env['warden'].authenticate!
     if env['warden'].user.role == 1 || env['warden'].user.role == 4
-      @title = "Viewing publications"
+      @title = "Publications"
       user_pub = env['warden'].user.paper_id
       @publications = Publication.all(:paper_id => user_pub, :order => [:date.asc])
       @ads_booked = {}
@@ -828,7 +829,7 @@ class EzrAds < Sinatra::Base
   get '/view/features' do
     env['warden'].authenticate!
 
-    @title = "Viewing features"
+    @title = "Features"
     @features = Feature.all(paper_id: env['warden'].user.paper_id)
 
     erb :view_features

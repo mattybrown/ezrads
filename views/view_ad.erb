@@ -43,7 +43,7 @@
         <a href="/edit/ad/<%= @ad.id %>"><i class="fa fa-pencil-square-o"></i></a>
       </td>
       <td>
-          <a href="/delete/ad/<%= a.id %>" class="delete-ad" style="color:red"><i class="fa fa-trash"></i></a>
+          <a href="/delete/ad/<%= @ad.id %>" class="delete-ad" style="color:red"><i class="fa fa-trash"></i></a>
       </td>
     </tr>
     <div id="note<%= @ad.id %>" class="modal">
@@ -69,15 +69,8 @@
   <input type="hidden" name="ad[position]" value="<%= @ad.position %>">
   <input type="hidden" name="ad[repeat_date]" value="<%= @ad.publication.date %>">
   <input type="hidden" name="ad[updated_by]" value="<%= env['warden'].user.id %>">
-  <input type="hidden" name="ad[payment]" value="<%= @ad.payment %>">
+  <input type="hidden" name="ad[payment]" value="<%= @ad.payment.to_i %>">
   <div class="row">
-    <div class="input-field col s4">
-      <select name="ad[user]">
-        <% @users.each do |u| %>
-          <option value="<%= u.id %>"><%= u.username.capitalize %></option>
-        <% end %>
-      </select>
-    </div>
     <div class="input-field col s4 single-publication">
       <select class="browser-default selectize" name="ad[single-publication]" class="validate">
         <option value="" disabled selected>Publication</option>
@@ -85,6 +78,17 @@
           <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
         <% end %>
       </select>
+    </div>
+    <div class="input-field col s4">
+      <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
+        <select name="ad[user]">
+          <% @users.each do |u| %>
+            <option value="<%= u.id %>"><%= u.username.capitalize %></option>
+          <% end %>
+        </select>
+      <% else %>
+        <input type="hidden" name="ad[user]" value="<%= env['warden'].user.id %>">
+      <% end %>
     </div>
   </div>
   <button class="btn waves-effect waves-light" type="submit">Repeat</button>

@@ -52,6 +52,6 @@ table .completed td{
   font-weight: bold;
 }
 .sublink a{
-  margin-left: 27px;
+  padding-left: 50px;
   font-weight: normal;
 }
