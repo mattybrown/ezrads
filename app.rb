@@ -857,6 +857,26 @@ class EzrAds < Sinatra::Base
     end
   end
 
+  get '/delete/feature/:id' do
+    env['warden'].authenticate!
+
+    if env['warden'].user['role'] != 1
+      flash[:error] = "Sorry, you don't have permission to do that"
+      redirect '/'
+    else
+      f = Feature.get params['id']
+      if f.destroy!
+        flash[:success] = "Feature deleted"
+        redirect back
+      else
+        f.errors.each do |f|
+          flash[:error] = "Something went wrong... #{f}"
+        end
+        redirect back
+      end
+    end
+  end
+
   get '/settings' do
     if Paper.all.count < 1
       erb :setup
