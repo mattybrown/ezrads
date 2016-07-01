@@ -449,7 +449,7 @@ class EzrAds < Sinatra::Base
     user = ad.user[:id]
     feature = Feature.get params['ad']['feature']
     customer = ad.customer
-    if params['ad']['price'] != "" && env['warden'].user['role'] == 1
+    if params['ad']['price'] != ""
       price = params['ad']['price']
     elsif customer.custom_rate != nil && customer.custom_rate > 0
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
