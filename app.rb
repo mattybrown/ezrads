@@ -638,6 +638,13 @@ class EzrAds < Sinatra::Base
 
     erb :view_task
   end
+  get '/view/tasks/complete' do
+    env['warden'].authenticate!
+    @tasks = Task.all(:user_id => env['warden'].user.id, :order => [:created_at.desc], :completed => true)
+    @title = "Completed tasks"
+
+    erb :view_tasks
+  end
   get '/task/completed/:id' do
     t = Task.get params['id']
     t.completed = true
@@ -669,15 +676,24 @@ class EzrAds < Sinatra::Base
     erb :create_task
   end
 
+  get '/create/task/:id' do
+    env['warden'].authenticate!
+    @title = "Create task"
+    @users = User.all
+    @task_ad = "/view/ad/#{params['id']}"
+
+    erb :create_task
+  end
+
   post '/create/task' do
-    uid = env['warden'].user[:id]
+    uid = env['warden'].user.id
     t = Task.new(title: params['task']['title'], created_by: uid, created_at: Time.now, deadline: params['task']['deadline'], user_id: params['task']['user_id'], priority: params['task']['priority'], body: params['task']['body'], completed: false)
 
     if t.save
       flash[:success] = "Task successfully created..."
       redirect back
     else
-      flash[:error] = "Something went wrong.."
+      flash[:error] = "Something went wrong.. #{t.errors.inspect}"
       redirect back
     end
   end

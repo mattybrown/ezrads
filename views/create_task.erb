@@ -32,8 +32,13 @@
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <textarea name="task[body]" id="body"></textarea>
-        <label for="body">Body</label>
+        <% if @task_ad %>
+          <textarea name="task[body]" id="body" style="height:120px;"><%= "<a href='#{@task_ad}'>View ad</a><br />" %></textarea>
+          <label for="body">Body</label>
+        <% else %>
+          <textarea name="task[body]" id="body" style="height:120px;"></textarea>
+          <label for="body">Body</label>
+        <% end %>
       </div>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
