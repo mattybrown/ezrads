@@ -31,10 +31,10 @@
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Feature</span>
-        <select class="browser-default selectize" name="ad[feature]" class="validate" required>
+        <select class="browser-default selectize" name="ad[feature]" class="validate" id="feature" required>
           <option value="" disabled selected>Feature</option>
           <% @features.each do |f| %>
-            <option value="<%= f.id %>"><%= f.name %></option>
+            <option value="<%= f.id %>" rate="<%= f.rate %>"><%= f.name %></option>
           <% end %>
         </select>
       </div>
@@ -52,6 +52,12 @@
           <option value="3">Eftpos</option>
         </select>
       </div>
+      <div class="input-field col s6">
+        <span class="label">Price</span>
+        <input type="number" name="ad[price]" id="price" validate data-error="Please enter a number" min="0" step="0.01">
+      </div>
+    </div>
+    <div class="row">
       <div class="input-field col m4 s8 single-publication">
         <span class="label">Publication</span>
         <select class="browser-default selectize" name="ad[single-publication]" class="validate">

@@ -20,6 +20,9 @@
   <div class="col s12 m4">
     <p>Monthly spend: <%= @price %></p>
     <p>Ads booked this month: <%= @count %></p>
+    <% if @customer.custom_rate != 0 %>
+    <p>Custom rate: <%= @customer.custom_rate %></p>
+    <% end %>
   </div>
 </div>
 <div class="row">
