@@ -36,4 +36,10 @@ $(document).ready(function(){
   $('.delete-ad').click(function(){
     return confirm('Are you sure you want to delete this booking?');
   });
+  $('#runonBody').keyup(function(){
+    var word_count = $( this ).val().split(" ").length;
+    $('#words').val(word_count);
+  }).keyup;
+
+
 });

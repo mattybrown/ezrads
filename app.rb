@@ -547,11 +547,11 @@ class EzrAds < Sinatra::Base
     end
 
     if params['runon']['repeat']
-      repeat_publication = Publication.get(params['ad']['publication'].first[0])
+      repeat_publication = Publication.get(params['runon']['publication'].first[0])
       repeat_date = repeat_publication.date
 
       params['runon']['publication'].each do |p|
-        runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p.id, price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'])
+        runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'])
         if runon.save
           flash[:success] = "Run on created"
         else
