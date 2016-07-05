@@ -311,14 +311,14 @@ class EzrAds < Sinatra::Base
 
   get '/create/customer' do
     env['warden'].authenticate!
-
+    @title = "Create customer"
     erb :create_customer
   end
 
   get '/edit/customer/:id' do
     env['warden'].authenticate!
     @customer = Customer.get params['id']
-    @title = "Edit Customer"
+    @title = "Edit customer"
 
     erb :edit_customer
   end
@@ -400,7 +400,7 @@ class EzrAds < Sinatra::Base
       if customer.custom_rate > 0
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f > (price - percent)
+        if params['ad']['price'].to_f >= (price - percent)
           price = params['ad']['price'].to_f
         elsif params['ad']['price'] == ""
         else
@@ -410,7 +410,7 @@ class EzrAds < Sinatra::Base
       else
         price = params['ad']['height'] * params['ad']['columns'].to_f * feature.rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f > (price - percent)
+        if params['ad']['price'].to_f >= (price - percent)
           price = params['ad']['price'].to_f
         elsif params['ad']['price'] == ""
 
@@ -435,7 +435,7 @@ class EzrAds < Sinatra::Base
       if customer.custom_rate != nil && customer.custom_rate > 0
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f > (price - percent)
+        if params['ad']['price'].to_f >= (price - percent)
           price = params['ad']['price'].to_f
         elsif params['ad']['price'] == ""
         else
@@ -445,7 +445,7 @@ class EzrAds < Sinatra::Base
       else
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f > (price - percent)
+        if params['ad']['price'].to_f >= (price - percent)
           price = params['ad']['price'].to_f
         elsif params['ad']['price'] == ""
         else
