@@ -27,7 +27,7 @@
       <td><%= a.contact_name %></td>
       <td><%= a.phone %></td>
       <td><%= a.mobile %></td>
-      <td><%= a.email %></td>
+      <td><a href="mailto:<%= a.email %>"><%= a.email %></a></td>
       <td><%= a.ads.count %></td>
       <td><%= a.custom_rate > 0 ? true : false %></td>
       <td><a href="/edit/customer/<%= a.id %>"><i class="fa fa-edit"></i></a></td>

@@ -479,7 +479,12 @@ class EzrAds < Sinatra::Base
 
   post '/edit/ad/:id' do
     ad = Ad.get params['id']
-    user = ad.user[:id]
+    updater = env['warden'].user.id
+    if params['ad']['user'] != ""
+      user = params['ad']['user']
+    else
+      user = ad.user[:id]
+    end
     feature = Feature.get params['ad']['feature']
     customer = ad.customer
     if params['ad']['price'] != ""
@@ -490,7 +495,7 @@ class EzrAds < Sinatra::Base
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
     end
 
-    if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: user, payment: params['ad']['payment'])
+    if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user)
       flash[:success] = "Ad updated"
       redirect '/'
     else
