@@ -386,6 +386,10 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/customer' do
+    if Customer.all(business_name: params['customer']['business_name'])
+      flash[:error] = "There is an existing record with this business name"
+      redirect back
+    end
     if params['customer']['custom_rate'] == ""
       customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'])
     else
