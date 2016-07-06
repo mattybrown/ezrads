@@ -386,7 +386,7 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/customer' do
-    if Customer.all(business_name: params['customer']['business_name'])
+    if Customer.all(business_name: params['customer']['business_name']).length > 0
       flash[:error] = "There is an existing record with this business name"
       redirect back
     end
