@@ -277,7 +277,7 @@ class EzrAds < Sinatra::Base
       flash[:success] = "User deleted"
       redirect back
     else
-      flash[:error] = "Deletion failed"
+      flash[:error] = "Deletion failed #{user.errors.inspect}"
       redirect back
     end
   end
@@ -321,6 +321,40 @@ class EzrAds < Sinatra::Base
     @title = "Edit customer"
 
     erb :edit_customer
+  end
+
+  get '/changepassword/:id' do
+    env['warden'].authenticate!
+    if env['warden'].user.role == 1
+      @user = User.first(id: params['id'])
+      @title = "Change password"
+    else
+      flash[:error] = "You do not have permission to view this page"
+      redirect back
+    end
+    erb :changepassword
+  end
+
+  post '/changepassword/:id' do
+    env['warden'].authenticate!
+    if env['warden'].user.role == 1
+      u = User.first(id: params['id'])
+      if params['user']['password'] == params['user']['repeat-password']
+        if u.update(:password => params['user']['password'])
+          flash[:success] = "Password updated"
+          redirect '/view/users'
+        else
+          flash[:error] = "Something went wrong... #{u.errors.inspect}"
+          redirect back
+        end
+      else
+        flash[:error] = "Your passwords didn't match... #{u.errors.inspect}"
+        redirect back
+      end
+    else
+      flash[:error] = "You do not have permission to view this page"
+      redirect back
+    end
   end
 
   post '/edit/customer/:id' do

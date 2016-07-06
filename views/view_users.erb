@@ -34,6 +34,7 @@
       <td><%= u.email %></td>
       <% if env['warden'].user.role == 1 %>
       <td><a href="/edit/user/<%= u.id %>"><i class="fa fa-edit"></i></a></td>
+      <td><a href="/delete/user/<%= u.id %>" style="color:red"><i class="fa fa-trash"></i></a></td>
       <% end %>
     </tr>
 <% end %>

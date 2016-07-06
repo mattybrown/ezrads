@@ -7,10 +7,6 @@
         <input type="text" id="username" name="user[username]" value="<%= @user.username %>">
         <label for="username">Username</label>
       </div>
-      <div class="input-field col s6">
-        <input type="password" id="password" name="user[password]" value="yourasneakybastard" disabled>
-        <label for="password">Password</label>
-      </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
@@ -46,5 +42,7 @@
       </div>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>
+    <a href="/changepassword/<%= @user.id %>" class="btn right">Change password</a>
   </form>
+
 </div>
