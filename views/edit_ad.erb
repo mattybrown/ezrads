@@ -31,9 +31,9 @@
       </div>
     </div>
     <div class="row">
-      <div class="input-field col s6">
-        <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
-        <label for="note">Notes</label>
+      <div class="input-field col m6 s12">
+        <span class="label">Position</span>
+        <input type="text" name="ad[position]" value="<%= @ad.position %>" id="position">
       </div>
       <div class="input-field col s6">
         <select class="browser-default selectize" name="ad[customer]">
@@ -67,6 +67,10 @@
               <option value="<%= u.id %>" <% if u.id == @ad.user_id %>selected<% end %>><%= u.username.capitalize %></option>
             <% end %>
           </select>
+        </div>
+        <div class="input-field col s6">
+          <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
+          <label for="note">Notes</label>
         </div>
       </div>
     <% end %>
