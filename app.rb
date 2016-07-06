@@ -284,7 +284,7 @@ class EzrAds < Sinatra::Base
 
   get '/view/customers' do
     env['warden'].authenticate!
-    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+    @customers = Customer.all(:paper_id => env['warden'].user.paper_id, :order => (:business_name.asc))
     @title = "Customers"
 
     erb :view_customers
