@@ -325,7 +325,7 @@ class EzrAds < Sinatra::Base
 
   get '/changepassword/:id' do
     env['warden'].authenticate!
-    if env['warden'].user.role == 1
+    if env['warden'].user.id == params['id'].to_i || env['warden'].user.role == 1
       @user = User.first(id: params['id'])
       @title = "Change password"
     else
@@ -337,7 +337,7 @@ class EzrAds < Sinatra::Base
 
   post '/changepassword/:id' do
     env['warden'].authenticate!
-    if env['warden'].user.role == 1
+    if env['warden'].user.id == params['id'].to_i || env['warden'].user.role  == 1
       u = User.first(id: params['id'])
       if params['user']['password'] == params['user']['repeat-password']
         if u.update(:password => params['user']['password'])

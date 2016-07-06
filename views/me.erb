@@ -20,10 +20,11 @@
 <div class="row">
   <%= column_chart @data %>
 </div>
-
+<a href="/changepassword/<%= @user.id %>" class="btn right">Change password</a>
 <p>Monthly gross to date: $<%= @price %></p>
 <p>Ads booked this month: <%= @count %></p>
 <p><a href="/view/tasks/complete">View completed tasks</a></p>
+
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
