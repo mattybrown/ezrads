@@ -5,7 +5,7 @@
 
     font-size: .8em;
   }
-  nav, .flash, .view-pub, .fixed-action-btn, .right, .hide-print{
+  nav, .flash, .view-pub, .fixed-action-btn, .right, .hide-print, .print-gross{
     display:none;
   }
   .info, .card-panel{

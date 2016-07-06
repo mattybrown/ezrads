@@ -24,8 +24,8 @@
   <div class="col m12 s12">
     <div class="card-panel blue darken-4">
       <div class="white-text"><%= "#{@pub.name} - #{display_date(@pub.date)}" %> </div>
-      <% if env['warden'].user.role == 1 %>
-      <div class="white-text">Feature gross: $<%= @gross %> / Ads booked: <%= @count %></div>
+      <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
+      <div class="white-text print-gross">Feature: $<%= @gross %> / Ads booked: <%= @count %></div>
       <% end %>
     </div>
   </div>
