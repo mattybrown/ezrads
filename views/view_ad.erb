@@ -76,6 +76,7 @@
   <input type="hidden" name="ad[repeat_date]" value="<%= @ad.publication.date %>">
   <input type="hidden" name="ad[updated_by]" value="<%= env['warden'].user.id %>">
   <input type="hidden" name="ad[payment]" value="<%= @ad.payment.to_i %>">
+  <input type="hidden" name="ad[price]" value="<%= @ad.price.to_f %>">
   <div class="row">
     <div class="input-field col s4 single-publication">
       <select class="browser-default selectize" name="ad[single-publication]" class="validate">

@@ -438,20 +438,21 @@ class EzrAds < Sinatra::Base
       if customer.custom_rate > 0
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f >= (price - percent)
+        if env['warden'].user.role == 1 || env['warden'].user.role == 4
           price = params['ad']['price'].to_f
-        elsif params['ad']['price'] == ""
+        elsif params['ad']['price'].to_f >= (price - percent)
+          price = params['ad']['price'].to_f
         else
           flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
           redirect back
         end
       else
-        price = params['ad']['height'] * params['ad']['columns'].to_f * feature.rate
+        price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f >= (price - percent)
+        if env['warden'].user.role == 1 || env['warden'].user.role == 4
           price = params['ad']['price'].to_f
-        elsif params['ad']['price'] == ""
-
+        elsif params['ad']['price'].to_f >= (price - percent)
+          price = params['ad']['price'].to_f
         else
           flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
           redirect back
@@ -473,9 +474,10 @@ class EzrAds < Sinatra::Base
       if customer.custom_rate != nil && customer.custom_rate > 0
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f >= (price - percent)
+        if env['warden'].user.role == 1 || env['warden'].user.role == 4
           price = params['ad']['price'].to_f
-        elsif params['ad']['price'] == ""
+        elsif params['ad']['price'].to_f >= (price - percent)
+          price = params['ad']['price'].to_f
         else
           flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
           redirect back
@@ -483,9 +485,10 @@ class EzrAds < Sinatra::Base
       else
         price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
         percent = price / 100 * 20
-        if params['ad']['price'].to_f >= (price - percent)
+        if env['warden'].user.role == 1 || env['warden'].user.role == 4
           price = params['ad']['price'].to_f
-        elsif params['ad']['price'] == ""
+        elsif params['ad']['price'].to_f >= (price - percent)
+          price = params['ad']['price'].to_f
         else
           flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
           redirect back
