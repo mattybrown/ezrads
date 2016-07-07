@@ -63,6 +63,8 @@ class EzrAds < Sinatra::Base
       @pub = "No publications found - <a href='/create/publication'>Click here to create one</a>"
     end
 
+    @features = @ads.features
+
     @gross = 0
     @count = 0
     if @ads.class != String

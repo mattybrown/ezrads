@@ -41,6 +41,23 @@
     <li><a href="/view/publication/<%= @pub.id %>" class="btn-floating blue"><i class="fa fa-pie-chart"></i></a></li>
   </ul>
 </div>
+<div class="row feature-selection">
+  <form class="col s12 m12">
+    <% @features.each do |f| %>
+    <div class="col s4 m2">
+      <input type="checkbox" id="hide-feature-<%= f.id %>" checked>
+      <label for="hide-feature-<%= f.id %>"><%= f.name %></label>
+    </div>
+    <script>
+      $(document).ready(function(){
+        $('#hide-feature-<%= f.id %>').click(function(){
+          $('.feature-<%= f.id %>').toggle();
+        });
+      });
+    </script>
+    <% end %>
+  </form>
+</div>
 
 <table class="ad_table tablesorter highlight">
   <thead>
@@ -64,7 +81,7 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-    <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %>">
+    <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %> feature-<%= a.feature.id %>">
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
       <td><%= a.user[:username].capitalize %></td>
       <td><%= a.height %></td>
