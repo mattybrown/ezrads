@@ -414,9 +414,11 @@ class EzrAds < Sinatra::Base
     @title = "Create ad"
     today = Date.today
     @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 1)
-
-    @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
-
+    if env['warden'].user.role == 1 || env['warden'].user.role == 4
+      @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
+    else
+      @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
+    end
     erb :create_ad
   end
 
