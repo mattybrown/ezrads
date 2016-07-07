@@ -424,43 +424,52 @@ class EzrAds < Sinatra::Base
     else
       ad_user = env['warden'].user[:id]
     end
-    customer = Customer.get(params['ad']['customer'])
 
     if params['ad']['updated_by']
       updated_by = params['ad']['updated_by']
     else
       updated_by = nil
     end
-    
+
+    customer = Customer.get(params['ad']['customer'])
     feature = Feature.get(params['ad']['feature'])
     if customer.custom_rate > 0
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
+      if params['ad']['price'] != ""
+        user_price = params['ad']['price'].to_f
+      end
       percent = price / 100 * 20
-      if env['warden'].user.role == 1 || env['warden'].user.role == 4
-        price = params['ad']['price'].to_f
-      elsif params['ad']['price'].to_f >= (price - percent)
-        price = params['ad']['price'].to_f
-      else
-        flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
-        redirect back
+      if user_price
+        if user_price && user_price >= (price - percent)
+          price = user_price
+        else
+          flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
+          redirect back
+        end
       end
     else
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+      if params['ad']['price'] != ""
+        user_price = params['ad']['price'].to_f
+      end
       percent = price / 100 * 20
-      if env['warden'].user.role == 1 || env['warden'].user.role == 4
-        price = params['ad']['price'].to_f
-      elsif params['ad']['price'].to_f >= (price - percent)
-        price = params['ad']['price'].to_f
-      else
-        flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
-        redirect back
+      if user_price
+        if user_price >= (price - percent)
+          price = user_price
+        else
+          flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
+          redirect back
+        end
       end
     end
 
     if params['ad']['repeat']
       repeat_publication = Publication.get(params['ad']['publication'].first[0])
-      repeat_date = repeat_publication.date
-
+      if params['ad']['repeat_date']
+        repeat_date = params['ad']['repeat_date']
+      else
+        repeat_date = repeat_publication.date
+      end
       params['ad']['publication'].each do |a|
         ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'])
         if ad.save
@@ -474,7 +483,11 @@ class EzrAds < Sinatra::Base
       redirect '/'
     else
       feature = Feature.get(params['ad']['feature'])
-
+      if params['ad']['repeat_date']
+        repeat_date = params['ad']['repeat_date']
+      else
+        repeat_date = nil
+      end
       ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'])
       if ad.save
         flash[:success] = "Ad booked"
