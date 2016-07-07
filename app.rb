@@ -449,6 +449,8 @@ class EzrAds < Sinatra::Base
           redirect back
         end
       end
+    elsif params['ad']['repeat_ad'] == "true"
+      price = params['ad']['price']
     else
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
       if params['ad']['price'] != ""
