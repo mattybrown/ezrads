@@ -86,6 +86,23 @@
         <% end %>
       </select>
     </div>
+    <div class="input-field col m2 s4">
+      <input type="checkbox" name="ad[repeat]" id="repeat" value="repeat">
+      <label for="repeat">Repeat</label>
+    </div>
+  </div>
+  <div class="row" id="repeat-dates" style="display:none;">
+    <h4>Publication dates</h4>
+    <% count = 0 %>
+    <% @publications.each do |p| %>
+      <div class="input-field col m3 s6">
+        <input type="checkbox" id="repeat<%= count %>" name="ad[publication][<%= p.id %>]">
+        <label for="repeat<%= count %>"><%= "#{display_date(p.date)} - #{p.name}" %></label>
+      </div>
+      <% count += 1 %>
+    <% end %>
+  </div>
+  <div class="row">
     <div class="input-field col s4">
       <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
         <select name="ad[user]">
@@ -98,5 +115,7 @@
       <% end %>
     </div>
   </div>
-  <button class="btn waves-effect waves-light" type="submit">Repeat</button>
+  <div class="row">
+    <button class="btn waves-effect waves-light" type="submit">Repeat</button>
+  </div>
 </form>
