@@ -122,7 +122,7 @@ class EzrAds < Sinatra::Base
 
     @publications = paper.publications(:order => [:date.asc])
     @ads = pub.ads
-
+    @features = @ads.features
     @gross = 0
     @count = 0
     @ads.each do |a|
