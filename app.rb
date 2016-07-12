@@ -844,6 +844,17 @@ class EzrAds < Sinatra::Base
         end
 
         @features = @publication.ads.feature
+        f = Feature.all
+        @feat_data = {}
+        f.each do |f|
+          total = 0
+          f.ads.each do |a|
+            if a.publication_id == @publication.id
+              total += a.price
+            end
+          end
+          @feat_data.update(f.name => total)
+        end
 
         erb :view_publication
       else
