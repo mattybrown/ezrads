@@ -511,7 +511,11 @@ class EzrAds < Sinatra::Base
     @ad = Ad.get params['id']
     @customers = Customer.all
     @features = Feature.all
-    @publications = Publication.all(:order => [:date.asc], :paper_id => env['warden'].user.paper_id)
+    if env['warden'].user.role == 1 || env['warden'].user.role == 4
+      @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
+    else
+      @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
+    end
     @users = User.all(:paper_id => env['warden'].user.paper_id)
 
     erb :edit_ad

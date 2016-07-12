@@ -11,7 +11,7 @@
       <th>Publication</th>
       <th>Publication date</th>
       <th>Repeat</th>
-      <% if @role != 3 %>
+      <% if env['warden'].user.role != 3 %>
         <th>Price</th>
       <% end %>
       <th>Notes</th>
@@ -33,7 +33,7 @@
       <td><%= @ad.publication[:name] %></td>
       <td><%= display_date(@ad.publication[:date]) %></td>
       <td><%= display_date(@ad.repeat_date) %>
-      <% if @role != 3 %>
+      <% if env['warden'].user.role != 3 %>
         <td>$<%= @ad.price %></td>
       <% end %>
 
