@@ -568,7 +568,11 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @ad = Ad.get params['id']
     @users = User.all(:paper_id => @ad.publication.paper_id)
-    @publications = Publication.all(:paper_id => @ad.publication.paper_id)
+    if env['warden'].user.role == 1 || env['warden'].user.role == 4
+      @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
+    else
+      @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
+    end
     @title = "Viewing ad"
 
     erb :view_ad
