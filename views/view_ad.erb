@@ -46,10 +46,10 @@
 
       </td>
       <td>
-        <a href="/edit/ad/<%= @ad.id %>"><i class="fa fa-pencil-square-o"></i></a>
+        <a href="/edit/ad/<%= @ad.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
       </td>
       <td>
-          <a href="/delete/ad/<%= @ad.id %>" class="delete-ad" style="color:red"><i class="fa fa-trash"></i></a>
+          <a href="/delete/ad/<%= @ad.id %>" class="delete-ad tooltipped" data-delay="50" data-tooltip="Delete" data-position="top" style="color:red"><i class="fa fa-trash"></i></a>
       </td>
     </tr>
     <div id="note<%= @ad.id %>" class="modal">

@@ -60,16 +60,16 @@
         <td>$<%= a.price %></td>
       <% end %>
       <td>
-        <a href="/view/ad/<%= a.id %>"><i class="fa fa-eye"></i></a></td>
+        <a href="/view/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="View" data-position="top"><i class="fa fa-eye"></i></a></td>
       </td>
       <td>
-          <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil-square-o"></i></a>
+          <a href="/edit/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
       </td>
       <td>
-        <a href="/create/task/<%= a.id %>"><i class="fa fa-send"></i></a></td>
+        <a href="/create/task/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Send as task" data-position="top"><i class="fa fa-send"></i></a></td>
       </td>
       <td>
-          <a href="/delete/ad/<%= a.id %>" class="delete-ad" style="color:red"><i class="fa fa-trash"></i></a>
+          <a href="/delete/ad/<%= a.id %>" class="delete-ad tooltipped" data-delay="50" data-tooltip="Delete" data-position="top" style="color:red"><i class="fa fa-trash"></i></a>
       </td>
     </tr>
 

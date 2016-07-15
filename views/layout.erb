@@ -107,7 +107,9 @@
         <li><a href="/view/users">Users</a></li>
         <li><a href="/view/publications">Publications</a></li>
         <li><a href="/view/features">View features</a></li>
-        <li><a href="/view/tasks">Tasks<span class="badge"><%= display_task_number %></span></a></li>
+        <% if env['warden'].user %>
+          <li><a href="/me"><%= env['warden'].user.username.capitalize %><span class="badge"><%= display_task_number %></span></a></li>
+        <% end %>
         <% if env['warden'].user == nil %>
           <li><a href="/auth/login">Login</a></li>
         <% else %>

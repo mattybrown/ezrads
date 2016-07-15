@@ -30,7 +30,7 @@
       <td><a href="mailto:<%= a.email %>"><%= a.email %></a></td>
       <td><%= a.ads.count %></td>
       <td><%= a.custom_rate > 0 ? true : false %></td>
-      <td><a href="/edit/customer/<%= a.id %>"><i class="fa fa-edit"></i></a></td>
+      <td><a href="/edit/customer/<%= a.id %>"><i class="fa fa-edit tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"></i></a></td>
     </tr>
 
 <% end %>

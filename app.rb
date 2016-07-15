@@ -557,9 +557,10 @@ class EzrAds < Sinatra::Base
       flash[:error] = "Sorry, you don't have permission to do that"
     else
       ad = Ad.get params['id']
+      path = "/view/customer/#{ad.customer_id}"
       if ad.destroy
         flash[:success] = "Ad deleted"
-        redirect back
+        redirect path
       end
     end
   end

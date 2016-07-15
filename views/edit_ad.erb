@@ -4,16 +4,17 @@
 
     <div class="row">
       <div class="input-field col s6">
+        <span class="label">Height</span>
         <input type="text" id="height" name="ad[height]" value="<%= @ad.height %>">
-        <label for="size">Height</label>
       </div>
       <div class="input-field col s6">
+        <span class="label">Columns</span>
         <input type="text" id="columns" name="ad[columns]" value="<%= @ad.columns %>">
-        <label for="columns">Columns</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
+        <span class="label">Feature</span>
         <select class="browser-default selectize" name="ad[feature]">
           <option value="<%= @ad.feature[:id] %>" selected><%= @ad.feature[:name] %></option>
           <% @features.each do |f| %>
@@ -22,6 +23,7 @@
         </select>
       </div>
       <div class="input-field col s6">
+        <span class="label">Publication</span>
         <select class="browser-default selectize" name="ad[publication]">
           <option value="<%= @ad.publication[:id] %>" selected><%= "#{display_date(@ad.publication[:date])} - #{@ad.publication[:name]}" %></option>
           <% @publications.each do |p| %>
@@ -36,6 +38,7 @@
         <input type="text" name="ad[position]" value="<%= @ad.position %>" id="position">
       </div>
       <div class="input-field col s6">
+        <span class="label">Customer</span>
         <select class="browser-default selectize" name="ad[customer]">
           <option value="<%= @ad.customer[:id] %>" selected><%= @ad.customer[:business_name] %></option>
           <% @customers.each do |c| %>
@@ -46,6 +49,7 @@
     </div>
     <div class="row">
       <div class="input-field col s6">
+        <span class="label">Payment type</span>
         <select name="ad[payment]" required>
           <option value="" disabled>Payment type</option>
           <option value="1" <% if @ad.payment == 1 %>selected<% end %>>Account</option>
@@ -54,13 +58,14 @@
         </select>
       </div>
       <div class="input-field col s6">
+        <span class="label">Price</span>
         <input type="number" name="ad[price]" id="price" value="<%= @ad.price %>" validate data-error="Please enter a number" <%= env['warden'].user['role'] == 2 || env['warden'].user.role == 3 ? 'disabled' : '' %> min="0" step="0.01">
-        <label for="price">Price</label>
       </div>
     </div>
     <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
       <div class="row">
         <div class="input-field col s6">
+          <span class="label">Rep</span>
           <select name="ad[user]" required>
             <option value="" disabled>Rep</option>
             <% @users.each do |u| %>
@@ -69,8 +74,8 @@
           </select>
         </div>
         <div class="input-field col s6">
+          <span class="label">Notes</span>
           <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
-          <label for="note">Notes</label>
         </div>
       </div>
     <% end %>

@@ -41,5 +41,6 @@ $(document).ready(function(){
     $('#words').val(word_count);
   }).keyup;
 
+  $('.tooltipped').tooltip({delay: 50});
 
 });
