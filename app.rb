@@ -444,7 +444,9 @@ class EzrAds < Sinatra::Base
       end
       percent = price / 100 * 20
       if user_price
-        if user_price && user_price >= (price - percent)
+        if env['warden'].user.role == 1 || env['warden'].user.role == 4
+          price = user_price
+        elsif user_price && user_price >= (price - percent)
           price = user_price
         else
           flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
@@ -507,6 +509,7 @@ class EzrAds < Sinatra::Base
 
   get '/edit/ad/:id' do
     env['warden'].authenticate!
+    today = Date.today
     @title = "Edit ad"
     @ad = Ad.get params['id']
     @customers = Customer.all
@@ -567,6 +570,7 @@ class EzrAds < Sinatra::Base
 
   get '/view/ad/:id' do
     env['warden'].authenticate!
+    today = Date.today
     @ad = Ad.get params['id']
     @users = User.all(:paper_id => @ad.publication.paper_id)
     if env['warden'].user.role == 1 || env['warden'].user.role == 4
