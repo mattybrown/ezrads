@@ -24,12 +24,8 @@
         </select>
       </div>
       <div class="input-field col m6 s12">
-        <span class="label">Payment type</span>
-        <select name="runon[payment]" required>
-          <option value="1">Account</option>
-          <option value="2">Cash</option>
-          <option value="3">Eftpos</option>
-        </select>
+        <span class="label">Position</span>
+        <input type="text" name="runon[position]" id="position">
       </div>
     </div>
     <div class="row">
@@ -42,6 +38,17 @@
           <% end %>
         </select>
       </div>
+
+      <div class="input-field col m6 s12">
+        <span class="label">Payment type</span>
+        <select name="runon[payment]" required>
+          <option value="1">Account</option>
+          <option value="2">Cash</option>
+          <option value="3">Eftpos</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
       <div class="input-field col m4 s8 single-publication">
         <span class="label">Publication</span>
         <select class="browser-default selectize" name="runon[single-publication]" class="validate">
@@ -56,7 +63,6 @@
         <label for="repeat">Repeat</label>
       </div>
     </div>
-
     <div class="row" id="repeat-dates" style="display:none;">
       <h4>Publication dates</h4>
       <% count = 0 %>
