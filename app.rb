@@ -296,7 +296,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customer = Customer.get(params['id'])
     @title = "#{@customer.business_name}"
-    @ads = Ad.all(:customer_id => params['id'], :order => (Ad.publication.date.desc))
+    @ads = Ad.all(:customer_id => params['id'], :order => (:created_at.desc))
     @role = env['warden'].user['role']
 
     @price = 0
@@ -542,10 +542,12 @@ class EzrAds < Sinatra::Base
     else
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
     end
-
+    if params['ad']['columns'] == ""
+      params['ad']['columns'] = 0
+    end
     if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'])
       flash[:success] = "Ad updated"
-      redirect '/'
+      redirect "/view/customer/#{customer.id}"
     else
       flash[:error] = "Something went wrong #{ad.errors.inspect}"
       redirect back
@@ -556,15 +558,14 @@ class EzrAds < Sinatra::Base
   get '/delete/ad/:id' do
     env['warden'].authenticate!
 
-    if env['warden'].user['role'] != 1
-      flash[:error] = "Sorry, you don't have permission to do that"
-    else
-      ad = Ad.get params['id']
-      path = "/view/customer/#{ad.customer_id}"
+    if env['warden'].user['role'] == 1 || env['warden'].user['role'] == 4
+      ad = Ad.get params['id'] 
       if ad.destroy
         flash[:success] = "Ad deleted"
-        redirect path
+        redirect "/view/customer/#{ad.customer_id}"
       end
+    else
+      flash[:error] = "Sorry, you don't have permission to do that"
     end
   end
 

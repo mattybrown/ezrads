@@ -21,7 +21,7 @@
   <%= column_chart @data %>
 </div>
 <a href="/changepassword/<%= @user.id %>" class="btn right">Change password</a>
-<p>Monthly gross to date: $<%= @price %></p>
+<p>Monthly gross to date: $<%= format_price(@price) %></p>
 <p>Ads booked this month: <%= @count %></p>
 <p><a href="/view/tasks/complete">View completed tasks</a></p>
 
@@ -57,7 +57,7 @@
       <td><%= a.feature[:name] %></td>
       <td><%= a.position %></td>
       <% if @role != 3 %>
-        <td>$<%= a.price %></td>
+        <td>$<%= format_price(a.price) %></td>
       <% end %>
       <td>
         <a href="/view/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="View" data-position="top"><i class="fa fa-eye"></i></a></td>

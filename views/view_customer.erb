@@ -18,11 +18,12 @@
     </p>
   </div>
   <div class="col s12 m4">
-    <p>Monthly spend: <%= @price %></p>
+    <p>Monthly spend: <%= format_price(@price) %></p>
     <p>Ads booked this month: <%= @count %></p>
     <% if @customer.custom_rate != 0 %>
     <p>Custom rate: <%= @customer.custom_rate %></p>
     <% end %>
+    <a href="/edit/customer/<%= @customer.id %>" class="btn">Edit customer</a>
   </div>
 </div>
 <div class="row">
