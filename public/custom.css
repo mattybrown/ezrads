@@ -55,3 +55,6 @@ table .completed td{
   padding-left: 50px;
   font-weight: normal;
 }
+.banned{
+  background-color:#ffcccb;
+}

@@ -22,7 +22,7 @@
   <tbody>
 <% if @customers %>
 <% @customers.each do |a| %>
-    <tr>
+    <tr class="<%= a.banned ? 'banned' : 'sweetas' %>">
       <td><a href="/view/customer/<%= a.id %>"><%= a.business_name %></a></td>
       <td><%= a.contact_name %></td>
       <td><%= a.phone %></td>

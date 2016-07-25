@@ -34,7 +34,7 @@
       <td><%= display_date(@ad.publication[:date]) %></td>
       <td><%= display_date(@ad.repeat_date) %>
       <% if env['warden'].user.role != 3 %>
-        <td>$<%= @ad.price %></td>
+        <td>$<%= format_price(@ad.price) %></td>
       <% end %>
 
       <td>

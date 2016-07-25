@@ -23,7 +23,9 @@
         <select class="browser-default selectize" name="ad[customer]" class="validate" required data-error="Please select a customer">
           <option value="" disabled selected>Customer</option>
           <% @customers.each do |c| %>
-            <option value="<%= c.id %>"><%= c.business_name %></option>
+            <% if c.banned == false %>
+              <option value="<%= c.id %>"><%= c.business_name %></option>
+            <% end %>
           <% end %>
         </select>
       </div>

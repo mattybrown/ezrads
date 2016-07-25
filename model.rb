@@ -40,6 +40,7 @@ class Customer
   property :email, String
   property :custom_rate, Float, :default => 0
   property :notes, Text
+  property :banned, Boolean
 
   has n, :ads
   belongs_to :paper

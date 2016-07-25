@@ -361,12 +361,17 @@ class EzrAds < Sinatra::Base
 
   post '/edit/customer/:id' do
     customer = Customer.get params['id']
-    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'])
+    if params['customer']['banned'] == 'on'
+      banned = true
+    else
+      banned = false
+    end
+    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'], banned: banned)
       flash[:success] = "Customer updated"
       redirect '/view/customers'
     else
       customer.errors.each do |e|
-        flash[:error] = "Update failed - #{e}"
+        flash[:error] = "Update failed - #{e}}"
       end
       redirect back
     end
@@ -559,7 +564,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
 
     if env['warden'].user['role'] == 1 || env['warden'].user['role'] == 4
-      ad = Ad.get params['id'] 
+      ad = Ad.get params['id']
       if ad.destroy
         flash[:success] = "Ad deleted"
         redirect "/view/customer/#{ad.customer_id}"
