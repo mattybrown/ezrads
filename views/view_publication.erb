@@ -7,6 +7,16 @@
   <div class="col m4 s12">
     <table>
       <tr>
+        <form action="/ads/publication/" method="get" class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="view[publication]" type="hidden" value="<%= @publication.id %>">
+              <button class="btn" type="submit">View ads</button>
+            </div>
+          </div>
+        </form>
+      </tr>
+      <tr>
         <td>Ads Booked</td>
         <td class="right"><%= @publication.ads.count %></td>
       </tr>
