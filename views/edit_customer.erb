@@ -52,12 +52,14 @@
         <label for="note">Notes</label>
       </div>
     </div>
-    <div class="row">
-      <div class="input-field col s6">
-        <input type="checkbox" id="banned" name="customer[banned]" <%= @customer.banned  ? 'checked="checked"' : '' %>>
-        <label for="banned">Stop bookings for this customer</label>
+    <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
+      <div class="row">
+        <div class="input-field col s6">
+          <input type="checkbox" id="banned" name="customer[banned]" <%= @customer.banned  ? 'checked="checked"' : '' %>>
+          <label for="banned">Stop bookings for this customer</label>
+        </div>
       </div>
-    </div>
+    <% end %>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>
   </form>
 </div>

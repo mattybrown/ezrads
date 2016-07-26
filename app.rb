@@ -398,9 +398,9 @@ class EzrAds < Sinatra::Base
       redirect back
     end
     if params['customer']['custom_rate'] == ""
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'])
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
     else
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'])
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
     end
     if customer.save
       flash[:success] = "Customer created"
@@ -442,11 +442,11 @@ class EzrAds < Sinatra::Base
 
     customer = Customer.get(params['ad']['customer'])
     feature = Feature.get(params['ad']['feature'])
+    if params['ad']['price'] != ""
+      user_price = params['ad']['price'].to_f
+    end
     if customer.custom_rate > 0
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
-      if params['ad']['price'] != ""
-        user_price = params['ad']['price'].to_f
-      end
       percent = price / 100 * 20
       if user_price
         if env['warden'].user.role == 1 || env['warden'].user.role == 4
@@ -458,16 +458,13 @@ class EzrAds < Sinatra::Base
           redirect back
         end
       end
-    elsif params['ad']['repeat_ad'] == "true"
-      price = params['ad']['price']
     else
       price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
-      if params['ad']['price'] != ""
-        user_price = params['ad']['price'].to_f
-      end
       percent = price / 100 * 20
       if user_price
-        if user_price >= (price - percent)
+        if env['warden'].user.role == 1 || env['warden'].user.role == 4
+          price = user_price
+        elsif user_price >= (price - percent)
           price = user_price
         else
           flash[:error] = "The minimum price for this ad is $#{format_price(price - percent)} - see an admin for further discounts"
