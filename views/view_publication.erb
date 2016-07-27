@@ -1,53 +1,96 @@
 
 <h4><%= "#{@publication.name} - #{display_date(@publication.date)}" %></h4>
+<form action="/ads/publication/" method="get" class="col s12">
+  <div class="row">
+    <div class="input-field col s12">
+      <input name="view[publication]" type="hidden" value="<%= @publication.id %>">
+      <button class="btn" type="submit">View ads</button>
+    </div>
+  </div>
+</form>
 <div class="row">
-  <div class="col m6 s12">
+  <div class="col m4 s12">
+    <h5>Features</h5>
     <%= pie_chart @feat_data, label: "Ads sold by feature" %>
   </div>
   <div class="col m4 s12">
-    <table>
-      <tr>
-        <form action="/ads/publication/" method="get" class="col s12">
-          <div class="row">
-            <div class="input-field col s12">
-              <input name="view[publication]" type="hidden" value="<%= @publication.id %>">
-              <button class="btn" type="submit">View ads</button>
-            </div>
-          </div>
-        </form>
-      </tr>
+    <h5>Reps</h5>
+    <%= pie_chart @repdata, label: "Ads sold by rep" %>
+  </div>
+  <div class="col m4 s12">
+    <h5>Previous issues</h5>
+    <%= column_chart @pub_data %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+    <h5>Breakdown</h5>
+    <table class="highlight">
       <tr>
         <td>Ads Booked</td>
         <td class="right"><%= @publication.ads.count %></td>
       </tr>
+      <% if @unpaid > 0 %>
+        <tr>
+          <td>Ads with payment outstanding</td>
+          <td class="right"><%= @unpaid %></td>
+        </tr>
+      <% end %>
       <tr class="total">
-        <td>Account</td>
-        <td class="right"><%= "$#{format_price(@gross)}" %></td>
-      </tr>
-      <tr>
         <td>Paid</td>
         <td class="right"><%= "$#{format_price(@paid)}" %></td>
       </tr>
+      <tr>
+        <td>Unpaid</td>
+        <td class="right"><%= "$#{format_price(@unpaid_total)}" %></td>
+      </tr>
+      <tr class="total">
+        <td>Account</td>
+        <td class="right"><%= "$#{format_price(@account)}" %></td>
+      </tr>
+      <tr>
+        <td>Eftpos</td>
+        <td class="right"><%= "$#{format_price(@eftpos)}" %></td>
+      </tr>
+      <tr>
+        <td>Cash</td>
+        <td class="right"><%= "$#{format_price(@cash)}" %></td>
+      </tr>
       <tr class="total">
         <td>Total</td>
-        <td class="right">$<%= format_price(@gross + @paid) %></td>
+        <td class="right">$<%= format_price(@paid + @unpaid_total) %></td>
       </tr>
       <tr>
         <td>GST</td>
         <td class="right"><%= "$#{format_price(@gst)}" %></td>
       </tr>
       <tr>
-        <td>Total +GST</td>
-        <td class="right"><%= "$#{format_price((@gross + @paid) + @gst)}" %></td>
+        <td><strong>Total +GST</strong></td>
+        <td class="right"><strong><%= "$#{format_price((@paid + @unpaid_total) + @gst)}" %></strong></td>
       </tr>
+      <tr class="total">
+        <td><strong>Features</strong></td>
+      </tr>
+      <% @feat_data.each do |f| %>
+        <% if f[1] > 0 %>
+          <tr>
+            <td><%= f[0] %></td>
+            <td class="right">$<%= format_price(f[1]) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr class="total">
+        <td><strong>Ads with outstanding payment</strong></td>
+      </tr>
+      <% @ads.each do |a| %>
+        <% if a.paid == false %>
+          <tr>
+            <td><a href="/view/ad/<%= a.id %>"><%= a.customer.business_name %></a></td>
+            <td class="right">$<%= format_price(a.price) %></td>
+          </tr>
+        <% end %>
+      <% end %>
     </table>
-  </div>
-</div>
-<div class="row">
-  <div class="col m6 s12">
-    <%= column_chart @pub_data %>
-  </div>
-  <div class="col m6 s12">
-    <%= pie_chart @repdata, label: "Ads sold by rep" %>
   </div>
 </div>

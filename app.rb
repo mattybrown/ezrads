@@ -889,13 +889,31 @@ class EzrAds < Sinatra::Base
     if env['warden'].user.role == 1 || env['warden'].user.role == 4
       if @publication = Publication.get(params['id'])
         @title = "Viewing publication #{@publication.name} - #{display_date(@publication.date)}"
-        @gross = 0
+        @ads = @publication.ads
+        @account = 0
+        @cash = 0
+        @eftpos = 0
         @paid = 0
+        @unpaid = 0
+        @unpaid_total = 0
         @publication.ads.each do |a|
           if a.payment == 1
-            @gross += a.price
-          else
+            @account += a.price
+          end
+          if a.payment == 3
+            @eftpos += a.price
+          end
+          if a.payment == 2
+            @cash += a.price
+          end
+          if a.paid == true
             @paid += a.price
+          else
+            @unpaid_total += a.price
+          end
+
+          if a.paid == false
+            @unpaid += 1
           end
         end
 
@@ -908,9 +926,9 @@ class EzrAds < Sinatra::Base
           end
           @pub_data.update(display_date(p.date) => total)
         end
-        @pub_data.update(display_date(@publication.date) => (@gross + @paid))
+        @pub_data.update(display_date(@publication.date) => (@paid))
 
-        @gst = (@gross + @paid) * @publication.paper.gst / 100.0
+        @gst = (@paid + @unpaid_total) * @publication.paper.gst / 100.0
 
         u = User.all
         @repdata = {}
