@@ -481,7 +481,7 @@ class EzrAds < Sinatra::Base
         repeat_date = repeat_publication.date
       end
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'])
+        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true)
         if ad.save
           flash[:success] = "Ad booked"
         else
@@ -498,7 +498,7 @@ class EzrAds < Sinatra::Base
       else
         repeat_date = nil
       end
-      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'])
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true)
       if ad.save
         flash[:success] = "Ad booked"
         redirect '/'
@@ -601,6 +601,11 @@ class EzrAds < Sinatra::Base
   post '/create/runon' do
     feature = Feature.get params['runon']['feature']
     words = params['runon']['words'].to_i
+    if params['runon']['paid']
+      paid = true
+    else
+      paid = false
+    end
 
     if words > feature.rate
       price = (words - feature.rate) * 0.5 + 10
@@ -613,7 +618,7 @@ class EzrAds < Sinatra::Base
       repeat_date = repeat_publication.date
 
       params['runon']['publication'].each do |p|
-        runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'])
+        runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid)
         if runon.save
           flash[:success] = "Run on created"
         else
@@ -623,12 +628,67 @@ class EzrAds < Sinatra::Base
       end
       redirect '/'
     else
-      runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'])
+      runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid)
       if runon.save
         flash[:success] = "Run on created"
         redirect '/'
       else
         flash[:error] = "Something went wrong #{runon.errors.inspect}"
+        redirect back
+      end
+    end
+  end
+
+  get '/edit/runon/:id' do
+    env['warden'].authenticate!
+    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+    @title = "Edit run on"
+    today = Date.today
+    @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 2)
+
+    @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
+
+    @ad = Ad.get params['id']
+
+    erb :edit_runon
+  end
+
+  post '/edit/runon/:id' do
+    ad = Ad.get params['id']
+    feature = Feature.get params['runon']['feature']
+    words = params['runon']['words'].to_i
+    updater = env['warden'].user.id
+    if params['runon']['paid']
+      paid = true
+    else
+      paid = false
+    end
+
+    if params['runon']['price'] != "" && env['warden'].user.role == 1 || env['warden'].user.role == 4
+      price = params['runon']['price'].to_f
+    else
+      price = ad.price
+    end
+
+    if params['runon']['repeat']
+      repeat_publication = Publication.get(params['runon']['publication'].first[0])
+      repeat_date = repeat_publication.date
+
+      params['runon']['publication'].each do |p|
+        if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid)
+          flash[:success] = "Run on updated"
+        else
+          flash[:error] = "Something went wrong #{ad.errors.inspect}"
+          redirect back
+        end
+      end
+      redirect '/'
+    else
+      if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid)
+        flash[:success] = "Run on updated"
+        redirect '/'
+      else
+        flash[:error] = "Something went wrong #{ad.errors.inspect}"
         redirect back
       end
     end
@@ -715,14 +775,19 @@ class EzrAds < Sinatra::Base
 
     price = 0
     count = 0
+    paid = 0
     @ads.each do |a|
       if a.publication.date.mon == Date.today.mon
         price += a.price
         count += 1
       end
+      if a.paid == false
+        paid += 1
+      end
     end
     @price = price
     @count = count
+    @paid = paid
     erb :me
   end
 

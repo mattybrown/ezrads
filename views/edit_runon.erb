@@ -1,23 +1,24 @@
 
 <div class="row">
-  <h3>Create new run on</h3>
-  <form action="/create/runon" method="POST" class="col s12">
+  <h3>Edit run on</h3>
+  <form action="/edit/runon/<%= @ad.id %>" method="POST" class="col s12">
 
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Word count</span>
-        <input type="number" id="words" name="runon[words]" class="validate" data-error="Please enter a number">
+        <input type="number" id="words" name="runon[words]" class="validate" data-error="Please enter a number" value="<%= @ad.height %>">
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Text (Note: A space at the end is counted as a word)</span>
-        <textarea name="runon[note]" id="runonBody" style="height:120px;"></textarea>
+        <textarea name="runon[note]" id="runonBody" style="height:120px;"><%= @ad.note %></textarea>
       </div>
     </div>
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Customer</span>
         <select class="browser-default selectize" name="runon[customer]" class="validate" required>
-          <option value="" disabled selected>Customer</option>
+          <option value="" disabled>Customer</option>
+          <option value="<%= @ad.customer.id %>" selected><%= @ad.customer.business_name %></option>
           <% @customers.each do |c| %>
             <% if c.banned == false %>
               <option value="<%= c.id %>"><%= c.business_name %></option>
@@ -27,14 +28,15 @@
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Position</span>
-        <input type="text" name="runon[position]" id="position">
+        <input type="text" name="runon[position]" id="position" value="<%= @ad.position %>">
       </div>
     </div>
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Feature</span>
         <select class="browser-default selectize" name="runon[feature]" class="validate" required>
-          <option value="" disabled selected>Feature</option>
+          <option value="" disabled>Feature</option>
+          <option value="<%= @ad.feature.id %>" selected><%= @ad.feature.name %></option>
           <% @features.each do |f| %>
             <option value="<%= f.id %>"><%= f.name %></option>
           <% end %>
@@ -44,13 +46,13 @@
       <div class="input-field col m4 s8">
         <span class="label">Payment type</span>
         <select name="runon[payment]" required>
-          <option value="1">Account</option>
-          <option value="2">Cash</option>
-          <option value="3">Eftpos</option>
+          <option value="1" <%= @ad.payment == 1 ? "selected" : "" %>>Account</option>
+          <option value="2" <%= @ad.payment == 2 ? "selected" : "" %>>Cash</option>
+          <option value="3" <%= @ad.payment == 3 ? "selected" : "" %>>Eftpos</option>
         </select>
       </div>
       <div class="input-field col m2 s4">
-        <input type="checkbox" name="runon[paid]" id="paid" value="paid" checked>
+        <input type="checkbox" name="runon[paid]" id="paid" value="paid" <%= @ad.paid ? "checked" : "" %>>
         <label for="paid">Paid?</label>
       </div>
     </div>
@@ -58,13 +60,14 @@
       <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
         <div class="input-field col m6 s12">
           <span class="label">Price (leave blank to generate price automatically)</span>
-          <input type="number" name="runon[price]" id="price" validate data-error="Please enter a number" min="0" step="0.01">
+          <input type="number" name="runon[price]" id="price" validate data-error="Please enter a number" min="0" step="0.01" value="<%= @ad.price %>">
         </div>
       <% end %>
       <div class="input-field col m4 s8 single-publication">
         <span class="label">Publication</span>
         <select class="browser-default selectize" name="runon[single-publication]" class="validate">
-          <option value="" disabled selected>Publication</option>
+          <option value="" disabled>Publication</option>
+          <option value="<%= @ad.publication.id %>" selected><%= "#{display_date(@ad.publication.date)} - #{@ad.publication.name}" %></option>
           <% @publications.each do |p| %>
             <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
           <% end %>

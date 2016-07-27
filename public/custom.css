@@ -13,6 +13,10 @@ table .completed td{
 .c-completed{
   background-color: #dcedc8 !important;
 }
+table .notpaid td{
+  background-color: #ffcccb;
+  border-color: #ff6961;
+}
 .brand-logo{
   margin-left: 10px;
   font-weight: bold;

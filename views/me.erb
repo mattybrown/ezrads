@@ -21,8 +21,17 @@
   <%= column_chart @data %>
 </div>
 <a href="/changepassword/<%= @user.id %>" class="btn right">Change password</a>
-<p>Monthly gross to date: $<%= format_price(@price) %></p>
-<p>Ads booked this month: <%= @count %></p>
+<p>Monthly total to date: $<%= format_price(@price) %></p>
+<p>
+  Ads booked this month: <%= @count %><br />
+  <% if @paid != 0 %>
+    <% if @paid > 1 %>
+      <%= @paid %> ads haven't been paid for
+    <% else %>
+      <%= @paid %> ad hasn't been paid for
+    <% end %>
+  <% end %>
+</p>
 <p><a href="/view/tasks/complete">View completed tasks</a></p>
 
 <table class="ad_table tablesorter highlight">
@@ -46,7 +55,7 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-    <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
+    <tr class="<% if a.paid == false %>notpaid<% end %>">
       <td><%= display_time(a.created_at) %></td>
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
       <td><a href="/view/publication/<%= a.publication.id %>"><%= display_date(a.publication[:date]) %></a></td>
@@ -63,7 +72,11 @@
         <a href="/view/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="View" data-position="top"><i class="fa fa-eye"></i></a></td>
       </td>
       <td>
+        <% if a.feature.type == 1 %>
           <a href="/edit/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
+        <% elsif a.feature.type == 2 %>
+          <a href="/edit/runon/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
+        <% end %>
       </td>
       <td>
         <a href="/create/task/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Send as task" data-position="top"><i class="fa fa-send"></i></a></td>

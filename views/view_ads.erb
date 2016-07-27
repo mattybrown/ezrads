@@ -81,6 +81,7 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
+  <% if a.paid %>
     <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %> feature-<%= a.feature.id %>">
       <td><a href="/view/ad/<%= a.id %>"><%= a.customer.business_name %></a></td>
       <td><%= a.user[:username].capitalize %></td>
@@ -127,7 +128,7 @@
         <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
       </div>
     </div>
-
+  <% end %>
 <% end %>
 <% end %>
   </tbody>
