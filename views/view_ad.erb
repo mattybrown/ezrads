@@ -14,6 +14,7 @@
       <% if env['warden'].user.role != 3 %>
         <th>Price</th>
       <% end %>
+      <th>Receipt #</td>
       <th>Notes</th>
     </tr>
   </thead>
@@ -36,6 +37,7 @@
       <% if env['warden'].user.role != 3 %>
         <td>$<%= format_price(@ad.price) %></td>
       <% end %>
+      <td><%= @ad.receipt %></td>
 
       <td>
         <% if @ad.note != "" %>

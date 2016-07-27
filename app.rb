@@ -618,7 +618,7 @@ class EzrAds < Sinatra::Base
       repeat_date = repeat_publication.date
 
       params['runon']['publication'].each do |p|
-        runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid)
+        runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
         if runon.save
           flash[:success] = "Run on created"
         else
@@ -628,7 +628,7 @@ class EzrAds < Sinatra::Base
       end
       redirect '/'
     else
-      runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid)
+      runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
       if runon.save
         flash[:success] = "Run on created"
         redirect '/'
@@ -675,7 +675,7 @@ class EzrAds < Sinatra::Base
       repeat_date = repeat_publication.date
 
       params['runon']['publication'].each do |p|
-        if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid)
+        if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
           flash[:success] = "Run on updated"
         else
           flash[:error] = "Something went wrong #{ad.errors.inspect}"
@@ -684,7 +684,7 @@ class EzrAds < Sinatra::Base
       end
       redirect '/'
     else
-      if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid)
+      if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
         flash[:success] = "Run on updated"
         redirect '/'
       else
@@ -1349,6 +1349,8 @@ class EzrAds < Sinatra::Base
         return "Cash"
       elsif i == 3
         return "Eftpos"
+      elsif i == 4
+        return "Direct Credit"
       end
     end
 

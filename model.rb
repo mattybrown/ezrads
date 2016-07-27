@@ -61,8 +61,9 @@ class Ad
   property :completed, Boolean
   property :placed, Boolean
   property :note, Text
-  property :payment, Integer # 1 = account, 2 = cash, 3 = eftpos
+  property :payment, Integer # 1 = account, 2 = cash, 3 = eftpos, 4 = direct credit
   property :paid, Boolean
+  property :receipt, String
 
   belongs_to :user
   belongs_to :customer

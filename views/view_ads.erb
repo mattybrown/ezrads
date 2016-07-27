@@ -81,54 +81,52 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-  <% if a.paid %>
-    <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %> feature-<%= a.feature.id %>">
-      <td><a href="/view/ad/<%= a.id %>"><%= a.customer.business_name %></a></td>
-      <td><%= a.user[:username].capitalize %></td>
-      <td><%= a.height %></td>
-      <td><%= a.columns %></td>
-      <td><a href="/view/publication/feature/<%= a.feature.id %>"><%= a.feature[:name] %></a></td>
-      <td><%= a.position %></td>
-      <td><%= a.repeat_date != a.publication.date ? display_date(a.repeat_date) : "" %></td>
-      <td><%= display_payment(a.payment) %></td>
-      <% if @role != 3 %>
-        <td>$<%= format_price(a.price) %></td>
+  <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %> feature-<%= a.feature.id %>">
+    <td><a href="/view/ad/<%= a.id %>"><%= a.customer.business_name %></a></td>
+    <td><%= a.user[:username].capitalize %></td>
+    <td><%= a.height %></td>
+    <td><%= a.columns %></td>
+    <td><a href="/view/publication/feature/<%= a.feature.id %>"><%= a.feature[:name] %></a></td>
+    <td><%= a.position %></td>
+    <td><%= a.repeat_date != a.publication.date ? display_date(a.repeat_date) : "" %></td>
+    <td><%= display_payment(a.payment) %></td>
+    <% if @role != 3 %>
+      <td>$<%= format_price(a.price) %></td>
+    <% end %>
+
+    <td class="hide-print">
+      <% if a.note != "" %>
+      <a href="#note<%= a.id %>" class="toggle-note"><i class="fa fa-clipboard"></i></a>
+        <% else %>
+
+        <i class="fa fa-clipboard"></i>
+        <% end %>
+
+    </td>
+    <td class="hide-print">
+      <% if a.completed == true %>
+        <a href="/ad/incomplete/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
+      <% else %>
+        <a href="/ad/completed/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
       <% end %>
-
-      <td class="hide-print">
-        <% if a.note != "" %>
-        <a href="#note<%= a.id %>" class="toggle-note"><i class="fa fa-clipboard"></i></a>
-          <% else %>
-
-          <i class="fa fa-clipboard"></i>
-          <% end %>
-
-      </td>
-      <td class="hide-print">
-        <% if a.completed == true %>
-          <a href="/ad/incomplete/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
-        <% else %>
-          <a href="/ad/completed/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
-        <% end %>
-      </td>
-      <td class="hide-print">
-        <% if a.placed == true %>
-          <a href="/ad/unplace/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
-        <% else %>
-          <a href="/ad/place/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
-        <% end %>
-      </td>
-    </tr>
-    <div id="note<%= a.id %>" class="modal">
-      <div class="modal-content">
-        <h4>Notes</h4>
-        <p><%= a.note %></p>
-      </div>
-      <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
-      </div>
+    </td>
+    <td class="hide-print">
+      <% if a.placed == true %>
+        <a href="/ad/unplace/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
+      <% else %>
+        <a href="/ad/place/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
+      <% end %>
+    </td>
+  </tr>
+  <div id="note<%= a.id %>" class="modal">
+    <div class="modal-content">
+      <h4>Notes</h4>
+      <p><%= a.note %></p>
     </div>
-  <% end %>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+    </div>
+  </div>
 <% end %>
 <% end %>
   </tbody>
