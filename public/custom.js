@@ -9,7 +9,7 @@ $(document).ready(function(){
   });
 
   $('.toggle-completed').click(function(){
-    $('.completed').toggle();
+    $('.placed').toggle();
   });
 
   $('#repeat').click(function(){
@@ -42,5 +42,6 @@ $(document).ready(function(){
   }).keyup;
 
   $('.tooltipped').tooltip({delay: 50});
+
 
 });

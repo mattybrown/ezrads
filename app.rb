@@ -696,42 +696,38 @@ class EzrAds < Sinatra::Base
 
   get '/ad/completed/:id' do
     ad = Ad.get params['id']
-    ad.completed = true
-    if ad.save
-      redirect back
-    else
-      flash[:error] = "Something went wrong"
-      redirect back
+    if ad.completed == true
+      ad.completed = false
+      ad.save
+      return "incomplete"
+    elsif ad.completed == false
+      ad.completed = true
+      ad.save
+      return "completed"
     end
   end
-  get '/ad/incomplete/:id' do
-    ad = Ad.get params['id']
-    ad.completed = false
-    if ad.save
-      redirect back
-    else
-      flash[:error] = "Something went wrong"
-      redirect back
-    end
-  end
+
   get '/ad/place/:id' do
+
     ad = Ad.get params['id']
-    ad.placed = true
-    if ad.save
-      redirect back
-    else
-      flash[:error] = "Something went wrong"
-      redirect back
+    if ad.placed == true
+      ad.placed = false
+      ad.save
+      return "not-placed"
+    elsif ad.placed == false
+      ad.placed = true
+      ad.save
+      return "placed"
     end
+
   end
-  get '/ad/unplace/:id' do
+
+  get '/ad/status/:id' do
     ad = Ad.get params['id']
-    ad.placed = false
-    if ad.save
-      redirect back
+    if ad.placed == true
+      return true
     else
-      flash[:error] = "Something went wrong"
-      redirect back
+      return false
     end
   end
 

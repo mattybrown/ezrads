@@ -7,12 +7,17 @@ nav{
 .close-flash{
   bottom:30px;
 }
+
 table .completed td{
+  background-color: #c1ecfa;
+}
+table .placed td{
   background-color: #dcedc8;
 }
-.c-completed{
-  background-color: #dcedc8 !important;
+.placed{
+  display:none;
 }
+
 table .notpaid td{
   background-color: #ffcccb;
   border-color: #ff6961;

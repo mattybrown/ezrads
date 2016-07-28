@@ -51,7 +51,7 @@
     <script>
       $(document).ready(function(){
         $('#hide-feature-<%= f.id %>').click(function(){
-          $('.feature-<%= f.id %>').toggle();
+          $('.feature-<%= f.id %>')[this.checked ? "show" : "hide"]();
         });
       });
     </script>
@@ -81,7 +81,7 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-  <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %> feature-<%= a.feature.id %>">
+  <tr class="<% if a.placed == true %>placed<% elsif a.completed == true %>completed<% else %>not-placed<% end %> feature-<%= a.feature.id %>" id="ad-<%= a.id %>">
     <td><a href="/view/ad/<%= a.id %>"><%= a.customer.business_name %></a></td>
     <td><%= a.user[:username].capitalize %></td>
     <td><%= a.height %></td>
@@ -104,18 +104,14 @@
 
     </td>
     <td class="hide-print">
-      <% if a.completed == true %>
-        <a href="/ad/incomplete/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
-      <% else %>
-        <a href="/ad/completed/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
-      <% end %>
+      <a href="#" onclick="$.get('/ad/completed/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('completed').removeClass('incomplete').addClass(data) })">
+        Approve
+      </a>
     </td>
     <td class="hide-print">
-      <% if a.placed == true %>
-        <a href="/ad/unplace/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
-      <% else %>
-        <a href="/ad/place/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
-      <% end %>
+      <a href="#" onclick="$.get('/ad/place/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('placed').removeClass('not-placed').addClass(data) })">
+        Place
+      </a>
     </td>
   </tr>
   <div id="note<%= a.id %>" class="modal">
