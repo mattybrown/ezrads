@@ -8,8 +8,11 @@ $(document).ready(function(){
     $('.flash').fadeOut(1100);
   });
 
-  $('.toggle-completed').click(function(){
-    $('.placed').toggle();
+  $('.hide-completed').click(function(){
+    $('.placed').hide();
+  });
+  $('.show-completed').click(function(){
+    $('.placed').show();
   });
 
   $('#repeat').click(function(){
