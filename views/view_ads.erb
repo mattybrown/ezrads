@@ -105,12 +105,12 @@
 
     </td>
     <td class="hide-print">
-      <a href="#" onclick="$.get('/ad/completed/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('completed').removeClass('incomplete').addClass(data) })">
+      <a href="#" onclick="$.get('/ad/completed/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('completed').removeClass('incomplete').addClass(data).addClass(status) })">
         Approve
       </a>
     </td>
     <td class="hide-print">
-      <a href="#" onclick="$.get('/ad/place/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('placed').removeClass('not-placed').addClass(data) })">
+      <a href="#" onclick="$.get('/ad/place/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('placed').removeClass('not-placed').addClass(data).addClass(status) })">
         Place
       </a>
     </td>

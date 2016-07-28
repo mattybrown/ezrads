@@ -481,7 +481,7 @@ class EzrAds < Sinatra::Base
         repeat_date = repeat_publication.date
       end
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true)
+        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false)
         if ad.save
           flash[:success] = "Ad booked"
         else
@@ -498,7 +498,7 @@ class EzrAds < Sinatra::Base
       else
         repeat_date = nil
       end
-      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true)
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false)
       if ad.save
         flash[:success] = "Ad booked"
         redirect '/'
@@ -698,12 +698,18 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     if ad.completed == true
       ad.completed = false
-      ad.save
-      return "incomplete"
-    elsif ad.completed == false
+      if ad.save
+        return "incomplete"
+      else
+        return "#{ad.errors.inspect}"
+      end
+    elsif ad.completed == false || ad.placed == nil
       ad.completed = true
-      ad.save
-      return "completed"
+      if ad.save
+        return "completed"
+      else
+        return "#{ad.errors.inspect}"
+      end
     end
   end
 
@@ -712,12 +718,18 @@ class EzrAds < Sinatra::Base
     ad = Ad.get params['id']
     if ad.placed == true
       ad.placed = false
-      ad.save
-      return "not-placed"
-    elsif ad.placed == false
+      if ad.save
+        return "not-placed"
+      else
+        return "#{ad.errors.inspect}"
+      end
+    elsif ad.placed == false || ad.placed == nil
       ad.placed = true
-      ad.save
-      return "placed"
+      if ad.save
+        return "placed"
+      else
+        return "#{ad.errors.inspect}"
+      end
     end
 
   end
