@@ -442,6 +442,12 @@ class EzrAds < Sinatra::Base
 
     customer = Customer.get(params['ad']['customer'])
     feature = Feature.get(params['ad']['feature'])
+    if feature.type == 2
+      columns = 0
+    else
+      columns = params['ad']['columns']
+    end
+
     if params['ad']['price'] != ""
       user_price = params['ad']['price'].to_f
     end
@@ -481,7 +487,7 @@ class EzrAds < Sinatra::Base
         repeat_date = repeat_publication.date
       end
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false)
+        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false)
         if ad.save
           flash[:success] = "Ad booked"
         else
@@ -498,7 +504,7 @@ class EzrAds < Sinatra::Base
       else
         repeat_date = nil
       end
-      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: params['ad']['columns'], position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false)
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false)
       if ad.save
         flash[:success] = "Ad booked"
         redirect '/'

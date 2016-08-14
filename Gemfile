@@ -7,15 +7,11 @@ gem 'data_mapper'
 gem 'warden'
 gem 'chartkick'
 gem 'groupdate'
+gem 'dm-sqlite-adapter'
 
-group :production do
-  gem 'pg'
-  gem 'dm-postgres-adapter'
-end
 group :development, :test do
 
   gem 'shotgun'
   gem 'tux'
 
-  gem 'dm-sqlite-adapter'
 end

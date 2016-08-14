@@ -36,9 +36,6 @@ GEM
       dm-core (~> 1.2.0)
     dm-migrations (1.2.0)
       dm-core (~> 1.2.0)
-    dm-postgres-adapter (1.2.0)
-      dm-do-adapter (~> 1.2.0)
-      do_postgres (~> 0.10.6)
     dm-serializer (1.2.2)
       dm-core (~> 1.2.0)
       fastercsv (~> 1.5)
@@ -62,8 +59,6 @@ GEM
       uuidtools (~> 2.1)
     dm-validations (1.2.0)
       dm-core (~> 1.2.0)
-    do_postgres (0.10.17)
-      data_objects (= 0.10.17)
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
     fastercsv (1.5.5)
@@ -74,7 +69,6 @@ GEM
     json_pure (1.8.3)
     minitest (5.9.0)
     multi_json (1.12.0)
-    pg (0.18.4)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -117,10 +111,8 @@ DEPENDENCIES
   bcrypt-ruby
   chartkick
   data_mapper
-  dm-postgres-adapter
   dm-sqlite-adapter
   groupdate
-  pg
   shotgun
   sinatra
   sinatra-flash

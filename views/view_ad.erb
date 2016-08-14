@@ -113,6 +113,7 @@
     <div class="input-field col s4">
       <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
         <select name="ad[user]">
+          <option value="<%= @ad.user.id %>" selected><%= @ad.user.username.capitalize %></option>
           <% @users.each do |u| %>
             <option value="<%= u.id %>"><%= u.username.capitalize %></option>
           <% end %>
