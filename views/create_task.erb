@@ -4,21 +4,33 @@
   <form action="/create/task" method="post" class="col s12">
     <div class="row">
       <div class="input-field col s6">
+        <% if @tasktitle %>
+        <input type="text" id="contact_name" name="task[title]" value="<%= title = @tasktitle.gsub(/-/, '-') %>">
+        <% else %>
         <input type="text" id="contact_name" name="task[title]">
+        <% end %>
         <label for="title">Title</label>
       </div>
       <div class="input-field col s6">
         <select name="task[user_id]">
           <option value="" disabled selected>Recipient</option>
           <% @users.each do |u| %>
+            <% if @user %>
+              <% if @user.to_i == u.id %>
+                <option value="<%= u.id %>" selected><%= u.username %></option>
+              <% else %>
+                <option value="<%= u.id %>"><%= u.username %></option>
+              <% end %>
+            <% else %>
             <option value="<%= u.id %>"><%= u.username %></option>
+            <% end %>
           <% end %>
         </select>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <input type="text" class="datepicker" id="deadline" name="task[deadline]" value="Deadline">
+        <input type="text" class="datepicker" id="deadline" name="task[deadline]" value="<%= Date.today.strftime('%d %b %Y') %>">
 
       </div>
       <div class="input-field col s6">

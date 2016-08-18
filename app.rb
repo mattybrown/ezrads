@@ -860,8 +860,20 @@ class EzrAds < Sinatra::Base
     erb :create_task
   end
 
+  get '/task/reply/:user/:title' do
+    env['warden'].authenticate!
+    @title = "Reply"
+    @tasktitle = "Re: " + params[:title].gsub(/-/, ' ')
+    @user = params[:user]
+    @users = User.all
+
+    erb :create_task
+  end
+
   post '/create/task' do
     uid = env['warden'].user.id
+    title = params['task']['title']
+    title.gsub!(/\s/, '-')
     t = Task.new(title: params['task']['title'], created_by: uid, created_at: Time.now, deadline: params['task']['deadline'], user_id: params['task']['user_id'], priority: params['task']['priority'], body: params['task']['body'], completed: false)
 
     if t.save
