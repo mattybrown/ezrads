@@ -1377,7 +1377,7 @@ class EzrAds < Sinatra::Base
 
     def display_time(i)
       if i
-        return i.strftime('%l:%M%P, %d %b %Y')
+        return i.strftime('%y%m%d %H:%M')
       end
     end
 
