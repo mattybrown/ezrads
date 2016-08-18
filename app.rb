@@ -416,6 +416,7 @@ class EzrAds < Sinatra::Base
   get '/create/ad' do
     env['warden'].authenticate!
     @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+    @users = User.all(:paper_id => env['warden'].user.paper_id)
     @title = "Create ad"
     today = Date.today
     @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 1)
@@ -487,7 +488,7 @@ class EzrAds < Sinatra::Base
         repeat_date = repeat_publication.date
       end
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false)
+        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'])
         if ad.save
           flash[:success] = "Ad booked"
         else
@@ -504,7 +505,7 @@ class EzrAds < Sinatra::Base
       else
         repeat_date = nil
       end
-      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false)
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'])
       if ad.save
         flash[:success] = "Ad booked"
         redirect '/'
@@ -553,7 +554,7 @@ class EzrAds < Sinatra::Base
     if params['ad']['columns'] == ""
       params['ad']['columns'] = 0
     end
-    if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'])
+    if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'], receipt: params['ad']['receipt'])
       flash[:success] = "Ad updated"
       redirect "/view/customer/#{customer.id}"
     else
