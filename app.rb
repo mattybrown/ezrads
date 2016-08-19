@@ -179,6 +179,7 @@ class EzrAds < Sinatra::Base
       @title = "Viewing #{@user.username}"
 
       @ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
+      @pub = Publication.all(:paper_id => env['warden'].user.paper_id, :order => :date.desc, :limit => 10, :date.lte => Date.today)
       @data = {}
       this_month_total = 0
       last_month_total = 0
@@ -221,6 +222,23 @@ class EzrAds < Sinatra::Base
       end
       @price = price
       @count = count
+
+      @per_pub = {}
+      @pub.each do |p|
+        hash = {}
+        c = 0
+        pub_price = 0
+
+        p.ads.each do |a|
+          if a.user.id == @user.id
+            pub_price += a.price
+            c += 1
+          end
+        end
+        @per_pub.update(p.date => { price: pub_price, count: c })
+      end
+
+
 
       erb :view_user
     else

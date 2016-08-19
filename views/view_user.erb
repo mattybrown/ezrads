@@ -1,12 +1,30 @@
+
 <div class="row">
   <h3><%= @user.username.capitalize %></h3>
 </div>
 <div class="row">
   <%= column_chart @data %>
 </div>
-
-<p>Monthly gross to date: $<%= format_price(@price) %></p>
-<p>Ads booked this month: <%= @count %></p>
+<div class="row">
+  <div class="col s12 m6">
+    <h5>Last 10 issues - breakdown</h5>
+    <ul>
+    <% @per_pub.each do |p| %>
+      <li>
+        <%= p[0].strftime('%y%m%d') %> -
+        $<%= format_price(p[1][:price]) %> |
+        <%= p[1][:count] %> Ads booked
+      </li>
+    <% end %>
+    </ul>
+  </div>
+  <div class="col s12 m6">
+    <h5>Overview</h5>
+    <p>Monthly gross to date: $<%= format_price(@price) %></p>
+    <p></p>
+    <p>Ads booked this month: <%= @count %></p>
+  </div>
+</div>
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
