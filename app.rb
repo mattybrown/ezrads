@@ -1212,6 +1212,7 @@ class EzrAds < Sinatra::Base
   post '/auth/login' do
     env['warden'].authenticate!
     @title = "Login"
+    session[:ad] = {}
     flash[:success] = "Successfully logged in"
 
     if session[:return_to].nil?
