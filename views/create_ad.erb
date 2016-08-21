@@ -5,11 +5,11 @@
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Height</span>
-        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number" <%= session[:ad] ? "value='#{ session[:ad][:height].to_i }'" : "" %> >
+        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number" <%= session[:ad][:height] ? "value='#{ session[:ad][:height] }'" : "" %> >
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Columns</span>
-        <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number" <%= session[:ad] ? "value='#{ session[:ad][:columns] }'" : "" %>>
+        <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number" <%= session[:ad][:columns] ? "value='#{ session[:ad][:columns] }'" : "" %>>
       </div>
     </div>
     <div class="row">
