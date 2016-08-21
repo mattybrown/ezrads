@@ -433,6 +433,7 @@ class EzrAds < Sinatra::Base
 
   get '/create/ad' do
     env['warden'].authenticate!
+
     @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @users = User.all(:paper_id => env['warden'].user.paper_id)
     @title = "Create ad"
@@ -447,6 +448,8 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/ad' do
+    session[:ad] = {height: params['ad']['height'], columns: params['ad']['columns'], notes: params['ad']['note'], customer: params['ad']['customer'], feature: params['ad']['feature'], position: params['ad']['position'], payment: params['ad']['payment'], price: params['ad']['price'], user: params['ad']['user'], receipt: params['ad']['receipt'], publication: params['ad']['single-publication']}
+
     if params['ad']['user']
       ad_user = params['ad']['user']
     else
@@ -509,6 +512,7 @@ class EzrAds < Sinatra::Base
         ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'])
         if ad.save
           flash[:success] = "Ad booked"
+          session[:ad].clear
         else
           ad.errors.each do |e|
             flash[:error] = e
@@ -526,6 +530,7 @@ class EzrAds < Sinatra::Base
       ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'])
       if ad.save
         flash[:success] = "Ad booked"
+        session[:ad].clear
         redirect '/'
       else
         flash[:error] = "Something went wrong #{ad.errors.inspect}"

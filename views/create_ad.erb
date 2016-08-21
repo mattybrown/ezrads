@@ -1,4 +1,3 @@
-
 <div class="row">
   <h3>Create new ad</h3>
   <form action="/create/ad" method="POST" class="col s12">
@@ -6,25 +5,25 @@
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Height</span>
-        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number">
+        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number" <%= "value='#{ session[:ad][:height] }'" %> >
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Columns</span>
-        <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number">
+        <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number" <%= "value='#{ session[:ad][:columns] }'" %>>
       </div>
     </div>
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Notes</span>
-        <textarea name="ad[note]" id="note"></textarea>
+        <textarea name="ad[note]" id="note"><%= session[:ad][:notes]%></textarea>
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Customer</span>
         <select class="browser-default selectize" name="ad[customer]" class="validate" required data-error="Please select a customer">
-          <option value="" disabled selected>Customer</option>
+          <option value="" disabled <%= session[:ad][:customer] ? "" : "selected" %>>Customer</option>
           <% @customers.each do |c| %>
             <% if c.banned == false %>
-              <option value="<%= c.id %>"><%= c.business_name %></option>
+              <option value="<%= c.id %>" <%= session[:ad][:customer].to_i == c.id ? "selected" : "" %>><%= c.business_name %></option>
             <% end %>
           <% end %>
         </select>
@@ -34,29 +33,29 @@
       <div class="input-field col m6 s12">
         <span class="label">Feature</span>
         <select class="browser-default selectize" name="ad[feature]" class="validate" id="feature" required data-error="Please select a feature">
-          <option value="" disabled selected>Feature</option>
+          <option value="" disabled <%= session[:ad][:feature] ? "" : "selected" %>>Feature</option>
           <% @features.each do |f| %>
-            <option value="<%= f.id %>" rate="<%= f.rate %>"><%= f.name %></option>
+            <option value="<%= f.id %>" rate="<%= f.rate %>" <%= session[:ad][:feature].to_i == f.id ? "selected" : "" %>><%= f.name %></option>
           <% end %>
         </select>
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Position</span>
-        <input type="text" name="ad[position]" id="position">
+        <input type="text" name="ad[position]" id="position" <%= "value='#{session[:ad][:position]}'" %>>
       </div>
     </div>
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Payment type</span>
         <select name="ad[payment]" required>
-          <option value="1">Account</option>
-          <option value="2">Cash</option>
-          <option value="3">Eftpos</option>
+          <option value="1" <%= session[:ad][:payment] == "1" ? "selected" : "" %>>Account</option>
+          <option value="2" <%= session[:ad][:payment] == "2" ? "selected" : "" %>>Cash</option>
+          <option value="3" <%= session[:ad][:payment] == "3" ? "selected" : "" %>>Eftpos</option>
         </select>
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Price (leave blank to generate price automatically)</span>
-        <input type="number" name="ad[price]" id="price" min="0" step="0.01">
+        <input type="number" name="ad[price]" id="price" min="0" step="0.01" <%= "value='#{session[:price]}'" %>>
       </div>
     </div>
     <div class="row">
@@ -73,7 +72,7 @@
       <% end %>
       <div class="input-field col m6 s12">
         <span class="label">Receipt</span>
-        <input type="text" name="ad[receipt]" id="receipt">
+        <input type="text" name="ad[receipt]" id="receipt" <%= "value='#{session[:ad][:receipt]}'" %>>
       </div>
     </div>
     <div class="row">
@@ -82,7 +81,7 @@
         <select class="browser-default selectize" name="ad[single-publication]">
           <option value="" disabled selected>Publication</option>
           <% @publications.each do |p| %>
-            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+            <option value="<%= p.id %>" <%= session[:ad][:publication] == p.id ? "selected" : "" %>><%= display_date(p.date) %> - <%= p.name %></option>
           <% end %>
         </select>
       </div>
