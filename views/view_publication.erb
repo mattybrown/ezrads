@@ -70,9 +70,9 @@
         <td class="right"><strong><%= "$#{format_price((@paid + @unpaid_total) + @gst)}" %></strong></td>
       </tr>
       <tr class="total">
-        <td><strong>Features</strong></td>
+        <td><strong>ROP Features</strong></td>
       </tr>
-      <% @feat_data.each do |f| %>
+      <% @rop_data.each do |f| %>
         <% if f[1] > 0 %>
           <tr>
             <td><%= f[0] %></td>
@@ -80,6 +80,26 @@
           </tr>
         <% end %>
       <% end %>
+      <tr>
+        <td><strong>ROP Total</strong></td>
+        <td class="right"><strong><%= "$#{format_price(@rop_total)}" %></strong></td>
+      </tr>
+      <tr class="total">
+        <td><strong>Classie Features</strong></td>
+      </tr>
+      <% @clas_data.each do |f| %>
+        <% if f[1] > 0 %>
+          <tr>
+            <td><%= f[0] %></td>
+            <td class="right">$<%= format_price(f[1]) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr>
+      <tr>
+        <td><strong>Classie Total</strong></td>
+        <td class="right"><strong><%= "$#{format_price(@clas_total)}" %></strong></td>
+      </tr>
       <tr class="total">
         <td><strong>Ads with outstanding payment</strong></td>
       </tr>

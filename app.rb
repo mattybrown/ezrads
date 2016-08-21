@@ -973,7 +973,7 @@ class EzrAds < Sinatra::Base
         end
 
         @pub_data = {}
-        past_publications = Publication.all(:date.lt => @publication.date, :order => [:date.asc], :limit => 5, :paper_id => env['warden'].user.paper_id)
+        past_publications = Publication.all(:date.lte => @publication.date, :order => [:date.desc], :limit => 5, :paper_id => env['warden'].user.paper_id)
         past_publications.each do |p|
           total = 0
           p.ads.each do |a|
@@ -1000,12 +1000,31 @@ class EzrAds < Sinatra::Base
         @features = @publication.ads.feature
         f = Feature.all
         @feat_data = {}
+        @rop_data = {}
+        @clas_data = {}
+        @feat_total = 0
+        @rop_total = 0
+        @clas_total = 0
         f.each do |f|
           total = 0
+          rop_price = 0
+          clas_price = 0
           f.ads.each do |a|
             if a.publication_id == @publication.id
               total += a.price
+              if a.feature.rop == true
+                @rop_total += a.price
+                rop_price += a.price
+              else
+                @clas_total += a.price
+                clas_price += a.price
+              end
             end
+          end
+          if f.rop == true
+            @rop_data.update(f.name => rop_price)
+          else
+            @clas_data.update(f.name => clas_price)
           end
           @feat_data.update(f.name => total)
         end
@@ -1074,7 +1093,13 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/feature' do
-    f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: env['warden'].user.paper_id, type: params['feature']['type'])
+    f = Feature.get params['id']
+    if params['feature']['rop'] == "true"
+      rop = true
+    else
+      rop = false
+    end
+    f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: env['warden'].user.paper_id, type: params['feature']['type'], rop: rop)
     if f.save
       flash[:success] = "Feature created"
       redirect '/view/publications'
@@ -1106,7 +1131,12 @@ class EzrAds < Sinatra::Base
 
   post '/edit/feature/:id' do
     f = Feature.get params['id']
-    if f.update(name: params['feature']['name'], rate: params['feature']['rate'], type: params['feature']['type'])
+    if params['feature']['rop'] == "true"
+      rop = true
+    else
+      rop = false
+    end
+    if f.update(name: params['feature']['name'], rate: params['feature']['rate'], type: params['feature']['type'], rop: rop)
       flash[:success] = "Feature updated"
       redirect '/view/features'
     else

@@ -105,6 +105,7 @@ class Feature
   property :name, String
   property :rate, Float
   property :type, Integer
+  property :rop, Boolean
 
   belongs_to :paper
   has n, :ads

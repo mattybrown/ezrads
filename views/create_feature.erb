@@ -3,22 +3,26 @@
   <h4>Create feature</h4>
   <form action="/create/feature" method="post" class="col s12">
     <div class="row">
-      <div class="input-field col s6">
+      <div class="input-field col s12 m6">
         <input type="text" id="name" name="feature[name]" required>
         <label for="name">Feature Name</label>
       </div>
-      <div class="input-field col s6">
+      <div class="input-field col s12 m6">
         <input type="number" id="rate" name="feature[rate]" min="0" step="0.01" required>
         <label for="rate">Charge rate (col x cm) or word limit if run on</label>
       </div>
     </div>
     <div class="row">
-      <div class="input-field col s6">
+      <div class="input-field col s12 m6">
         <select name="feature[type]" required>
           <option value="" disabled selected>Feature type</option>
           <option value="1">ROP</option>
           <option value="2">Run on</option>
         </select>
+      </div>
+      <div class="input-field col s12 m6">
+        <input type="checkbox" name="feature[rop]" id="rop" value="true">
+        <label for="rop">Is this feature run of paper?</label>
       </div>
     </div>
     <button type="submit" class="btn"><i class="fa fa-plus"></i> Create</button>
