@@ -5,11 +5,11 @@
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Height</span>
-        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number" <%= "value='#{ session[:ad][:height] }'" %> >
+        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number" <%= session[:ad] ? "value='#{ session[:ad][:height] }'" : "" %> >
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Columns</span>
-        <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number" <%= "value='#{ session[:ad][:columns] }'" %>>
+        <input type="number" id="columns" name="ad[columns]" class="validate" required data-error="Please enter a number" <%= session[:ad] ? "value='#{ session[:ad][:columns] }'" : "" %>>
       </div>
     </div>
     <div class="row">
@@ -41,7 +41,7 @@
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Position</span>
-        <input type="text" name="ad[position]" id="position" <%= "value='#{session[:ad][:position]}'" %>>
+        <input type="text" name="ad[position]" id="position" <%= session[:ad] ? "value='#{session[:ad][:position]}'" : "" %>>
       </div>
     </div>
     <div class="row">
@@ -55,7 +55,7 @@
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Price (leave blank to generate price automatically)</span>
-        <input type="number" name="ad[price]" id="price" min="0" step="0.01" <%= "value='#{session[:price]}'" %>>
+        <input type="number" name="ad[price]" id="price" min="0" step="0.01" <%= session[:ad] ? "value='#{session[:price]}'" : "" %>>
       </div>
     </div>
     <div class="row">
@@ -72,7 +72,7 @@
       <% end %>
       <div class="input-field col m6 s12">
         <span class="label">Receipt</span>
-        <input type="text" name="ad[receipt]" id="receipt" <%= "value='#{session[:ad][:receipt]}'" %>>
+        <input type="text" name="ad[receipt]" id="receipt" <%= session[:ad] ? "value='#{session[:ad][:receipt]}'" : "" %>>
       </div>
     </div>
     <div class="row">
