@@ -433,7 +433,7 @@ class EzrAds < Sinatra::Base
 
   get '/create/ad' do
     env['warden'].authenticate!
-
+    session[:ad] = ""
     @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @users = User.all(:paper_id => env['warden'].user.paper_id)
     @title = "Create ad"
