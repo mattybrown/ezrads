@@ -5,7 +5,7 @@
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Height</span>
-        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number" <%= session[:ad] ? "value='#{ session[:ad][:height] }'" : "" %> >
+        <input type="number" id="height" name="ad[height]" class="validate" required data-error="Please enter a number" <%= session[:ad] ? "value='#{ session[:ad][:height].to_i }'" : "" %> >
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Columns</span>
