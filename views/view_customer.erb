@@ -1,5 +1,8 @@
 <div class="row">
   <h4><%= @customer.business_name %></h4>
+  <% if @customer.banned %>
+    <h5 style="color:red">This customer is banned!</h5>
+  <% end %>
 </div>
 <div class="row">
   <div class="col s12 m8">
@@ -10,7 +13,7 @@
       <%= @customer.mobile %><br />
       <%= @customer.email %><br />
       <%= @customer.alt_contact_name %><br />
-      <%= @customer.alt_contact_phone %>
+      <%= @customer.alt_contact_phone %><br />
     </p>
     <p>
       <h5>Notes</h5>
