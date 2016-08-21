@@ -1,7 +1,6 @@
 <% if @pub.class == String %>
   <p><%= @pub %></p>
 <% else %>
-<% session[:ad] = {} %>
 <div class="row view-pub">
   <form action="/ads/publication/" method="get" class="col s12">
     <div class="row">
