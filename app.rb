@@ -565,19 +565,17 @@ class EzrAds < Sinatra::Base
   post '/edit/ad/:id' do
     ad = Ad.get params['id']
     updater = env['warden'].user.id
-    if params['ad']['user'] != ""
+    if params['ad']['user']
       user = params['ad']['user']
     else
       user = ad.user[:id]
     end
     feature = Feature.get params['ad']['feature']
     customer = ad.customer
-    if params['ad']['price'] != ""
+    if params['ad']['price']
       price = params['ad']['price']
-    elsif customer.custom_rate != nil && customer.custom_rate > 0
-      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
     else
-      price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
+      price = ad.price
     end
     if params['ad']['columns'] == ""
       params['ad']['columns'] = 0
