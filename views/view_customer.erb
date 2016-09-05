@@ -45,6 +45,7 @@
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
+      <th>#</th>
       <th>Created at</th>
       <th>Sales rep</th>
       <th>Publication date</th>
@@ -62,6 +63,7 @@
 <% if @ads %>
 <% @ads.each do |a| %>
     <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
+      <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
       <td><%= display_time(a.created_at) %></td>
       <td><%= a.user[:username].capitalize %></td>
       <td><%= display_date(a.publication[:date]) %></td>

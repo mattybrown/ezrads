@@ -64,6 +64,7 @@ class Ad
   property :payment, Integer # 1 = account, 2 = cash, 3 = eftpos, 4 = direct credit
   property :paid, Boolean
   property :receipt, String
+  property :print_only, String
 
   belongs_to :user
   belongs_to :customer

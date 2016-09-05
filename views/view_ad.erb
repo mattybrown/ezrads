@@ -1,11 +1,11 @@
 <table class="ad_table highlight">
   <thead>
     <tr>
+      <th>#</th>
       <th>Business</th>
       <th>Rep</th>
       <th>Last edited</th>
-      <th>Height</th>
-      <th>Columns</th>
+      <th>Size</th>
       <th>Feature</th>
       <th>Position</th>
       <th>Publication</th>
@@ -20,6 +20,7 @@
   </thead>
   <tbody>
     <tr class="<% if @ad.placed == true %>completed<% else %>incomplete<% end %>">
+      <td><%= @ad.id %></td>
       <td><a href="/view/customer/<%= @ad.customer.id %>"><%= @ad.customer.business_name %></a></td>
       <td><%= @ad.user[:username].capitalize %></td>
       <% if @ad.updated_at != @ad.created_at %>
@@ -27,8 +28,7 @@
       <% else %>
         <td></td>
       <% end %>
-      <td><%= @ad.height %></td>
-      <td><%= @ad.columns %></td>
+      <td><%= @ad.height %>x<%= @ad.columns %></td>
       <td><%= @ad.feature[:name] %></td>
       <td><%= @ad.position %></td>
       <td><%= @ad.publication[:name] %></td>

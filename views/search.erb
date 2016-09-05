@@ -19,18 +19,34 @@
 <% end %>
 
 <div class="row">
-  <form action="/search" method="get" class="col s12">
+  <div class="col s6">
+  <form action="/search" method="get">
     <div class="row">
-      <div class="col s6 customer-search">
-        <h4>Search customers</h4>
-        <input type="text" id="customer-search" name="customer-search[query]">
-        <label for="customer-search"><i class="fa fa-search prefix"></i> Business name or contact name</label>
+      <div class="col s12 customer-search">
+        <h4>View booking</h4>
+        <input type="text" id="ad-search" name="booking[number]">
+        <label for="ad-search"><i class="fa fa-search prefix"></i> Ad booking number</label>
       </div>
     </div>
   <div class="row">
     <button type="submit" class="btn">Search</button>
   </div>
   </form>
+  </div>
+  <div class="col s6">
+    <form action="/search" method="get">
+      <div class="row">
+        <div class="customer-search">
+          <h4>Search customers</h4>
+          <input type="text" id="customer-search" name="customer-search[query]">
+          <label for="customer-search"><i class="fa fa-search prefix"></i> Business name or contact name</label>
+        </div>
+      </div>
+    <div class="row">
+      <button type="submit" class="btn">Search</button>
+    </div>
+    </form>
+  </div>
 </div>
 
 <div class="row">

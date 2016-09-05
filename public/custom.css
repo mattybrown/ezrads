@@ -7,7 +7,9 @@ nav{
 .close-flash{
   bottom:30px;
 }
-
+table{
+  font-size: .8em;
+}
 table .completed td{
   background-color: #c1ecfa;
 }
@@ -15,7 +17,6 @@ table .placed td{
   background-color: #dcedc8;
 }
 .placed{
-  display:none;
 }
 
 table .notpaid td{
@@ -66,4 +67,9 @@ table .notpaid td{
 }
 .banned{
   background-color:#ffcccb;
+}
+@media screen{
+  .hide-screen{
+    display:none;
+  }
 }

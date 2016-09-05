@@ -38,6 +38,7 @@
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
+      <th>#</th>
       <th>Created at</th>
       <th>Business</th>
       <th>Publication Date</th>
@@ -57,6 +58,7 @@
 <% if @ads %>
 <% @ads.each do |a| %>
     <tr class="<% if a.paid == false %>notpaid<% end %>">
+      <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
       <td><%= display_time(a.created_at) %></td>
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
       <td><a href="/view/publication/<%= a.publication.id %>"><%= display_date(a.publication[:date]) %></a></td>

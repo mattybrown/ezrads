@@ -63,6 +63,7 @@
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
+      <th>#</th>
       <th>Business</th>
       <th>Rep</th>
       <th>Height</th>
@@ -70,6 +71,7 @@
       <th>Feature</th>
       <th>Position</th>
       <th>Repeat</th>
+      <th class="hide-screen">Extra</th>
       <th>Payment</th>
       <% if @role != 3 %>
         <th>Price</th>
@@ -83,6 +85,7 @@
 <% if @ads %>
 <% @ads.each do |a| %>
   <tr class="<% if a.placed == true %>placed<% elsif a.completed == true %>completed<% else %>not-placed<% end %> feature-<%= a.feature.id %>" id="ad-<%= a.id %>">
+    <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
     <td><a href="/view/ad/<%= a.id %>"><%= a.customer.business_name %></a></td>
     <td><%= a.user[:username].capitalize %></td>
     <td><%= a.height %></td>
@@ -90,6 +93,7 @@
     <td><a href="/view/publication/feature/<%= a.feature.id %>"><%= a.feature[:name] %></a></td>
     <td><%= a.position %></td>
     <td><%= a.repeat_date != a.publication.date ? display_date(a.repeat_date) : "" %></td>
+    <td class="hide-screen"><%= a.print_only %></td>
     <td><%= display_payment(a.payment) %></td>
     <% if @role != 3 %>
       <td>$<%= format_price(a.price) %></td>

@@ -82,7 +82,8 @@ class EzrAds < Sinatra::Base
     today = Date.today
     user_publication = env['warden'].user.paper[:id]
     @role = env['warden'].user[:role]
-
+    feature = Feature.get(params['id'])
+    @feature = feature.name
     @title = "Home"
 
     paper = Paper.all(:id => user_publication)
@@ -453,7 +454,7 @@ class EzrAds < Sinatra::Base
   end
 
   post '/create/ad' do
-    session[:ad] = {height: params['ad']['height'], columns: params['ad']['columns'], notes: params['ad']['note'], customer: params['ad']['customer'], feature: params['ad']['feature'], position: params['ad']['position'], payment: params['ad']['payment'], price: params['ad']['price'], user: params['ad']['user'], receipt: params['ad']['receipt'], publication: params['ad']['single-publication']}
+    session[:ad] = {height: params['ad']['height'], columns: params['ad']['columns'], notes: params['ad']['note'], customer: params['ad']['customer'], feature: params['ad']['feature'], position: params['ad']['position'], payment: params['ad']['payment'], price: params['ad']['price'], user: params['ad']['user'], receipt: params['ad']['receipt'], publication: params['ad']['single-publication'], print: params['ad']['print']}
 
     if params['ad']['user']
       ad_user = params['ad']['user']
@@ -514,9 +515,9 @@ class EzrAds < Sinatra::Base
         repeat_date = repeat_publication.date
       end
       params['ad']['publication'].each do |a|
-        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'])
+        ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'], print_only: params['ad']['print'])
         if ad.save
-          flash[:success] = "Ad booked"
+          flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{customer.business_name}</a> successfully booked"
           session[:ad].clear
         else
           ad.errors.each do |e|
@@ -532,9 +533,9 @@ class EzrAds < Sinatra::Base
       else
         repeat_date = nil
       end
-      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'])
+      ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: true, completed: false, placed: false, receipt: params['ad']['receipt'], print_only: params['ad']['print'])
       if ad.save
-        flash[:success] = "Ad booked"
+        flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{customer.business_name}</a> successfully booked"
         session[:ad].clear
         redirect '/'
       else
@@ -1286,6 +1287,16 @@ class EzrAds < Sinatra::Base
             @results = "#{@customer.count} records found"
           end
         end
+      end
+    end
+
+    if params['booking']
+      id = params['booking']['number']
+      ad = Ad.get id
+      if ad
+        redirect '/view/ad/' + id
+      else
+        @results = "No record found"
       end
     end
 

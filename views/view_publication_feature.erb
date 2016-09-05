@@ -25,7 +25,7 @@
     <div class="card-panel blue darken-4">
       <div class="white-text"><%= "#{@pub.name} - #{display_date(@pub.date)}" %> </div>
       <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
-      <div class="white-text print-gross">Feature: $<%= @gross %> / Ads booked: <%= @count %></div>
+      <div class="white-text print-gross"><%= @feature %>: $<%= @gross %> / Ads booked: <%= @count %></div>
       <% end %>
     </div>
   </div>
@@ -45,6 +45,7 @@
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
+      <th>#</th>
       <th>Business</th>
       <th>Rep</th>
       <th>Height</th>
@@ -64,7 +65,8 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-    <tr class="<% if a.placed == true %>completed<% else %>incomplete<% end %>">
+    <tr class="<% if a.placed == true %>placed<% elsif a.completed == true %>completed<% else %>not-placed<% end %> feature-<%= a.feature.id %>" id="ad-<%= a.id %>">
+      <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>
       <td><%= a.user[:username].capitalize %></td>
       <td><%= a.height %></td>
@@ -87,18 +89,14 @@
 
       </td>
       <td class="hide-print">
-        <% if a.completed == true %>
-          <a href="/ad/incomplete/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
-        <% else %>
-          <a href="/ad/completed/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
-        <% end %>
+        <a href="#" onclick="$.get('/ad/completed/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('completed').removeClass('incomplete').addClass(data).addClass(status) })">
+          Approve
+        </a>
       </td>
       <td class="hide-print">
-        <% if a.placed == true %>
-          <a href="/ad/unplace/<%= a.id %>"><i class="fa fa-check"></i> Yes</a>
-        <% else %>
-          <a href="/ad/place/<%= a.id %>"><i class="fa fa-minus"></i> No</a>
-        <% end %>
+        <a href="#" onclick="$.get('/ad/place/<%= a.id %>', function( data, status ){ $('#ad-<%= a.id %>').removeClass('placed').removeClass('not-placed').addClass(data).addClass(status) })">
+          Place
+        </a>
       </td>
     </tr>
     <div id="note<%= a.id %>" class="modal">
