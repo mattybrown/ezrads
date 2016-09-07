@@ -70,7 +70,7 @@
         <td class="right"><strong><%= "$#{format_price((@paid + @unpaid_total) + @gst)}" %></strong></td>
       </tr>
       <tr class="total">
-        <td><strong>ROP Features</strong></td>
+        <td><strong><a href="/view/publication/<%= @publication.id %>/rop">ROP Features</a></strong></td>
       </tr>
       <% @rop_data.each do |f| %>
         <% if f[1] > 0 %>
@@ -85,7 +85,7 @@
         <td class="right"><strong><%= "$#{format_price(@rop_total)}" %></strong></td>
       </tr>
       <tr class="total">
-        <td><strong>Classie Features</strong></td>
+        <td><strong><a href="/view/publication/<%= @publication.id %>/classie">Classie Features</a></strong></td>
       </tr>
       <% @clas_data.each do |f| %>
         <% if f[1] > 0 %>

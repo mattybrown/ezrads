@@ -45,13 +45,17 @@
       </div>
     </div>
     <div class="row">
-      <div class="input-field col m6 s12">
+      <div class="input-field col m4 s8">
         <span class="label">Payment type</span>
         <select name="ad[payment]" required>
           <option value="1" <%= session[:ad][:payment] == "1" ? "selected" : "" %>>Account</option>
           <option value="2" <%= session[:ad][:payment] == "2" ? "selected" : "" %>>Cash</option>
           <option value="3" <%= session[:ad][:payment] == "3" ? "selected" : "" %>>Eftpos</option>
         </select>
+      </div>
+      <div class="input-field col m2 s4">
+        <input type="checkbox" name="ad[paid]" id="paid" value="paid" checked>
+        <label for="paid">Paid?</label>
       </div>
       <div class="input-field col m6 s12">
         <span class="label">Price (leave blank to generate price automatically)</span>

@@ -48,7 +48,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="input-field col s6">
+      <div class="input-field col m4 s8">
         <span class="label">Payment type</span>
         <select name="ad[payment]" required>
           <option value="" disabled>Payment type</option>
@@ -56,6 +56,10 @@
           <option value="2" <% if @ad.payment == 2 %>selected<% end %>>Cash</option>
           <option value="3" <% if @ad.payment == 3 %>selected<% end %>>Eftpos</option>
         </select>
+      </div>
+      <div class="input-field col m2 s4">
+        <input type="checkbox" name="ad[paid]" id="paid" value="paid" <%= @ad.paid ? 'checked' : '' %>>
+        <label for="paid">Paid?</label>
       </div>
       <div class="input-field col s6">
         <span class="label">Price</span>

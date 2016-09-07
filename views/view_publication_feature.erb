@@ -25,7 +25,7 @@
     <div class="card-panel blue darken-4">
       <div class="white-text"><%= "#{@pub.name} - #{display_date(@pub.date)}" %> </div>
       <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
-      <div class="white-text print-gross"><%= @feature %>: $<%= @gross %> / Ads booked: <%= @count %></div>
+      <div class="white-text print-gross"><%= @feature %>: $<%= format_price(@gross) %> / Ads booked: <%= @count %></div>
       <% end %>
     </div>
   </div>
@@ -57,6 +57,9 @@
       <% if @role != 3 %>
         <th>Price</th>
       <% end %>
+      <th>Paid</th>
+      <th>Receipt</th>
+      <th>Extra</th>
       <th class="hide-print">Notes</th>
       <th class="hide-print">Complete</th>
       <th class="hide-print">Placed</th>
@@ -78,6 +81,15 @@
       <% if @role != 3 %>
         <td>$<%= format_price(a.price) %></td>
       <% end %>
+      <% if a.payment != 1 && a.paid == true %>
+        <td>Paid</td>
+      <% elsif a.payment == 1 %>
+        <td></td>
+      <% else %>
+        <td>Not paid</td>
+      <% end %>
+      <td><%= a.receipt %></td>
+      <td><%= a.print_only %></td>
 
       <td class="hide-print">
         <% if a.note != "" %>
