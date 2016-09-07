@@ -581,8 +581,8 @@ class EzrAds < Sinatra::Base
     if params['ad']['columns'] == ""
       params['ad']['columns'] = 0
     end
-    if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'], receipt: params['ad']['receipt'])
-      flash[:success] = "Ad updated"
+    if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'], receipt: params['ad']['receipt'], print_only: params['ad']['print'])
+      flash[:success] = "Ad #{ad.id} updated"
       redirect "/view/customer/#{customer.id}"
     else
       flash[:error] = "Something went wrong #{ad.errors.inspect}"
@@ -597,7 +597,7 @@ class EzrAds < Sinatra::Base
     if env['warden'].user['role'] == 1 || env['warden'].user['role'] == 4
       ad = Ad.get params['id']
       if ad.destroy
-        flash[:success] = "Ad deleted"
+        flash[:success] = "Ad #{ad.id} deleted"
         redirect "/view/customer/#{ad.customer_id}"
       end
     else
@@ -709,8 +709,8 @@ class EzrAds < Sinatra::Base
       repeat_date = repeat_publication.date
 
       params['runon']['publication'].each do |p|
-        if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
-          flash[:success] = "Run on updated"
+        if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: ad.user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
+          flash[:success] = "Run on #{ad.id} updated"
         else
           flash[:error] = "Something went wrong #{ad.errors.inspect}"
           redirect back
@@ -718,8 +718,8 @@ class EzrAds < Sinatra::Base
       end
       redirect '/'
     else
-      if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
-        flash[:success] = "Run on updated"
+      if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: ad.user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
+        flash[:success] = "Run on #{ad.id} updated"
         redirect '/'
       else
         flash[:error] = "Something went wrong #{ad.errors.inspect}"

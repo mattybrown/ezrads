@@ -81,7 +81,11 @@
       <div class="row">
         <div class="input-field col m6 s12">
           <span class="label">Print only field (for accounts)</span>
-          <input type="text" name="ad[print]" id="receipt" value="<%= @ad.print_only %>">
+          <input type="text" name="ad[print]" id="print" value="<%= @ad.print_only %>">
+        </div>
+        <div class="input-field col m6 s12">
+          <span class="label">Receipt</span>
+          <input type="text" name="ad[receipt]" id="receipt" value="<%= @ad.receipt %>">
         </div>
       </div>
     <% end %>
