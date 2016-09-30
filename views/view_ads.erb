@@ -8,7 +8,7 @@
         <select name="view[publication]">
           <option value="" disabled selected>View publication</option>
           <% @publications.each do |p| %>
-            <option value="<%= p.id %>"><%= "#{display_date(p.date)} - #{p.name}" %></option>
+            <option value="<%= p.id %>" <%= p.date == @pub.date ? "selected" : "" %>><%= "#{display_date(p.date)} - #{p.name}" %></option>
           <% end %>
           <label>View publication</label>
         </select>
