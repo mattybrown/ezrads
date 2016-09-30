@@ -124,7 +124,7 @@ class EzrAds < Sinatra::Base
       feature = paper.features(:type => 1)
     elsif params['feat'] == 'classie'
       @feature = "Classified"
-      feature = paper.features(:type => 2) || paper.features(:type => 3)
+      feature = paper.features(:type => 2) + paper.features(:type => 3)
     end
 
 
@@ -1376,7 +1376,7 @@ class EzrAds < Sinatra::Base
       end
 
       if feature && width && height && user && customer
-        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer) 
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer)
       elsif feature && width && height && user
         @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user)
       elsif feature && width && height && customer
