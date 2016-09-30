@@ -116,17 +116,17 @@ class EzrAds < Sinatra::Base
     user_publication = env['warden'].user.paper[:id]
     @role = env['warden'].user[:role]
     @title = "Home"
-
+    #THIS NEEDS TO BE FIXED TO SHOW THE CORRECT ADS DEPENDING ON TYPE
     paper = Paper.all(:id => user_publication)
     pub = paper.publications.get params['pub']
     if params['feat'] == 'rop'
-      feat = true
       @feature = "ROP"
-    else
-      feat = nil
+      feature = paper.features(:type => 1)
+    elsif params['feat'] == 'classie'
       @feature = "Classified"
+      feature = paper.features(:type => 2) || paper.features(:type => 3)
     end
-    feature = paper.features(:rop => feat)
+
 
     if @publications = paper.publications.count >= 1
       @publications = paper.publications(:order => [:date.asc])
@@ -1002,11 +1002,9 @@ class EzrAds < Sinatra::Base
         @publication.ads.each do |a|
           if a.payment == 1
             @account += a.price
-          end
-          if a.payment == 3
+          elsif a.payment == 3
             @eftpos += a.price
-          end
-          if a.payment == 2
+          elsif a.payment == 2
             @cash += a.price
           end
           if a.paid == true
@@ -1021,7 +1019,7 @@ class EzrAds < Sinatra::Base
         end
 
         @pub_data = {}
-        past_publications = Publication.all(:date.lte => @publication.date, :order => [:date.desc], :limit => 5, :paper_id => env['warden'].user.paper_id)
+        past_publications = Publication.all(:date.lte => @publication.date, :order => [:date.desc], :limit => 12, :paper_id => env['warden'].user.paper_id)
         past_publications.each do |p|
           total = 0
           p.ads.each do |a|
@@ -1050,31 +1048,41 @@ class EzrAds < Sinatra::Base
         @feat_data = {}
         @rop_data = {}
         @clas_data = {}
+        @other_data = {}
         @feat_total = 0
         @rop_total = 0
         @clas_total = 0
+        @other_total = 0
         f.each do |f|
           total = 0
           rop_price = 0
           clas_price = 0
+          other_price = 0
+
           f.ads.each do |a|
             if a.publication_id == @publication.id
               total += a.price
-              if a.feature.rop == true
+              if a.feature.type == 1
                 @rop_total += a.price
                 rop_price += a.price
-              else
+              elsif a.feature.type == 2 || a.feature.type == 3
                 @clas_total += a.price
                 clas_price += a.price
+              else
+                @other_total += a.price
+                other_price += a.price
               end
             end
           end
-          if f.rop == true
+          if f.type == 1
             @rop_data.update(f.name => rop_price)
-          else
+          elsif f.type == 2 || f.type == 3
             @clas_data.update(f.name => clas_price)
+          else
+            @other_data.update(f.name => other_price)
           end
-          @feat_data.update(f.name => total)
+
+          @feat_data.update("ROP" => @rop_total, "Classified" => @clas_total, "Other" => @other_total)
         end
 
         erb :view_publication
@@ -1327,9 +1335,10 @@ class EzrAds < Sinatra::Base
     @features = Feature.all
     @users = User.all
     @customers = Customer.all
+    @paper = env['warden'].user.paper_id
     if params['customer-search']
       if params['customer-search']['query']
-        if @customer = Customer.all(:business_name.like => "%#{params['customer-search']['query']}%") | Customer.all(:contact_name.like => "%#{params['customer-search']['query']}%")
+        if @customer = Customer.all(:business_name.like => "%#{params['customer-search']['query']}%") + Customer.all(:contact_name.like => "%#{params['customer-search']['query']}%") & Customer.all(:paper_id => @paper)
           if @customer.count == 1
             @results = "1 record found"
           else
@@ -1367,7 +1376,7 @@ class EzrAds < Sinatra::Base
       end
 
       if feature && width && height && user && customer
-        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer)
+        @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user) & Ad.all(:customer_id => customer) 
       elsif feature && width && height && user
         @ads = Ad.all(:feature_id => feature) & Ad.all(:columns => width) & Ad.all(:height => height) & Ad.all(:user_id => user)
       elsif feature && width && height && customer
@@ -1530,6 +1539,11 @@ class EzrAds < Sinatra::Base
 
     def display_papers
       @papers = Paper.all
+    end
+
+    def get_feature_id(f)
+      k = Feature.first(:name => f)
+      return k.id
     end
   end
 

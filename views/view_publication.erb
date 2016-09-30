@@ -9,15 +9,17 @@
   </div>
 </form>
 <div class="row">
-  <div class="col m4 s12">
+  <div class="col m6 s12">
     <h5>Features</h5>
     <%= pie_chart @feat_data, label: "Ads sold by feature" %>
   </div>
-  <div class="col m4 s12">
+  <div class="col m6 s12">
     <h5>Reps</h5>
     <%= pie_chart @repdata, label: "Ads sold by rep" %>
   </div>
-  <div class="col m4 s12">
+</div>
+<div class="row">
+  <div class="col m12 s12">
     <h5>Previous issues</h5>
     <%= column_chart @pub_data %>
   </div>
@@ -31,32 +33,21 @@
         <td>Ads Booked</td>
         <td class="right"><%= @publication.ads.count %></td>
       </tr>
-      <% if @unpaid > 0 %>
-        <tr>
-          <td>Ads with payment outstanding</td>
-          <td class="right"><%= @unpaid %></td>
-        </tr>
+        <td>ROP Total</td>
+        <td class="right"><%= "$#{format_price(@rop_total)}" %></td>
+      </tr>
+      <tr>
+        <td>Classie Total</td>
+        <td class="right"><%= "$#{format_price(@clas_total)}" %></td>
+      </tr>
+      <% @other_data.each do |f| %>
+        <% if f[1] > 0 %>
+          <tr>
+            <td><%= f[0] %></td>
+            <td class="right">$<%= format_price(f[1]) %></td>
+          </tr>
+        <% end %>
       <% end %>
-      <tr class="total">
-        <td>Paid</td>
-        <td class="right"><%= "$#{format_price(@paid)}" %></td>
-      </tr>
-      <tr>
-        <td>Unpaid</td>
-        <td class="right"><%= "$#{format_price(@unpaid_total)}" %></td>
-      </tr>
-      <tr class="total">
-        <td>Account</td>
-        <td class="right"><%= "$#{format_price(@account)}" %></td>
-      </tr>
-      <tr>
-        <td>Eftpos</td>
-        <td class="right"><%= "$#{format_price(@eftpos)}" %></td>
-      </tr>
-      <tr>
-        <td>Cash</td>
-        <td class="right"><%= "$#{format_price(@cash)}" %></td>
-      </tr>
       <tr class="total">
         <td>Total</td>
         <td class="right">$<%= format_price(@paid + @unpaid_total) %></td>
@@ -70,6 +61,19 @@
         <td class="right"><strong><%= "$#{format_price((@paid + @unpaid_total) + @gst)}" %></strong></td>
       </tr>
       <tr class="total">
+        <td>Account</td>
+        <td class="right"><%= "$#{format_price(@account)}" %></td>
+      </tr>
+      <tr>
+        <td>Eftpos</td>
+        <td class="right"><%= "$#{format_price(@eftpos)}" %></td>
+      </tr>
+      <tr>
+        <td>Cash</td>
+        <td class="right"><%= "$#{format_price(@cash)}" %></td>
+      </tr>
+      <tr>
+      <tr class="total">
         <td><strong><a href="/view/publication/<%= @publication.id %>/rop">ROP Features</a></strong></td>
       </tr>
       <% @rop_data.each do |f| %>
@@ -80,10 +84,6 @@
           </tr>
         <% end %>
       <% end %>
-      <tr>
-        <td><strong>ROP Total</strong></td>
-        <td class="right"><strong><%= "$#{format_price(@rop_total)}" %></strong></td>
-      </tr>
       <tr class="total">
         <td><strong><a href="/view/publication/<%= @publication.id %>/classie">Classie Features</a></strong></td>
       </tr>
@@ -95,16 +95,19 @@
           </tr>
         <% end %>
       <% end %>
-      <tr>
-      <tr>
-        <td><strong>Classie Total</strong></td>
-        <td class="right"><strong><%= "$#{format_price(@clas_total)}" %></strong></td>
-      </tr>
+      <% @other_data.each do |f| %>
+        <% if f[1] > 0 %>
+          <tr class="total">
+            <td><a href="/view/publication/<%= @publication.id %>/feature/<%= get_feature_id(f[0]) %>"><%= f[0] %></a></td>
+            <td class="right"><strong>$<%= format_price(f[1]) %></strong></td>
+          </tr>
+        <% end %>
+      <% end %>
       <tr class="total">
         <td><strong>Ads with outstanding payment</strong></td>
       </tr>
       <% @ads.each do |a| %>
-        <% if a.paid == false %>
+        <% if a.paid == false && a.payment != 1 %>
           <tr>
             <td><a href="/view/ad/<%= a.id %>"><%= a.customer.business_name %></a></td>
             <td class="right">$<%= format_price(a.price) %></td>

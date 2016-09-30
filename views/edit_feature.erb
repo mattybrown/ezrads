@@ -16,8 +16,10 @@
       <div class="input-field col s12 m6">
         <select name="feature[type]">
           <option value="" disabled>Calculation type</option>
-          <option value="1" <%= @feature.type == 1 ? "selected" : "" %>>Price by column centimeter</option>
-          <option value="2" <%= @feature.type == 2 ? "selected" : "" %>>Price by word</option>
+          <option value="1" <%= @feature.type == 1 ? "selected" : "" %>>ROP</option>
+          <option value="2" <%= @feature.type == 2 ? "selected" : "" %>>Run on</option>
+          <option value="3" <%= @feature.type == 3 ? "selected" : "" %>>Classified</option>
+          <option value="4" <%= @feature.type == 4 ? "selected" : "" %>>Stand alone</option>
         </select>
       </div>
       <div class="input-field col s12 m6">

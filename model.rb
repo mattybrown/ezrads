@@ -105,7 +105,7 @@ class Feature
   property :id, Serial, :key => true
   property :name, String
   property :rate, Float
-  property :type, Integer
+  property :type, Integer #1: ROP 2: Run on 3:Class 4: Stand alone
   property :rop, Boolean
 
   belongs_to :paper
