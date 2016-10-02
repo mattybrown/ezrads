@@ -73,6 +73,10 @@
         <td class="right"><%= "$#{format_price(@cash)}" %></td>
       </tr>
       <tr>
+        <td>Direct Credit</td>
+        <td class="right"><%= "$#{format_price(@direct_credit)}" %></td>
+      </tr>
+      <tr>
       <tr class="total">
         <td><strong><a href="/view/publication/<%= @publication.id %>/rop">ROP Features</a></strong></td>
       </tr>
