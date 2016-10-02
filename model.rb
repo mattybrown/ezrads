@@ -124,6 +124,15 @@ class Paper
   has n, :users
 end
 
+class Motd
+  include DataMapper::Resource
+
+  property :id, Serial, :key => true
+  property :message, Text
+  property :enabled, Boolean
+
+  belongs_to :paper
+end
 
 DataMapper.finalize
 DataMapper.auto_upgrade!

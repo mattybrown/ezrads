@@ -1226,12 +1226,30 @@ class EzrAds < Sinatra::Base
     end
   end
 
+  post '/create/motd' do
+    if params['motd']['enabled']
+      enabled = true
+    else
+      enabled = false
+    end
+    m = Motd.new(message: params['motd']['message'], paper_id: params['motd']['paper'], enabled: enabled)
+    if m.save
+      flash[:success] = "Message saved";
+      redirect '/'
+    else
+      flash[:error] = "Something went wrong..."
+    end
+  end
+
   get '/settings' do
+    @title = "Paper settings"
     if Paper.all.count < 1
       erb :setup
     elsif env['warden'].user.role == 1
       env['warden'].authenticate!
       @paper = Paper.get(env['warden'].user.paper_id)
+      @papers = Paper.all
+      @motd = Motd.last
       erb :settings
     else
       flash[:error] = "You do not have permission to view this page"
@@ -1548,6 +1566,19 @@ class EzrAds < Sinatra::Base
       k = Feature.first(:name => f)
       return k.id
     end
+
+    def motd
+      if k = Motd.last(:paper_id => env['warden'].user.paper_id)
+        if k.enabled == true
+          return k.message
+        else
+          return false
+        end
+      else
+        return false
+      end
+    end
+
   end
 
 end

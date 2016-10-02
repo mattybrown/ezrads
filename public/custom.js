@@ -4,6 +4,7 @@ $(document).ready(function(){
     selectYears: 10 // Creates a dropdown of 15 years to control year
   });
   $('.ad_table').tablesorter();
+
   $('.close-flash').click(function(){
     $('.flash').fadeOut(1100);
   });
