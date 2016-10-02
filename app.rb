@@ -1568,9 +1568,13 @@ class EzrAds < Sinatra::Base
     end
 
     def motd
-      if k = Motd.last(:paper_id => env['warden'].user.paper_id)
-        if k.enabled == true
-          return k.message
+      if env['warden'].user
+        if k = Motd.last(:paper_id => env['warden'].user.paper_id)
+          if k.enabled == true
+            return k.message
+          else
+            return false
+          end
         else
           return false
         end
