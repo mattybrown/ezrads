@@ -75,7 +75,7 @@
         <a href="/view/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="View" data-position="top"><i class="fa fa-eye"></i></a></td>
       </td>
       <td>
-        <% if a.feature.type == 1 %>
+        <% if a.feature.type != 2 %>
           <a href="/edit/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
         <% elsif a.feature.type == 2 %>
           <a href="/edit/runon/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
