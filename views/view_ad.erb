@@ -48,7 +48,7 @@
 
       </td>
       <td>
-        <% if @ad.feature.type == 1 %>
+        <% if @ad.feature.type != 2 %>
           <a href="/edit/ad/<%= @ad.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
         <% elsif @ad.feature.type == 2 %>
           <a href="/edit/runon/<%= @ad.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
