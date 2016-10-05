@@ -100,10 +100,14 @@ class EzrAds < Sinatra::Base
 
     @gross = 0
     @count = 0
+    @paid = 0
     if @ads.class != String
       @ads.each do |a|
         @gross += a.price
         @count += 1
+        if a.paid
+          @paid += a.price
+        end
       end
     end
 
@@ -138,10 +142,14 @@ class EzrAds < Sinatra::Base
 
     @gross = 0
     @count = 0
+    @paid = 0
     if @ads.class != String
       @ads.each do |a|
         @gross += a.price
         @count += 1
+        if a.paid == true && a.payment != 1
+          @paid += a.price
+        end
       end
     end
 
