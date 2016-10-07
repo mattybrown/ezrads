@@ -14,28 +14,8 @@
     </div>
     <div class="row">
       <div class="input-field col s6">
-        <span class="label">Feature</span>
-        <select class="browser-default selectize" name="ad[feature]">
-          <option value="<%= @ad.feature[:id] %>" selected><%= @ad.feature[:name] %></option>
-          <% @features.each do |f| %>
-            <option value="<%= f.id %>"><%= f.name %></option>
-          <% end %>
-        </select>
-      </div>
-      <div class="input-field col s6">
-        <span class="label">Publication</span>
-        <select class="browser-default selectize" name="ad[publication]">
-          <option value="<%= @ad.publication[:id] %>" selected><%= "#{display_date(@ad.publication[:date])} - #{@ad.publication[:name]}" %></option>
-          <% @publications.each do |p| %>
-            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
-          <% end %>
-        </select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-field col m6 s12">
-        <span class="label">Position</span>
-        <input type="text" name="ad[position]" value="<%= @ad.position %>" id="position">
+        <span class="label">Notes</span>
+        <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
       </div>
       <div class="input-field col s6">
         <span class="label">Customer</span>
@@ -46,6 +26,22 @@
           <% end %>
         </select>
       </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <span class="label">Feature</span>
+        <select class="browser-default selectize" name="ad[feature]">
+          <option value="<%= @ad.feature[:id] %>" selected><%= @ad.feature[:name] %></option>
+          <% @features.each do |f| %>
+            <option value="<%= f.id %>"><%= f.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="input-field col m6 s12">
+        <span class="label">Position</span>
+        <input type="text" name="ad[position]" value="<%= @ad.position %>" id="position">
+      </div>
+
     </div>
     <div class="row">
       <div class="input-field col m4 s8">
@@ -78,19 +74,25 @@
             </select>
           </div>
         <% end %>
-      <div class="input-field col s6">
-        <span class="label">Notes</span>
-        <textarea name="ad[note]" id="note"><%= @ad.note %></textarea>
-      </div>
+        <div class="input-field col m6 s12">
+          <span class="label">Receipt</span>
+          <input type="text" name="ad[receipt]" id="receipt" value="<%= @ad.receipt %>">
+        </div>
     </div>
     <div class="row">
       <div class="input-field col m6 s12">
         <span class="label">Print only field (for accounts)</span>
         <input type="text" name="ad[print]" id="print" value="<%= @ad.print_only %>">
       </div>
-      <div class="input-field col m6 s12">
-        <span class="label">Receipt</span>
-        <input type="text" name="ad[receipt]" id="receipt" value="<%= @ad.receipt %>">
+
+      <div class="input-field col s6">
+        <span class="label">Publication</span>
+        <select class="browser-default selectize" name="ad[publication]">
+          <option value="<%= @ad.publication[:id] %>" selected><%= "#{display_date(@ad.publication[:date])} - #{@ad.publication[:name]}" %></option>
+          <% @publications.each do |p| %>
+            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+          <% end %>
+        </select>
       </div>
     </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
