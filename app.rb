@@ -1055,7 +1055,6 @@ class EzrAds < Sinatra::Base
         end
 
         @features = @publication.ads.feature
-        f = Feature.all
         @feat_data = {}
         @rop_data = {}
         @clas_data = {}
@@ -1064,7 +1063,7 @@ class EzrAds < Sinatra::Base
         @rop_total = 0
         @clas_total = 0
         @other_total = 0
-        f.each do |f|
+        @features.each do |f|
           total = 0
           rop_price = 0
           clas_price = 0
@@ -1361,9 +1360,9 @@ class EzrAds < Sinatra::Base
   get '/search' do
     env['warden'].authenticate!
     @title = "Search"
-    @features = Feature.all
-    @users = User.all
-    @customers = Customer.all
+    @features = Feature.all(:paper_id => env['warden'].user.paper_id)
+    @users = User.all(:paper_id => env['warden'].user.paper_id)
+    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @paper = env['warden'].user.paper_id
     if params['customer-search']
       if params['customer-search']['query']
@@ -1380,7 +1379,7 @@ class EzrAds < Sinatra::Base
     if params['booking']
       id = params['booking']['number']
       ad = Ad.get id
-      if ad
+      if ad && ad.publication.paper_id == env['warden'].user.paper_id
         redirect '/view/ad/' + id
       else
         @results = "No record found"

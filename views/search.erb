@@ -75,7 +75,7 @@
         <select name="ad-search[user]">
           <option value="" disabled selected>Rep</option>
           <% @users.each do |u| %>
-            <option value="<%= u.id %>"><%= u.username %></option>
+            <option value="<%= u.id %>"><%= u.username.capitalize %></option>
           <% end %>
         </select>
       </div>
