@@ -1362,7 +1362,7 @@ class EzrAds < Sinatra::Base
     @title = "Search"
     @features = Feature.all(:paper_id => env['warden'].user.paper_id)
     @users = User.all(:paper_id => env['warden'].user.paper_id)
-    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+    @customers = Customer.all
     @paper = env['warden'].user.paper_id
     if params['customer-search']
       if params['customer-search']['query']
@@ -1464,10 +1464,12 @@ class EzrAds < Sinatra::Base
       end
 
 
-      if @ads.count == 1
-        @results = "1 record found"
-      else
+      if @ads == nil
+        @results = "You gotta enter a search term for a search to work..."
+      elsif @ads.count > 1
         @results = "#{@ads.count} records found"
+      elsif @ads.count == 1
+        @results = "1 record found"
       end
     end
 
