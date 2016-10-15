@@ -95,6 +95,21 @@
         </select>
       </div>
     </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <span class="label">Repeat date</span>
+        <select class="browser-default selectize" name="ad[repeat_date]">
+          <% if @ad.repeat_date != nil %>
+            <option value="<%= @ad.publication[:date] %>" selected><%= "#{display_date(@ad.repeat_date)} - #{@ad.publication[:name]}" %></option>
+          <% else %>
+          <option disabled selected>Repeat date</option>
+          <% end %>
+          <% @publications.each do |p| %>
+            <option value="<%= p.date %>"><%= display_date(p.date) %> - <%= p.name %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
 </div>

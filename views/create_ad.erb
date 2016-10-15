@@ -90,27 +90,50 @@
         <select class="browser-default selectize" name="ad[single-publication]">
           <option value="" disabled selected>Publication</option>
           <% @publications.each do |p| %>
-            <option value="<%= p.id %>" <%= session[:ad][:publication] == p.id ? "selected" : "" %>><%= display_date(p.date) %> - <%= p.name %></option>
+            <% if p.id == next_issue.id %>
+              <option value="<%= p.id %>" selected><%= display_date(p.date) %> - <%= p.name %></option>
+            <% elsif session[:ad][:publication] == p.id %>
+              <option value="<%= p.id %>" selected><%= display_date(p.date) %> - <%= p.name %></option>
+            <% else %>
+              <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+            <% end %>
+
           <% end %>
         </select>
       </div>
-
       <div class="input-field col m2 s4">
         <input type="checkbox" name="ad[repeat]" id="repeat" value="repeat">
         <label for="repeat">Repeat</label>
       </div>
     </div>
 
-    <div class="row" id="repeat-dates" style="display:none;">
-      <h4>Publication dates</h4>
-      <% count = 0 %>
-      <% @publications.each do |p| %>
-        <div class="input-field col m3 s6">
-          <input type="checkbox" id="repeat<%= count %>" name="ad[publication][<%= p.id %>]">
-          <label for="repeat<%= count %>"><%= "#{display_date(p.date)} - #{p.name}" %></label>
+    <div id="repeat-dates" style="display:none;">
+      <div class="row">
+        <h4>Publication dates</h4>
+        <% count = 0 %>
+        <% @publications.each do |p| %>
+          <div class="input-field col m3 s6">
+            <input type="checkbox" id="repeat<%= count %>" name="ad[publication][<%= p.id %>]">
+            <label for="repeat<%= count %>"><%= "#{display_date(p.date)} - #{p.name}" %></label>
+          </div>
+          <% count += 1 %>
+        <% end %>
+      </div>
+      <div class="row">
+        <div class="input-field col m6 s12">
+          <input type="checkbox" name="ad[show_repeat]" id="show_repeat" value="show_repeat">
+          <label for="show_repeat">Book without a repeat date?</label>
         </div>
-        <% count += 1 %>
-      <% end %>
+        <div class="input-field col m6 s12">
+          <span class="label">Custom repeat date</span>
+          <select class="browser-default selectize" name="ad[custom_repeat]">
+            <option value="" disabled selected>Publication</option>
+            <% @all_publications.each do |p| %>
+                <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
     </div>
     <button type="submit" class="btn-floating btn-large tooltipped" data-delay="50" data-tooltip="Create ad" data-position="top"><i class="fa fa-plus"></i></button>
     <a href="/cancel/ad" class="btn-floating btn-large red right tooltipped" data-delay="50" data-tooltip="Cancel ad" data-position="top"><i class="fa fa-close"></i></a>
