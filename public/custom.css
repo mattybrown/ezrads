@@ -77,3 +77,18 @@ table .notpaid td{
     display:none;
   }
 }
+/* PAGINATION */
+.pagination{
+  width:auto;
+  text-align:center;
+}
+.pagination a{
+  display:inline-block;
+  padding:0 5px;
+  border:1px solid #0d47a1;
+  color:#0d47a1;
+}
+.pagination-active{
+  background:#0d47a1 !important;
+  color:#fff !important;
+}

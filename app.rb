@@ -1,7 +1,8 @@
 require 'bundler'
 Bundler.require
 require 'tilt/erb'
-
+require 'will_paginate'
+require 'will_paginate/data_mapper'
 require './model'
 
 
@@ -226,7 +227,8 @@ class EzrAds < Sinatra::Base
       @user = User.get params['id']
       @title = "Viewing #{@user.username}"
 
-      @ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
+      @ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
+      #@ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
       @pub = Publication.all(:paper_id => env['warden'].user.paper_id, :order => :date.desc, :limit => 10, :date.lte => Date.today)
       @data = {}
       this_month_total = 0
@@ -352,7 +354,7 @@ class EzrAds < Sinatra::Base
 
   get '/view/customers' do
     env['warden'].authenticate!
-    @customers = Customer.all(:paper_id => env['warden'].user.paper_id, :order => (:business_name.asc))
+    @customers = Customer.paginate(:page => params[:page], :per_page => 30, :paper_id => env['warden'].user.paper_id, :order => (:business_name.asc))
     @title = "Customers"
 
     erb :view_customers
@@ -843,7 +845,7 @@ class EzrAds < Sinatra::Base
     @user = env['warden'].user
     @title = "#{@user.username.capitalize}'s bookings"
     @tasks = Task.all(:user_id => @user.id, :completed => false)
-    @ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
+    @ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
     @data = {}
     this_month_total = 0
     last_month_total = 0
@@ -1600,6 +1602,41 @@ class EzrAds < Sinatra::Base
       paper = Paper.all(:id => env['warden'].user.paper_id)
       pub = paper.publications(:date.gt => Date.today) & paper.publications(:order => [:date.desc])
       return pub.last
+    end
+
+    def paginate(resources)
+      if !resources.next_page.nil? and !resources.previous_page.nil?
+        html = "<a href='#{request.path_info}?page=#{resources.previous_page}'>« Prev</a> "
+        (1..resources.total_pages).each do |p|
+          if params[:page].to_i == p
+            html += "<a href='#{request.path_info}?page=#{p}' class='pagination-active'>#{p}</a> "
+          else
+            html += "<a href='#{request.path_info}?page=#{p}'>#{p}</a> "
+          end
+        end
+        html += "<a href='#{request.path_info}?page=#{resources.next_page}'>Next »</a> "
+      elsif !resources.next_page.nil? and resources.previous_page.nil?
+        html = "« Prev "
+        (1..resources.total_pages).each do |p|
+          if params[:page].to_i == p
+            html += "<a href='#{request.path_info}?page=#{p}' class='pagination-active'>#{p}</a> "
+          else
+            html += "<a href='#{request.path_info}?page=#{p}'>#{p}</a> "
+          end
+        end
+        html += "<a href='#{request.path_info}?page=#{resources.next_page}'>Next »</a> "
+      elsif resources.next_page.nil? and !resources.previous_page.nil?
+        html = "<a href='#{request.path_info}?page=#{resources.previous_page}'>« Prev</a> "
+        (1..resources.total_pages).each do |p|
+          if params[:page].to_i == p
+            html += "<a href='#{request.path_info}?page=#{p}' class='pagination-active'>#{p}</a> "
+          else
+            html += "<a href='#{request.path_info}?page=#{p}'>#{p}</a> "
+          end
+        end
+        html += "Next » "
+      end
+      return html
     end
 
   end

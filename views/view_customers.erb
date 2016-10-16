@@ -6,10 +6,15 @@
     </div>
   </form>
 </div>-->
-
+<div class="row">
+  <div class="pagination">
+    <%= paginate @customers %>
+  </div>
+</div>
 <table class="ad_table tablesorter highlight">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Business name</th>
       <th>Contact name</th>
       <th>Phone</th>
@@ -23,6 +28,7 @@
 <% if @customers %>
 <% @customers.each do |a| %>
     <tr class="<%= a.banned ? 'banned' : 'sweetas' %>">
+      <td><a href="/view/customer/<%= a.id %>"><%= a.id %></a></td>
       <td><a href="/view/customer/<%= a.id %>"><%= a.business_name %></a></td>
       <td><%= a.contact_name %></td>
       <td><%= a.phone %></td>
@@ -37,3 +43,8 @@
 <% end %>
   </tbody>
 </table>
+<div class="row">
+  <div class="pagination">
+    <%= paginate @customers %>
+  </div>
+</div>

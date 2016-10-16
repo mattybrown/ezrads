@@ -8,6 +8,7 @@ gem 'warden'
 gem 'chartkick'
 gem 'groupdate'
 gem 'dm-sqlite-adapter'
+gem 'will_paginate'
 
 group :development, :test do
 

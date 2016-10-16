@@ -62,7 +62,7 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-    <tr class="<% if a.completed == true %>completed<% else %>incomplete<% end %>">
+    <tr>
       <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
       <td><%= display_time(a.created_at) %></td>
       <td><%= a.user[:username].capitalize %></td>
