@@ -230,38 +230,9 @@ class EzrAds < Sinatra::Base
       @ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
       #@ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
       @pub = Publication.all(:paper_id => env['warden'].user.paper_id, :order => :date.desc, :limit => 10, :date.lte => Date.today)
-      @data = {}
       this_month_total = 0
       last_month_total = 0
       next_month_total = 0
-      @ads.each do |a|
-        present = Date.today.mon
-        if present == 12
-          next_month == 1
-        else
-          next_month = present + 1
-        end
-
-        if present == 1
-          last_month = 12
-        else
-          last_month = present - 1
-        end
-
-        @data.update("Last month" => last_month_total)
-        if a.publication.date.mon == next_month
-          next_month_total += a.price
-        end
-        if a.publication.date.mon == present
-          this_month_total += a.price
-        end
-        @data.update("This month" => this_month_total)
-        if a.publication.date.mon == last_month
-          last_month_total += a.price
-        end
-        @data.update("Next month" => next_month_total)
-      end
-
       price = 0
       count = 0
       @ads.each do |a|
