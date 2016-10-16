@@ -1577,7 +1577,7 @@ class EzrAds < Sinatra::Base
 
     def paginate(resources)
       if !resources.next_page.nil? and !resources.previous_page.nil?
-        html = "<a href='#{request.path_info}?page=#{resources.previous_page}'>« Prev</a> "
+        html = "<a href='#{request.path_info}?page=#{resources.previous_page}'> Prev</a> "
         (1..resources.total_pages).each do |p|
           if params[:page].to_i == p
             html += "<a href='#{request.path_info}?page=#{p}' class='pagination-active'>#{p}</a> "
@@ -1605,7 +1605,7 @@ class EzrAds < Sinatra::Base
             html += "<a href='#{request.path_info}?page=#{p}'>#{p}</a> "
           end
         end
-        html += "Next » "
+        html += "Next "
       end
       return html
     end
