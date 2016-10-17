@@ -615,6 +615,9 @@ class EzrAds < Sinatra::Base
     else
       paid = false
     end
+    if params['ad']['repeat_date'] == ""
+      params['ad']['repeat_date'] = nil
+    end
     if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'], receipt: params['ad']['receipt'], print_only: params['ad']['print'], paid: paid, repeat_date: params['ad']['repeat_date'])
       flash[:success] = "Ad #{ad.id} updated"
       redirect "/view/customer/#{customer.id}"
