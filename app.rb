@@ -537,7 +537,7 @@ class EzrAds < Sinatra::Base
       repeat_publication = Publication.get(params['ad']['publication'].first[0])
       if params['ad']['show_repeat']
         repeat_date = nil
-      elsif params['ad']['custom_repeat'] != ""
+      elsif params['ad']['custom_repeat'] && params['ad']['custom_repeat'] != ""
         repeat_pub = Publication.get(params['ad']['custom_repeat'])
         repeat_date = repeat_pub.date
       else
@@ -617,9 +617,11 @@ class EzrAds < Sinatra::Base
     end
     if params['ad']['repeat_date'] == ""
       params['ad']['repeat_date'] = nil
+    elsif params['ad']['repeat_date'] == "none"
+      params['ad']['repeat_date'] = nil
     end
     if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'], receipt: params['ad']['receipt'], print_only: params['ad']['print'], paid: paid, repeat_date: params['ad']['repeat_date'])
-      flash[:success] = "Ad #{ad.id} updated"
+      flash[:success] = "Ad <a href='/view/ad/#{ad.id}'>#{ad.id}</a> updated"
       redirect "/view/customer/#{customer.id}"
     else
       flash[:error] = "Something went wrong #{ad.errors.inspect}"
