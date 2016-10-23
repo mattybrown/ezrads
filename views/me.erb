@@ -18,14 +18,10 @@
   <% end %>
 </div>
 
-<div class="row">
-  <%= column_chart @data %>
-</div>
 <a href="/changepassword/<%= @user.id %>" class="btn right">Change password</a>
-<p>Monthly total to date: $<%= format_price(@price) %></p>
-
+<br>
 <p><a href="/view/tasks/complete">View completed tasks</a></p>
-<hr>
+
 <div class="row">
   <div class="pagination">
     <%= paginate @ads %>
@@ -53,7 +49,7 @@
   <tbody>
 <% if @ads %>
 <% @ads.each do |a| %>
-    <tr>
+    <tr class="<% if a.placed == true %>placed<% elsif a.completed == true %>completed<% else %>not-placed<% end %> feature-<%= a.feature.id %>" id="ad-<%= a.id %>">
       <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
       <td><%= display_time(a.created_at) %></td>
       <td><a href="/view/customer/<%= a.customer.id %>"><%= a.customer.business_name %></a></td>

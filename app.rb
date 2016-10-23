@@ -818,57 +818,14 @@ class EzrAds < Sinatra::Base
 
   get '/me' do
     env['warden'].authenticate!
+    today = Date.today
     @user = env['warden'].user
     @title = "#{@user.username.capitalize}'s bookings"
     @tasks = Task.all(:user_id => @user.id, :completed => false)
-    @ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
-    @data = {}
-    this_month_total = 0
-    last_month_total = 0
-    next_month_total = 0
-    @ads.each do |a|
-      present = Date.today.mon
-      if present == 12
-        next_month == 1
-      else
-        next_month = present + 1
-      end
+    pub = Publication.all(:date.gt => today, :paper_id => env['warden'].user.paper_id, :order => :date.asc)
+    @ads = Ad.paginate(Ad.publication.date.gt => today, :order => Ad.publication.date.asc, :page => params[:page], :per_page => 30, :user_id => @user.id)
+    ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
 
-      if present == 1
-        last_month = 12
-      else
-        last_month = present - 1
-      end
-
-      @data.update("Last month" => last_month_total)
-      if a.publication.date.mon == next_month
-        next_month_total += a.price
-      end
-      if a.publication.date.mon == present
-        this_month_total += a.price
-      end
-      @data.update("This month" => this_month_total)
-      if a.publication.date.mon == last_month
-        last_month_total += a.price
-      end
-      @data.update("Next month" => next_month_total)
-    end
-
-    price = 0
-    count = 0
-    paid = 0
-    @ads.each do |a|
-      if a.publication.date.mon == Date.today.mon
-        price += a.price
-        count += 1
-      end
-      if a.paid == false
-        paid += 1
-      end
-    end
-    @price = price
-    @count = count
-    @paid = paid
     erb :me
   end
 
