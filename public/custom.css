@@ -92,3 +92,6 @@ table .notpaid td{
   background:#0d47a1 !important;
   color:#fff !important;
 }
+#rep-monthly-breakdown-table, #rep-monthly-breakdown-table th, #rep-monthly-breakdown-table td{
+  border:1px solid #d0d0d0;
+}

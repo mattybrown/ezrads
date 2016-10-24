@@ -191,6 +191,35 @@ class EzrAds < Sinatra::Base
     @roleArr = ['poo', 'Admin', 'Sales', 'Production', 'Accounts']
     @role = env['warden'].user[:role]
 
+    @pub = []
+    @pub_users = []
+    today = Date.today
+    pub = Publication.all(:date.lt => today, :limit => 8, :paper_id => env['warden'].user.paper_id, :order => :date.desc)
+    pub += Publication.all(:date.gt => today, :limit => 8, :paper_id => env['warden'].user.paper_id, :order => :date.asc)
+    pub.each do |p|
+      if p.date.mon == today.mon
+        @pub << p.date
+      end
+    end
+    @users.each do |u|
+      if u.role != 3
+        p_user = []
+        p_user << u.username
+        pub.each do |p|
+          if p.date.mon == today.mon
+            total = 0
+              p.ads.each do |a|
+                if a.user_id == u.id
+                  total += a.price
+                end
+              end
+            p_user << total
+          end
+        end
+        @pub_users << p_user
+      end
+    end
+
     @this_month = {}
     @last_month = {}
 

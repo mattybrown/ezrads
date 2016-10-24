@@ -1,15 +1,32 @@
-<% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
-  <div class="row">
-    <div class="col m6 s12">
-      <span class="label">Last month rep figures</span>
-      <%= column_chart @last_month %>
-    </div>
-    <div class="col m6 s12">
-      <span class="label">This month rep figures</span>
-      <%= column_chart @this_month %>
-    </div>
+
+<div class="row">
+  <div class="col m6 s12">
+    <span class="label">Last month rep figures</span>
+    <%= column_chart @last_month %>
   </div>
-<% end %>
+  <div class="col m6 s12">
+    <span class="label">This month rep figures</span>
+    <%= column_chart @this_month %>
+  </div>
+</div>
+<table id="rep-monthly-breakdown-table">
+  <th>Users</th>
+  <% @pub.each do |p| %>
+    <th><%= p %></th>
+  <% end %>
+  <% @pub_users.each do |u| %>
+    <tr>
+      <% u.each do |x| %>
+        <% if x.class == String %>
+          <td><strong><%= x.capitalize %></strong></td>
+        <% else %>
+          <td><%= format_price(x.to_f) %></td>
+        <% end %>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<br>
 <table class="highlight">
   <thead>
     <tr>
