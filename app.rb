@@ -227,22 +227,23 @@ class EzrAds < Sinatra::Base
       this_month_total = 0
       last_month_total = 0
       u.ads.each do |a|
-        present = Date.today.mon
-        if present == 1
-          last_month = 12
-        else
-          last_month = present - 1
-        end
+        if a.publication != nil
+          present = Date.today.mon
+          if present == 1
+            last_month = 12
+          else
+            last_month = present - 1
+          end
+          if a.publication.date.mon == present
+            this_month_total += a.price
+          end
+          @this_month.update(u.username.capitalize => this_month_total)
 
-        if a.publication.date.mon == present
-          this_month_total += a.price
+          if a.publication.date.mon == last_month
+            last_month_total += a.price
+          end
+          @last_month.update(u.username.capitalize => last_month_total)
         end
-        @this_month.update(u.username.capitalize => this_month_total)
-
-        if a.publication.date.mon == last_month
-          last_month_total += a.price
-        end
-        @last_month.update(u.username.capitalize => last_month_total)
       end
     end
 
