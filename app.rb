@@ -365,7 +365,7 @@ class EzrAds < Sinatra::Base
 
   get '/view/customers' do
     env['warden'].authenticate!
-    @customers = Customer.paginate(:page => params[:page], :per_page => 30, :paper_id => env['warden'].user.paper_id, :order => (:business_name.asc))
+    @customers = Customer.paginate(:page => params[:page], :per_page => 30, :order => (:business_name.asc))
     @title = "Customers"
 
     erb :view_customers
@@ -1346,7 +1346,7 @@ class EzrAds < Sinatra::Base
     @paper = env['warden'].user.paper_id
     if params['customer-search']
       if params['customer-search']['query']
-        if @customer = Customer.all(:business_name.like => "%#{params['customer-search']['query']}%") + Customer.all(:contact_name.like => "%#{params['customer-search']['query']}%") & Customer.all(:paper_id => @paper)
+        if @customer = Customer.all(:business_name.like => "%#{params['customer-search']['query']}%") + Customer.all(:contact_name.like => "%#{params['customer-search']['query']}%")
           if @customer.count == 1
             @results = "1 record found"
           else
