@@ -435,8 +435,8 @@ class EzrAds < Sinatra::Base
     else
       banned = false
     end
-    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'], banned: banned)
-      flash[:success] = "Customer updated"
+    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'], banned: banned)
+      flash[:success] = "Customer <a href='/view/customer/#{customer.id}'>#{customer.id}</a> updated"
       redirect '/view/customers'
     else
       customer.errors.each do |e|
@@ -467,9 +467,9 @@ class EzrAds < Sinatra::Base
       redirect back
     end
     if params['customer']['custom_rate'] == ""
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
     else
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
     end
     if customer.save
       flash[:success] = "Customer created"
@@ -999,7 +999,8 @@ class EzrAds < Sinatra::Base
         end
 
         @pub_data = {}
-        past_publications = Publication.all(:date.lte => @publication.date, :order => [:date.desc], :limit => 12, :paper_id => env['warden'].user.paper_id)
+        past_publications = Publication.all(:date.lte => @publication.date, :order => [:date.desc], :limit => 4, :paper_id => env['warden'].user.paper_id)
+        past_publications += Publication.all(:date.gte => @publication.date, :order => [:date.asc], :limit => 8, :paper_id => env['warden'].user.paper_id)
         past_publications.each do |p|
           total = 0
           p.ads.each do |a|

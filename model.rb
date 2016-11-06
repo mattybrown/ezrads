@@ -34,6 +34,8 @@ class Customer
   property :alt_contact_name, String, :length => 100
   property :business_name, String, :length => 100
   property :billing_address, String, :length => 100
+  property :address_line2, String, :length => 100
+  property :address_line3, String, :length => 100
   property :phone, String
   property :alt_contact_phone, String, :length => 100
   property :mobile, String

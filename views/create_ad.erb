@@ -76,13 +76,13 @@
       </div>
       <% end %>
       <div class="input-field col m6 s12">
-        <span class="label">Receipt</span>
+        <span class="label">Receipt number</span>
         <input type="text" name="ad[receipt]" id="receipt" <%= session[:ad] ? "value='#{session[:ad][:receipt]}'" : "" %>>
       </div>
     </div>
     <div class="row">
       <div class="input-field col m6 s12">
-        <span class="label">Print only field (for accounts)</span>
+        <span class="label">Order number / Key number</span>
         <input type="text" name="ad[print]" id="receipt" <%= session[:ad] ? "value='#{session[:ad][:print]}'" : "" %>>
       </div>
       <div class="input-field col m4 s8 single-publication">
