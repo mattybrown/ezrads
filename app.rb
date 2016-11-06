@@ -54,28 +54,35 @@ class EzrAds < Sinatra::Base
     @title = "Home"
 
     paper = Paper.all(:id => user_publication)
+
     pub = paper.publications(:date.gt => today) & paper.publications(:order => [:date.desc])
-
-    if @publications = paper.publications.count >= 1
-      @publications = paper.publications(:order => [:date.asc])
-      @ads = pub.last.ads
-      @pub = pub.last
-    else
-      @pub = "No publications found - <a href='/create/publication'>Click here to create one</a>"
-    end
-
-    @features = @ads.features
-
-    @gross = 0
-    @count = 0
-    if @ads.class != String
-      @ads.each do |a|
-        @gross += a.price
-        @count += 1
+    if pub.count > 1
+      if @publications = paper.publications.count >= 1
+        @publications = paper.publications(:order => [:date.asc])
+        @ads = pub.last.ads
+        @pub = pub.last
+      else
+        @pub = "No publications found - <a href='/create/publication'>Click here to create one</a>"
       end
+
+      @features = @ads.features
+
+      @gross = 0
+      @count = 0
+      if @ads.class != String
+        @ads.each do |a|
+          @gross += a.price
+          @count += 1
+        end
+      end
+      erb :view_ads
+    else
+      @title = "Create publication"
+      @papers = Paper.all
+      erb :create_publication
     end
 
-    erb :view_ads
+
   end
 
   get '/view/publication/:pub/feature/:id' do
@@ -163,7 +170,6 @@ class EzrAds < Sinatra::Base
     user = env['warden'].user
     user_paper = user.paper_id
     @role = user.role
-
     @title = "Home"
 
     paper = Paper.all(:id => user_paper)
@@ -187,9 +193,9 @@ class EzrAds < Sinatra::Base
   get '/view/users' do
     env['warden'].authenticate!
     @title = "Users"
-    @users = User.all(:paper_id => env['warden'].user.paper_id)
-    @roleArr = ['poo', 'Admin', 'Sales', 'Production', 'Accounts']
+    @users = User.all
     @role = env['warden'].user[:role]
+    @roleArr = ['nil', 'Admin', 'Sales', 'Production', 'Accounts']
 
     @pub = []
     @pub_users = []
@@ -205,6 +211,7 @@ class EzrAds < Sinatra::Base
       if u.role != 3
         p_user = []
         p_user << u.username
+        @user_total = 0
         pub.each do |p|
           if p.date.mon == today.mon
             total = 0
@@ -214,9 +221,12 @@ class EzrAds < Sinatra::Base
                 end
               end
             p_user << total
+            @user_total += total
           end
         end
-        @pub_users << p_user
+        if @user_total > 0
+          @pub_users << p_user
+        end
       end
     end
 
@@ -490,7 +500,7 @@ class EzrAds < Sinatra::Base
 
   get '/create/ad' do
     env['warden'].authenticate!
-    @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+    @customers = Customer.all
     @users = User.all(:paper_id => env['warden'].user.paper_id)
     @title = "Create ad"
     today = Date.today
@@ -1448,7 +1458,6 @@ class EzrAds < Sinatra::Base
 
   get '/paper/:id' do
     env['warden'].authenticate!
-    if env['warden'].user.role == 1
       @user = User.get env['warden'].user.id
       if @user.update(:paper_id => params['id'])
         flash[:success] = "Changed papers"
@@ -1457,10 +1466,6 @@ class EzrAds < Sinatra::Base
         flash[:error] = "Something went wrong"
         redirect back
       end
-    else
-      flash[:error] = "You do not have permission to view this page"
-      redirect back
-    end
 
   end
 

@@ -79,9 +79,8 @@
         <li><a href="/me" class="dropdown-button" data-activates="me-dropdown"><i class="fa fa-user"></i> <%= "#{env['warden'].user.username.capitalize}" %> <span class="badge"><%= display_task_number %></span></a></li>
         <% end %>
         <li><a href="#" class="datepicker"><i class="fa fa-calendar"></i> <%= "#{Date.today.strftime('%d %b %Y')}" %></a></li>
-        <% if env['warden'].user && env['warden'].user.role == 1 %>
-          <li><a href="#" class="dropdown-button" data-activates="paperselect">Change paper <i class="fa fa-angle-down"></i></a></li>
-        <% end %>
+        
+        <li><a href="#" class="dropdown-button" data-activates="paperselect">Change paper <i class="fa fa-angle-down"></i></a></li>
         <% if env['warden'].user == nil %>
           <li><a href="/auth/login">Login</a></li>
         <% else %>
