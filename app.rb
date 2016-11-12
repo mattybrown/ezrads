@@ -1009,8 +1009,8 @@ class EzrAds < Sinatra::Base
         end
 
         @pub_data = {}
-        past_publications = Publication.all(:date.lte => @publication.date, :order => [:date.desc], :limit => 4, :paper_id => env['warden'].user.paper_id)
-        past_publications += Publication.all(:date.gte => @publication.date, :order => [:date.asc], :limit => 8, :paper_id => env['warden'].user.paper_id)
+        past_publications = Publication.all(:date.lt => @publication.date, :order => [:date.desc], :limit => 4, :paper_id => env['warden'].user.paper_id)
+        past_publications += Publication.all(:date.gte => @publication.date, :order => [:date.asc], :limit => 9, :paper_id => env['warden'].user.paper_id)
         past_publications.each do |p|
           total = 0
           p.ads.each do |a|
@@ -1018,7 +1018,6 @@ class EzrAds < Sinatra::Base
           end
           @pub_data.update(display_date(p.date) => total)
         end
-        @pub_data.update(display_date(@publication.date) => (@paid))
 
         @gst = (@paid + @unpaid_total) * @publication.paper.gst / 100.0
 
