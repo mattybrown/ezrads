@@ -68,6 +68,17 @@
       </div>
     </div>
     <div class="row">
+      <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
+      <div class="input-field col m6 s12">
+        <span class="label">Rep</span>
+        <select name="runon[user]" required>
+          <option value="" disabled>Rep</option>
+          <% @users.each do |u| %>
+            <option value="<%= u.id %>" <% if u.id == env['warden'].user.id %>selected<% end %>><%= u.username.capitalize %></option>
+          <% end %>
+        </select>
+      </div>
+      <% end %>
       <div class="input-field col m4 s8 single-publication">
         <span class="label">Publication</span>
         <select class="browser-default selectize" name="runon[single-publication]" class="validate">

@@ -501,7 +501,7 @@ class EzrAds < Sinatra::Base
   get '/create/ad' do
     env['warden'].authenticate!
     @customers = Customer.all
-    @users = User.all(:paper_id => env['warden'].user.paper_id)
+    @users = User.all
     @title = "Create ad"
     today = Date.today
     @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 1) + Feature.all(:paper_id => env['warden'].user.paper_id, :type => 3) + Feature.all(:paper_id => env['warden'].user.paper_id, :type => 4)
@@ -703,6 +703,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @title = "Create ad"
+    @users = User.all
     today = Date.today
     @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 2)
 
@@ -741,7 +742,7 @@ class EzrAds < Sinatra::Base
       end
       redirect '/'
     else
-      runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: env['warden'].user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
+      runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
       if runon.save
         flash[:success] = "Run on created"
         redirect '/'
@@ -756,6 +757,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
     @title = "Edit run on"
+    @users = User.all
     today = Date.today
     @features = Feature.all(:paper_id => env['warden'].user.paper_id, :type => 2)
 
