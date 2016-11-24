@@ -727,6 +727,10 @@ class EzrAds < Sinatra::Base
       price = 10
     end
 
+    if !params['runon']['user']
+      params['runon']['user'] = env['warden'].user.id
+    end
+
     if params['runon']['repeat']
       repeat_publication = Publication.get(params['runon']['publication'].first[0])
       repeat_date = repeat_publication.date
@@ -785,12 +789,16 @@ class EzrAds < Sinatra::Base
       price = ad.price
     end
 
+    if !params['runon']['user']
+      params['runon']['user'] = env['warden'].user.id
+    end
+
     if params['runon']['repeat']
       repeat_publication = Publication.get(params['runon']['publication'].first[0])
       repeat_date = repeat_publication.date
 
       params['runon']['publication'].each do |p|
-        if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: ad.user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
+        if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
           flash[:success] = "Run on #{ad.id} updated"
         else
           flash[:error] = "Something went wrong #{ad.errors.inspect}"
@@ -799,7 +807,7 @@ class EzrAds < Sinatra::Base
       end
       redirect '/'
     else
-      if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: ad.user.id, feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
+      if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
         flash[:success] = "Run on #{ad.id} updated"
         redirect '/'
       else
