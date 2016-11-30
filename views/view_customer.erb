@@ -4,13 +4,17 @@
 <div class="row">
   <div class="col s12 m8">
     <p>
-      <%= @customer.contact_name %><br />
+      <h5><%= @customer.contact_name %></h5>
+      <%= @customer.phone %><br>
+      <%= @customer.mobile %><br>
+      <%= @customer.email %><br>
+      <%= @customer.alt_contact_name %><br>
+      <%= @customer.alt_contact_phone %><br>
+      <strong>Billing address:</strong><br>
       <pre><%= @customer.address_text %></pre>
-      <%= @customer.phone %><br />
-      <%= @customer.mobile %><br />
-      <%= @customer.email %><br />
-      <%= @customer.alt_contact_name %><br />
-      <%= @customer.alt_contact_phone %>
+      <strong>Physical address:</strong><br>
+      <pre><%= @customer.address_text2 %></pre>
+
     </p>
     <p>
       <h5>Notes</h5>

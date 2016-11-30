@@ -16,53 +16,62 @@
 
     <div class="row">
       <div class="input-field col m6 s12">
-        <textarea name="customer[address_text]" id="address_text"></textarea>
-        <label for="address_text">Address</label>
+        <textarea name="customer[address_text]" id="address_text" class="materialize-textarea"></textarea>
+        <label for="address_text">Billing Address</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <textarea name="customer[address_text2]" id="address_text2" class="materialize-textarea"></textarea>
+        <label for="address_text2">Physical Address</label>
       </div>
 
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="phone" name="customer[phone]" />
         <label for="phone">Phone</label>
       </div>
-    </div>
-    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="mobile" name="customer[mobile]" />
         <label for="mobile">Mobile</label>
       </div>
+
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="email" name="customer[email]" />
         <label for="email">Email</label>
       </div>
-    </div>
-    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="alt_contact_name" name="customer[alt_contact_name]">
         <label for="alt_contact_name">Extra details</label>
       </div>
+
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="alt_phone" name="customer[alt_contact_phone]">
         <label for="alt_phone">Extra details</label>
       </div>
-    </div>
-    <div class="row">
       <div class="input-field col m6 s12">
         <input type="number" id="custom-rate" name="customer[custom_rate]" min="0" step="0.01">
         <label for="custom-rate">Custom Rate</label>
       </div>
+
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <textarea name="customer[notes]" id="note"></textarea>
         <label for="note">Notes</label>
       </div>
-    </div>
     <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
-      <div class="row">
+
         <div class="input-field col s6">
-          <input type="checkbox" id="order" name="customer[booking_order]" <%= @customer.booking_order  ? 'checked="checked"' : '' %>>
+          <input type="checkbox" id="order" name="customer[booking_order]">
           <label for="order">Require booking order for this customer</label>
         </div>
-      </div>
+
     <% end %>
+    </div>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
 </div>

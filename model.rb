@@ -37,6 +37,7 @@ class Customer
   property :address_line2, String, :length => 100
   property :address_line3, String, :length => 100
   property :address_text, Text
+  property :address_text2, Text
   property :phone, String
   property :alt_contact_phone, String, :length => 100
   property :mobile, String

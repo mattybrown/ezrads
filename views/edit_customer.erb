@@ -16,38 +16,48 @@
     <div class="row">
       <div class="input-field col m6 s12">
         <textarea name="customer[address_text]" id="address_text" class="materialize-textarea"><%= @customer.address_text %></textarea>
-        <label for="address_text">Address</label>
+        <label for="address_text">Billing Address</label>
       </div>
+      <div class="input-field col m6 s12">
+        <textarea name="customer[address_text2]" id="address_text2" class="materialize-textarea"><%= @customer.address_text2 %></textarea>
+        <label for="address_text">Physical Address</label>
+      </div>
+
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="phone" name="customer[phone]" value="<%= @customer.phone %>">
         <label for="phone">Phone</label>
       </div>
-    </div>
-    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="mobile" name="customer[mobile]" value="<%= @customer.mobile %>">
         <label for="mobile">Mobile</label>
       </div>
+
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="email" name="customer[email]" value="<%= @customer.email %>">
         <label for="email">Email</label>
       </div>
-    </div>
-    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="alt_contact_name" name="customer[alt_contact_name]" value="<%= @customer.alt_contact_name %>">
         <label for="contact_name">Extra details</label>
       </div>
+
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <input type="text" id="alt_phone" name="customer[alt_contact_phone]" value="<%= @customer.alt_contact_phone %>">
         <label for="phone">Extra details</label>
       </div>
-    </div>
-    <div class="row">
       <div class="input-field col m6 s12">
         <input type="number" id="custom-rate" name="customer[custom_rate]" value="<%= @customer.custom_rate %>" min="0" step="0.01">
         <label for="custom-rate">Custom Rate</label>
       </div>
+
+    </div>
+    <div class="row">
       <div class="input-field col m6 s12">
         <textarea name="customer[notes]" id="note"><%= @customer.notes %></textarea>
         <label for="note">Notes</label>
