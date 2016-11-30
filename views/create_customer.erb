@@ -55,6 +55,14 @@
         <label for="note">Notes</label>
       </div>
     </div>
+    <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
+      <div class="row">
+        <div class="input-field col s6">
+          <input type="checkbox" id="order" name="customer[booking_order]" <%= @customer.booking_order  ? 'checked="checked"' : '' %>>
+          <label for="order">Require booking order for this customer</label>
+        </div>
+      </div>
+    <% end %>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-plus"></i></button>
   </form>
 </div>

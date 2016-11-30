@@ -44,6 +44,7 @@ class Customer
   property :custom_rate, Float, :default => 0
   property :notes, Text
   property :banned, Boolean
+  property :booking_order, Boolean
 
   has n, :ads
   belongs_to :paper

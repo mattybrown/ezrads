@@ -59,6 +59,10 @@
           <input type="checkbox" id="banned" name="customer[banned]" <%= @customer.banned  ? 'checked="checked"' : '' %>>
           <label for="banned">Stop bookings for this customer</label>
         </div>
+        <div class="input-field col s6">
+          <input type="checkbox" id="order" name="customer[booking_order]" <%= @customer.booking_order  ? 'checked="checked"' : '' %>>
+          <label for="order">Require booking order for this customer?</label>
+        </div>
       </div>
     <% end %>
     <button type="submit" class="btn-floating btn-large"><i class="fa fa-check"></i></button>

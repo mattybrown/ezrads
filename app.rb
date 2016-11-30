@@ -445,7 +445,12 @@ class EzrAds < Sinatra::Base
     else
       banned = false
     end
-    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_text: params['customer']['address_text'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'], banned: banned)
+    if params['customer']['booking_order'] == 'on'
+      booking_order = true
+    else
+      booking_order = false
+    end
+    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_text: params['customer']['address_text'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'], banned: banned, booking_order: booking_order)
       flash[:success] = "Customer <a href='/view/customer/#{customer.id}'>#{customer.id}</a> updated"
       redirect '/view/customers'
     else
@@ -476,10 +481,16 @@ class EzrAds < Sinatra::Base
       flash[:error] = "There is an existing record with this business name"
       redirect back
     end
-    if params['customer']['custom_rate'] == ""
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_text: params['customer']['address_text'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
+    if params['customer']['booking_order'] == 'on'
+      booking_order = true
     else
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
+      booking_order = false
+    end
+
+    if params['customer']['custom_rate'] == ""
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_text: params['customer']['address_text'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false, booking_order: booking_order)
+    else
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false, booking_order: booking_order)
     end
     if customer.save
       flash[:success] = "Customer created"
@@ -535,6 +546,11 @@ class EzrAds < Sinatra::Base
     end
 
     customer = Customer.get(params['ad']['customer'])
+    if customer.booking_order == true && params['ad']['print'] == "" || params['ad']['print'] == nil
+      flash[:error] = "This ad requires an order number to be created"
+      redirect back
+    end
+
     feature = Feature.get(params['ad']['feature'])
     if feature.type == 2
       columns = 0
