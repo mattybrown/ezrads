@@ -31,16 +31,16 @@
     </div>
     <div class="row">
       <div class="input-field col m6 s12">
-        <span class="label">Feature</span>
+        <span class="label">Position</span>
         <select class="browser-default selectize" name="ad[feature]" class="validate" id="feature" required data-error="Please select a feature">
-          <option value="" disabled <%= session[:ad][:feature] ? "" : "selected" %>>Feature</option>
+          <option value="" disabled <%= session[:ad][:feature] ? "" : "selected" %>>Position</option>
           <% @features.each do |f| %>
             <option value="<%= f.id %>" rate="<%= f.rate %>" <%= session[:ad][:feature].to_i == f.id ? "selected" : "" %>><%= f.name %></option>
           <% end %>
         </select>
       </div>
       <div class="input-field col m6 s12">
-        <span class="label">Position</span>
+        <span class="label">Info</span>
         <input type="text" name="ad[position]" id="position" <%= session[:ad] ? "value='#{session[:ad][:position]}'" : "" %>>
       </div>
     </div>

@@ -445,7 +445,7 @@ class EzrAds < Sinatra::Base
     else
       banned = false
     end
-    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'], banned: banned)
+    if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_text: params['customer']['address_text'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], notes: params['customer']['notes'], banned: banned)
       flash[:success] = "Customer <a href='/view/customer/#{customer.id}'>#{customer.id}</a> updated"
       redirect '/view/customers'
     else
@@ -477,7 +477,7 @@ class EzrAds < Sinatra::Base
       redirect back
     end
     if params['customer']['custom_rate'] == ""
-      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
+      customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_text: params['customer']['address_text'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
     else
       customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], billing_address: params['customer']['billing_address'], address_line2: params['customer']['address_line2'], address_line3: params['customer']['address_line3'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false)
     end
