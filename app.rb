@@ -546,9 +546,11 @@ class EzrAds < Sinatra::Base
     end
 
     customer = Customer.get(params['ad']['customer'])
-    if customer.booking_order == true && params['ad']['print'] == "" || params['ad']['print'] == nil
-      flash[:error] = "This ad requires an order number to be created"
-      redirect back
+    if customer.booking_order == true
+      if params['ad']['print'] == "" || params['ad']['print'] == nil
+        flash[:error] = "This ad requires an order number to be created"
+        redirect back
+      end
     end
 
     feature = Feature.get(params['ad']['feature'])

@@ -87,6 +87,9 @@
   <input type="hidden" name="ad[payment]" value="<%= @ad.payment.to_i %>">
   <input type="hidden" name="ad[price]" value="<%= @ad.price.to_f %>">
   <input type="hidden" name="ad[repeat_ad]" value="true">
+  <% if @ad.customer.booking_order == true %>
+    <input type="hidden" name="ad[booking_order]" value="<%= @ad.booking_order %>">
+  <% end %>
   <div class="row">
     <div class="input-field col s4 single-publication">
       <select class="browser-default selectize" name="ad[single-publication]" class="validate">
