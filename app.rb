@@ -1014,6 +1014,7 @@ class EzrAds < Sinatra::Base
         @cash = 0
         @eftpos = 0
         @direct_credit = 0
+        @cheque = 0
         @paid = 0
         @unpaid = 0
         @unpaid_total = 0
@@ -1026,6 +1027,8 @@ class EzrAds < Sinatra::Base
             @cash += a.price
           elsif a.payment == 4
             @direct_credit += a.price
+          elsif a.payment == 5
+            @cheque += a.price
           end
           if a.paid == true
             @paid += a.price

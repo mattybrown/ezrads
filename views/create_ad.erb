@@ -50,8 +50,9 @@
         <select name="ad[payment]" required>
           <option value="1" <%= session[:ad][:payment] == "1" ? "selected" : "" %>>Account</option>
           <option value="2" <%= session[:ad][:payment] == "2" ? "selected" : "" %>>Cash</option>
-          <option value="3" <%= session[:ad][:payment] == "3" ? "selected" : "" %>>Eftpos</option>
+          <option value="3" <%= session[:ad][:payment] == "3" ? "selected" : "" %>>Eftpos/Credit Card</option>
           <option value="4" <%= session[:ad][:payment] == "4" ? "selected" : "" %>>Direct Credit</option>
+          <option value="5" <%= session[:ad][:payment] == "5" ? "selected" : "" %>>Cheque</option>
         </select>
       </div>
       <div class="input-field col m2 s4">
