@@ -4,10 +4,12 @@
     <ul class="collection">
     <% @features.each do |f| %>
       <li class="collection-item">
-        <% if f.type == 1 %>
+        <% if f.type == 1 || f.type == 3 %>
           <%= "#{f.name}: $#{format_price(f.rate)} per column centimetre" %>
-        <% else %>
+        <% elsif f.type == 2 %>
           <%= "#{f.name}: $10 for #{f.rate.to_i} words" %>
+        <% elsif f.type == 4 %>
+          <%= "#{f.name}: $#{format_price(f.rate)}" %>
         <% end %>
         <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
           <a href="/edit/feature/<%= f.id %>" class="secondary-content"><i class="fa fa-edit"></i></a>
