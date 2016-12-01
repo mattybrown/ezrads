@@ -56,8 +56,9 @@
       <th>Repeat</th>
       <th>Publication</th>
       <th>Height x Columns</th>
-      <th>Feature</th>
       <th>Position</th>
+      <th>Order Number</th>
+      <th>Info</th>
       <% if @role != 3 %>
         <th>Price</th>
       <% end %>
@@ -75,6 +76,7 @@
       <td><%= a.publication[:name] %></td>
       <td><%= a.height %> x <%= a.columns %></td>
       <td><%= a.feature[:name] %></td>
+      <td><%= a.print_only %></td>
       <td><%= a.position %></td>
       <% if @role != 3 %>
         <td>$<%= format_price(a.price) %></td>
