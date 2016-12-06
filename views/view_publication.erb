@@ -1,13 +1,12 @@
 
 <h4><%= "#{@publication.name} - #{display_date(@publication.date)}" %></h4>
-<form action="/ads/publication/" method="get" class="col s12">
+<div class="col s12">
   <div class="row">
     <div class="input-field col s12">
-      <input name="view[publication]" type="hidden" value="<%= @publication.id %>">
-      <button class="btn" type="submit">View ads</button>
+      <a class="btn" href="/view/publication/<%= @publication.id %>/ads">View ads</a>
     </div>
   </div>
-</form>
+</div>
 <div class="row">
   <div class="col m6 s12">
     <h5>Features</h5>
