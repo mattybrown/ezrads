@@ -27,6 +27,7 @@
       <% if env['warden'].user.role == 1 || env['warden'].user.role == 4 %>
       <div class="white-text print-gross">
         <%= @feature %>: $<%= format_price(@gross) %> / Ads booked: <%= @count %><br>
+        Paid: $<%= format_price(@paid) %>
       </div>
       <% end %>
     </div>
