@@ -1,3 +1,4 @@
+#save_success_helper and error_helper are found in ads.rb
 module Sinatra
   module EzrAds
     module Routing
@@ -44,21 +45,18 @@ module Sinatra
               params['runon']['publication'].each do |p|
                 runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
                 if runon.save
-                  flash[:success] = "Run on created"
+                  repeat_save_success_helper(runon)
                 else
-                  flash[:error] = "Something went wrong #{runon.errors.inspect}"
-                  redirect back
+                  error_helper
                 end
               end
               redirect '/'
             else
               runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
               if runon.save
-                flash[:success] = "Run on created"
-                redirect '/'
+                save_success_helper(runon)
               else
-                flash[:error] = "Something went wrong #{runon.errors.inspect}"
-                redirect back
+                error_helper
               end
             end
           end

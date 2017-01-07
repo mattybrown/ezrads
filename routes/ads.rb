@@ -5,6 +5,24 @@ module Sinatra
 
         def self.registered(app)
 
+          app.helpers do
+            def save_success_helper(ad)
+              flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{ad.customer.business_name}</a> successfully booked"
+              session[:ad].clear
+              redirect '/'
+            end
+
+            def repeat_save_success_helper(ad)
+              flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{ad.customer.business_name}</a> successfully booked"
+              session[:ad].clear
+            end
+
+            def error_helper(custom_error_text)
+              custom_error_text ? flash[:error] = "#{ad.errors.inspect} - #{custom_error_text}" : flash[:error] = "#{ad.errors.inspect}"
+              redirect back
+            end
+          end
+
           #clears session data for create ad
           app.get '/cancel/ad' do
             env['warden'].authenticate!
@@ -31,22 +49,10 @@ module Sinatra
           app.post '/create/ad' do
             session[:ad] = {height: params['ad']['height'], columns: params['ad']['columns'], notes: params['ad']['note'], customer: params['ad']['customer'], feature: params['ad']['feature'], position: params['ad']['position'], payment: params['ad']['payment'], price: params['ad']['price'], user: params['ad']['user'], receipt: params['ad']['receipt'], publication: params['ad']['single-publication'], print: params['ad']['print']}
 
-            if params['ad']['user']
-              ad_user = params['ad']['user']
-            else
-              ad_user = env['warden'].user[:id]
-            end
+            params['ad']['user'] ? ad_user = params['ad']['user'] : ad_user = env['warden'].user[:id]
+            params['ad']['updated_by'] ? updated_by = params['ad']['updated_by'] : updated_by = nil
+            params['ad']['paid'] ? paid = true : paid = false
 
-            if params['ad']['updated_by']
-              updated_by = params['ad']['updated_by']
-            else
-              updated_by = nil
-            end
-            if params['ad']['paid']
-              paid = true
-            else
-              paid = false
-            end
 
             customer = Customer.get(params['ad']['customer'])
             if customer.booking_order == true
@@ -57,15 +63,10 @@ module Sinatra
             end
 
             feature = Feature.get(params['ad']['feature'])
-            if feature.type == 2
-              columns = 0
-            else
-              columns = params['ad']['columns']
-            end
+            feature.type == 2 ? columns = 0 : columns = params['ad']['columns']
 
-            if params['ad']['price'] != ""
-              user_price = params['ad']['price'].to_f
-            end
+            user_price = params['ad']['price'].to_f if params['ad']['price'] != ""
+
             if customer.custom_rate > 0
               price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
               percent = price / 100 * 20
@@ -107,30 +108,21 @@ module Sinatra
               params['ad']['publication'].each do |a|
                 ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: paid, completed: false, placed: false, receipt: params['ad']['receipt'], print_only: params['ad']['print'])
                 if ad.save
-                  flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{customer.business_name}</a> successfully booked"
-                  session[:ad].clear
+                  repeat_save_success_helper(ad)
                 else
-                  ad.errors.each do |e|
-                    flash[:error] = e
-                  end
+                  error_helper
                 end
               end
               redirect '/'
             else
               feature = Feature.get(params['ad']['feature'])
-              if params['ad']['repeat_date']
-                repeat_date = params['ad']['repeat_date']
-              else
-                repeat_date = nil
-              end
+              params['ad']['repeat_date'] ? repeat_date = params['ad']['repeat_date'] :repeat_date = nil
+
               ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: paid, completed: false, placed: false, receipt: params['ad']['receipt'], print_only: params['ad']['print'])
               if ad.save
-                flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{customer.business_name}</a> successfully booked"
-                session[:ad].clear
-                redirect '/'
+                save_success_helper(ad)
               else
-                flash[:error] = "Something went wrong #{ad.errors.inspect}"
-                redirect back
+                error_helper
               end
             end
           end
@@ -185,11 +177,9 @@ module Sinatra
               params['ad']['repeat_date'] = nil
             end
             if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'], receipt: params['ad']['receipt'], print_only: params['ad']['print'], paid: paid, repeat_date: params['ad']['repeat_date'])
-              flash[:success] = "Ad <a href='/view/ad/#{ad.id}'>#{ad.id}</a> updated"
-              redirect "/view/customer/#{customer.id}"
+              save_success_helper(ad)
             else
-              flash[:error] = "Something went wrong #{ad.errors.inspect}"
-              redirect back
+              error_helper
             end
           end
 
@@ -218,7 +208,6 @@ module Sinatra
               @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
             end
             @title = "Viewing ad"
-
             erb :view_ad
           end
 
