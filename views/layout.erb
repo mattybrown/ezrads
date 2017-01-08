@@ -5,15 +5,15 @@
     EzrAds | <%= @title ? @title : nil %>
   </title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+  <link rel="stylesheet" href="<%= url('/materialize.min.css') %>">
   <link rel="stylesheet" href="<%= url('/style.css') %>" type="text/css">
   <link rel="stylesheet" href="<%= url('/selectize.css') %>" type="text/css">
   <link rel="stylesheet" href="<%= url('/custom.css') %>" type="text/css">
   <link rel="stylesheet" href="<%= url('/print.css') %>" type="text/css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+  <link rel="stylesheet" href="<%= url ('/font-awesome-4.7.0/css/font-awesome.min.css') %>">
+  <script type="text/javascript" src="<%= url('/jquery-2.1.1.min.js') %>"></script>
+  <script type="text/javascript" src="<%= url('/jquery-ui.min.js') %>"></script>
+  <script src="<%= url('/materialize.min.js') %>"></script>
   <script type="text/javascript" src="<%= url('/jquery.tablesorter.min.js') %>"></script>
   <script type="text/javascript" src="<%= url('/selectize.js') %>"></script>
   <script type="text/javascript" src="<%= url('/custom.js') %>"></script>
