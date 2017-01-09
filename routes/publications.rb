@@ -102,6 +102,31 @@ module Sinatra
             erb :view_ads
           end
 
+          app.get '/ads/publication/' do
+            env['warden'].authenticate!
+            today = Date.today
+            user = env['warden'].user
+            user_paper = user.paper_id
+            @role = user.role
+            @title = "Ezrads"
+
+            paper = Paper.all(:id => user_paper)
+            pub = paper.publications(:id => params['view']['publication'])
+
+            @publications = paper.publications(:order => [:date.asc])
+            @ads = pub.ads
+            @features = @ads.features
+            @gross = 0
+            @count = 0
+            @ads.each do |a|
+              @gross += a.price
+              @count += 1
+            end
+
+            @pub = pub.last
+            erb :view_ads
+          end
+
           app.get '/view/publications' do
             env['warden'].authenticate!
             if env['warden'].user.role == 1 || env['warden'].user.role == 4
