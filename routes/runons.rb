@@ -8,7 +8,7 @@ module Sinatra
 
           app.get '/create/runon' do
             env['warden'].authenticate!
-            @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+            @customers = Customer.all
             @title = "Create ad"
             @users = User.all
             today = Date.today
@@ -63,7 +63,7 @@ module Sinatra
 
           app.get '/edit/runon/:id' do
             env['warden'].authenticate!
-            @customers = Customer.all(:paper_id => env['warden'].user.paper_id)
+            @customers = Customer.all
             @title = "Edit run on"
             @users = User.all
             today = Date.today
