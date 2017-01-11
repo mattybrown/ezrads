@@ -81,7 +81,7 @@
       </tr>
       <tr>
       <tr class="total">
-        <td><strong><a href="/view/publication/<%= @publication.id %>/feature/<%= get_feature_id('rop') %>">ROP Features</a></strong></td>
+        <td><strong><a href="/view/publication/<%= @publication.id %>/rop">ROP Features</a></strong></td>
       </tr>
       <% @rop_data.each do |f| %>
         <% if f[1] > 0 %>
@@ -92,7 +92,7 @@
         <% end %>
       <% end %>
       <tr class="total">
-        <td><strong><a href="/view/publication/<%= @publication.id %>/feature/<%= get_feature_id('classified') %>">Classie Features</a></strong></td>
+        <td><strong><a href="/view/publication/<%= @publication.id %>/classie">Classie Features</a></strong></td>
       </tr>
       <% @clas_data.each do |f| %>
         <% if f[1] > 0 %>

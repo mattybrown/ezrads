@@ -44,6 +44,48 @@ module Sinatra
 
           end
 
+          app.get '/view/publication/:pub/:feat' do
+            env['warden'].authenticate!
+            today = Date.today
+            user_publication = env['warden'].user.paper[:id]
+            @role = env['warden'].user[:role]
+            @title = "Home"
+            #THIS NEEDS TO BE FIXED TO SHOW THE CORRECT ADS DEPENDING ON TYPE
+            paper = Paper.all(:id => user_publication)
+            pub = paper.publications.get params['pub']
+            if params['feat'] == 'rop'
+              @feature = "ROP"
+              feature = paper.features(:type => 1)
+            elsif params['feat'] == 'classie'
+              @feature = "Classified"
+              feature = paper.features(:type => 2) + paper.features(:type => 3)
+            end
+
+
+            if @publications = paper.publications.count >= 1
+              @publications = paper.publications(:order => [:date.asc])
+              @pub = pub
+              @ads = feature.ads(:publication_id => pub.id)
+            else
+              @pub = "No publications found - <a href='/create/publication'>Click here to create one</a>"
+            end
+
+            @gross = 0
+            @count = 0
+            @paid = 0
+            if @ads.class != String
+              @ads.each do |a|
+                @gross += a.price
+                @count += 1
+                if a.paid == true && a.payment != 1
+                  @paid += a.price
+                end
+              end
+            end
+
+            erb :view_publication_feature
+          end
+
           app.get '/view/publication/:pub/feature/:id' do
             env['warden'].authenticate!
             today = Date.today
