@@ -97,7 +97,7 @@ module Sinatra
 
               @ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
               #@ads = Ad.all(:user_id => @user.id, :order => (:created_at.desc))
-              @pub = Publication.all(:paper_id => env['warden'].user.paper_id, :order => :date.desc, :limit => 10, :date.lte => Date.today)
+              @pub = Publication.all(:order => :date.desc, :limit => 10, :date.lte => Date.today)
               this_month_total = 0
               last_month_total = 0
               next_month_total = 0

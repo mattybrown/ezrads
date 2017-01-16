@@ -106,7 +106,7 @@ class EzrAds < Sinatra::Base
     env['warden'].authenticate!
     @title = "Search"
     @features = Feature.all(:paper_id => env['warden'].user.paper_id)
-    @users = User.all(:paper_id => env['warden'].user.paper_id)
+    @users = User.all
     @customers = Customer.all
     @paper = env['warden'].user.paper_id
     if params['customer-search']

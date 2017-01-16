@@ -139,7 +139,7 @@ module Sinatra
             else
               @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
             end
-            @users = User.all(:paper_id => env['warden'].user.paper_id)
+            @users = User.all
 
             erb :edit_ad
           end
