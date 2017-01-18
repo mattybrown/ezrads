@@ -44,7 +44,28 @@ module Sinatra
 
           end
 
-          app.get '/view/publication/:pub/:feat' do
+#          app.get '/view/publication/:id/ads' do
+#            env['warden'].authenticate!
+#            today = Date.today
+#            user = env['warden'].user
+#            user_paper = user.paper_id
+#            @role = user.role
+#            @title = "Home"
+#            @publications = Publication.all(paper_id: user_paper)
+#            @pub = Publication.get params[:id]
+#            @ads = @pub.ads
+#            @features = @ads.features
+#            @gross = 0
+#            @count = 0
+#            @ads.each do |a|
+#              @gross += a.price
+#              @count += 1
+#            end
+#
+#            erb :view_ads
+#          end
+
+         app.get '/view/publication/:pub/:feat' do
             env['warden'].authenticate!
             today = Date.today
             user_publication = env['warden'].user.paper[:id]
@@ -59,6 +80,9 @@ module Sinatra
             elsif params['feat'] == 'classie'
               @feature = "Classified"
               feature = paper.features(:type => 2) + paper.features(:type => 3)
+            elsif params['feat'] == 'ads'
+              @feature = "All Ads"
+              feature = paper.features
             end
 
 
@@ -121,27 +145,6 @@ module Sinatra
             end
 
             erb :view_publication_feature
-          end
-
-          app.get '/view/publication/:id/ads' do
-            env['warden'].authenticate!
-            today = Date.today
-            user = env['warden'].user
-            user_paper = user.paper_id
-            @role = user.role
-            @title = "Home"
-            @publications = Publication.all(paper_id: user_paper)
-            @pub = Publication.get params[:id]
-            @ads = @pub.ads
-            @features = @ads.features
-            @gross = 0
-            @count = 0
-            @ads.each do |a|
-              @gross += a.price
-              @count += 1
-            end
-
-            erb :view_ads
           end
 
           app.get '/ads/publication/' do

@@ -53,16 +53,15 @@
       <th>Rep</th>
       <th>Height</th>
       <th>Columns</th>
-      <th>Feature</th>
       <th>Position</th>
+      <th>Info</th>
       <th>Repeat</th>
       <th>Payment</th>
       <% if @role != 3 %>
         <th>Price</th>
       <% end %>
-      <th>Paid</th>
+      <th>Order #</th>
       <th>Receipt</th>
-      <th>Extra</th>
       <th class="hide-print">Notes</th>
       <th class="hide-print">Complete</th>
       <th class="hide-print">Placed</th>
@@ -77,22 +76,16 @@
       <td><%= a.user[:username].capitalize %></td>
       <td><%= a.height %></td>
       <td><%= a.columns %></td>
-      <td><%= a.feature[:name] %></td>
+      <td><a href="/view/publication/<%= @pub.id %>/feature/<%= a.feature.id %>"><%= a.feature[:name] %></a></td>
       <td><%= a.position %></td>
       <td><%= a.repeat_date != a.publication.date ? display_date(a.repeat_date) : "" %></td>
       <td><%= display_payment(a.payment) %></td>
       <% if @role != 3 %>
         <td>$<%= format_price(a.price) %></td>
       <% end %>
-      <% if a.payment != 1 && a.paid == true %>
-        <td>Paid</td>
-      <% elsif a.payment == 1 %>
-        <td></td>
-      <% else %>
-        <td>Not paid</td>
-      <% end %>
-      <td><%= a.receipt %></td>
+
       <td><%= a.print_only %></td>
+      <td><%= a.receipt %></td>
 
       <td class="hide-print">
         <% if a.note != "" %>
