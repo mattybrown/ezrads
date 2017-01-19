@@ -133,7 +133,7 @@ module Sinatra
             @title = "Edit ad"
             @ad = Ad.get params['id']
             @customers = Customer.all
-            @features = Feature.all
+            @features = Feature.all(:paper_id => env['warden'].user.paper.id)
             if env['warden'].user.role == 1 || env['warden'].user.role == 4
               @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
             else
