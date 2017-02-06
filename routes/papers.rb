@@ -83,7 +83,7 @@ module Sinatra
               @user = User.get env['warden'].user.id
               if @user.update(:paper_id => params['id'])
                 flash[:success] = "Changed papers"
-                redirect back
+                redirect '/'
               else
                 flash[:error] = "Something went wrong"
                 redirect back
