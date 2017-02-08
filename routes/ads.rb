@@ -17,7 +17,7 @@ module Sinatra
               session[:ad].clear
             end
 
-            def error_helper(custom_error_text)
+            def error_helper(ad, custom_error_text)
               custom_error_text ? flash[:error] = "#{ad.errors.inspect} - #{custom_error_text}" : flash[:error] = "#{ad.errors.inspect}"
               redirect back
             end
@@ -55,6 +55,12 @@ module Sinatra
 
 
             customer = Customer.get(params['ad']['customer'])
+
+            if customer.banned == true
+              flash[:error] = "This customer is blocked - see an admin"
+              redirect back
+            end
+
             if customer.booking_order == true
               if params['ad']['print'] == "" || params['ad']['print'] == nil
                 flash[:error] = "This ad requires an order number to be created"

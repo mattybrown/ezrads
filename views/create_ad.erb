@@ -20,10 +20,12 @@
       <div class="input-field col m6 s12">
         <span class="label">Customer</span>
         <select class="browser-default selectize" name="ad[customer]" class="validate" required data-error="Please select a customer">
-          <option value="" disabled <%= session[:ad][:customer] ? "" : "selected" %>>Customer</option>
+          <option value="" <%= session[:ad][:customer] ? "" : "selected" %>>Customer</option>
           <% @customers.each do |c| %>
             <% if c.banned == false %>
               <option value="<%= c.id %>" <%= session[:ad][:customer].to_i == c.id ? "selected" : "" %>><%= c.business_name %></option>
+            <% else %>
+              <option disabled value="<%= c.id %>" <%= session[:ad][:customer].to_i == c.id ? "selected" : "" %>><%= c.business_name %> **BLOCKED SEE ADMIN**</option>
             <% end %>
           <% end %>
         </select>

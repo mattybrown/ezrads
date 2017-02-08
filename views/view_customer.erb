@@ -1,4 +1,7 @@
 <div class="row">
+  <% if @customer.banned == true %>
+    <h3 class="flash-error">This customer has been blocked - please see an admin before booking ads for this customer</h3>
+  <% end %>
   <h4><%= @customer.business_name %></h4>
 </div>
 <div class="row">
