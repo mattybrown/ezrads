@@ -85,7 +85,11 @@
         <a href="/view/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="View" data-position="top"><i class="fa fa-eye"></i></a>
       </td>
       <td>
-          <a href="/edit/ad/<%= a.id %>"><i class="fa fa-pencil-square-o tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"></i></a>
+        <% if a.feature.type != 2 %>
+          <a href="/edit/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
+        <% elsif a.feature.type == 2 %>
+          <a href="/edit/runon/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
+        <% end %>
       </td>
       <td>
         <a href="/create/task/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Send as task" data-position="top"><i class="fa fa-send"></i></a>
