@@ -90,9 +90,9 @@
       <div class="input-field col s6">
         <span class="label">Publication</span>
         <select class="browser-default selectize" name="ad[publication]">
-          <option value="<%= @ad.publication[:id] %>" selected><%= "#{display_date(@ad.publication[:date])} - #{@ad.publication[:name]}" %></option>
+          
           <% @publications.each do |p| %>
-            <option value="<%= p.id %>"><%= display_date(p.date) %> - <%= p.name %></option>
+            <option value="<%= p.id %>" <%= p.id == @ad.publication[:id] ? "selected" : "" %>><%= display_date(p.date) %> - <%= p.name %></option>
           <% end %>
         </select>
       </div>
