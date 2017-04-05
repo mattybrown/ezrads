@@ -271,16 +271,17 @@ module Sinatra
           end
 
           app.get '/view/ad/:id' do
-            env['warden'].authenticate!
-            today = Date.today
-            @ad = Ad.get params['id']
-            @users = User.all(:paper_id => @ad.publication.paper_id)
-            if env['warden'].user.role == 1 || env['warden'].user.role == 4
-              @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
-            else
-              @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
-            end
-            @title = "Viewing ad"
+            # env['warden'].authenticate!
+            # today = Date.today
+            a = Ad.get params['id']
+            # @users = User.all(:paper_id => @ad.publication.paper_id)
+            # if env['warden'].user.role == 1 || env['warden'].user.role == 4
+            #   @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
+            # else
+            #   @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
+            # end
+            # @title = "Viewing ad"
+            @ad = a.to_json
             erb :view_ad
           end
 
@@ -347,6 +348,16 @@ module Sinatra
             flash[:notice] = "$#{quote}"
             redirect back
           end
+
+        #API routes
+          app.before '/api/*' do
+            content_type 'application/json'
+          end
+
+          app.get '/api/view/ad/:id' do
+            a = Ad.all.to_json
+          end
+
 
         #end of self.registered
         end

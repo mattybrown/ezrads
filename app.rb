@@ -4,6 +4,7 @@ require 'tilt/erb'
 require 'will_paginate'
 require 'will_paginate/data_mapper'
 require './model'
+require 'json'
 
 class EzrAds < Sinatra::Base
   enable :sessions
