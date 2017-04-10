@@ -326,7 +326,11 @@ module Sinatra
           end
 
           app.post '/create/single_publication' do
-            p = Publication.new(name: params['publication']['name'], date: params['publication']['date'], paper_id: params['publication']['publication_id'])
+            p = Publication.new(
+                name: params['publication']['name'], 
+                date: params['publication']['date'], 
+                paper_id: params['publication']['publication_id']
+            )
             if p.save
               flash[:success] = "Successfully created publication"
               redirect '/view/publications'
@@ -342,7 +346,11 @@ module Sinatra
 
             (sd..ed).each do |d|
               if d.wday == sd.wday
-                p = Publication.new(name: params['publication']['name'], date: d, paper_id: params['publication']['publication_id'])
+                p = Publication.new(
+                    name: params['publication']['name'], 
+                    date: d, 
+                    paper_id: params['publication']['publication_id']
+                )
                 if p.save
                   flash[:success] = "Publications created"
                 else

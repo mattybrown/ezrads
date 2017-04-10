@@ -18,7 +18,13 @@ module Sinatra
             else
               rop = false
             end
-            f = Feature.new(name: params['feature']['name'], rate: params['feature']['rate'], paper_id: env['warden'].user.paper_id, type: params['feature']['type'], rop: rop)
+            f = Feature.new(
+                name: params['feature']['name'], 
+                rate: params['feature']['rate'], 
+                paper_id: env['warden'].user.paper_id, 
+                type: params['feature']['type'], 
+                rop: rop
+            )
             if f.save
               flash[:success] = "Feature created"
               redirect '/view/publications'
@@ -55,7 +61,12 @@ module Sinatra
             else
               rop = false
             end
-            if f.update(name: params['feature']['name'], rate: params['feature']['rate'], type: params['feature']['type'], rop: rop)
+            if f.update(
+                name: params['feature']['name'], 
+                rate: params['feature']['rate'], 
+                type: params['feature']['type'], 
+                rop: rop
+            )
               flash[:success] = "Feature updated"
               redirect '/view/features'
             else

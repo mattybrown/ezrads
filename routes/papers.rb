@@ -22,9 +22,17 @@ module Sinatra
           end
 
           app.post '/setup' do
-            p = Paper.new(name: params['paper']['name'], gst: params['paper']['gst'])
+            p = Paper.new(
+                name: params['paper']['name'], 
+                gst: params['paper']['gst']
+            )
             if p.save
-              u = User.new(username: params['user']['username'], password: params['user']['password'], role: 1, paper_id: p.id)
+              u = User.new(
+                  username: params['user']['username'], 
+                  password: params['user']['password'], 
+                  role: 1, 
+                  paper_id: p.id
+              )
               if u.save
                 flash[:success] = "Paper and user set"
                 redirect '/'
@@ -38,7 +46,10 @@ module Sinatra
           end
 
           app.post '/create/paper' do
-            p = Paper.new(name: params['paper']['name'], gst: params['paper']['gst'])
+            p = Paper.new(
+                name: params['paper']['name'], 
+                gst: params['paper']['gst']
+            )
             if p.save
               flash[:success] = "Paper created"
               redirect '/'
@@ -51,7 +62,10 @@ module Sinatra
           end
 
           app.post '/edit/paper' do
-            if p = Paper.update(name: params['paper']['name'], gst: params['paper']['gst'])
+            if p = Paper.update(
+                name: params['paper']['name'], 
+                gst: params['paper']['gst']
+            )
               flash[:success] = "Paper updated"
               redirect '/'
             else
@@ -68,7 +82,11 @@ module Sinatra
             else
               enabled = false
             end
-            m = Motd.new(message: params['motd']['message'], paper_id: params['motd']['paper'], enabled: enabled)
+            m = Motd.new(
+                message: params['motd']['message'], 
+                paper_id: params['motd']['paper'], 
+                enabled: enabled
+            )
             if m.save
               flash[:success] = "Message saved";
               redirect '/'
