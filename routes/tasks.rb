@@ -76,7 +76,16 @@ module Sinatra
             uid = env['warden'].user.id
             title = params['task']['title']
             title.gsub!(/\s/, '-')
-            t = Task.new(title: params['task']['title'], created_by: uid, created_at: Time.now, deadline: params['task']['deadline'], user_id: params['task']['user_id'], priority: params['task']['priority'], body: params['task']['body'], completed: false)
+            t = Task.new(
+                title: params['task']['title'], 
+                created_by: uid, 
+                created_at: Time.now, 
+                deadline: params['task']['deadline'], 
+                user_id: params['task']['user_id'], 
+                priority: params['task']['priority'], 
+                body: params['task']['body'], 
+                completed: false
+            )
 
             if t.save
               flash[:success] = "Task successfully created..."

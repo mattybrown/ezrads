@@ -47,7 +47,20 @@ module Sinatra
           end
 
           app.post '/create/ad' do
-            session[:ad] = {height: params['ad']['height'], columns: params['ad']['columns'], notes: params['ad']['note'], customer: params['ad']['customer'], feature: params['ad']['feature'], position: params['ad']['position'], payment: params['ad']['payment'], price: params['ad']['price'], user: params['ad']['user'], receipt: params['ad']['receipt'], publication: params['ad']['single-publication'], print: params['ad']['print']}
+            session[:ad] = {
+                height: params['ad']['height'], 
+                columns: params['ad']['columns'], 
+                notes: params['ad']['note'], 
+                customer: params['ad']['customer'], 
+                feature: params['ad']['feature'], 
+                position: params['ad']['position'], 
+                payment: params['ad']['payment'], 
+                price: params['ad']['price'], 
+                user: params['ad']['user'], 
+                receipt: params['ad']['receipt'], 
+                publication: params['ad']['single-publication'], 
+                print: params['ad']['print']
+            }
 
             params['ad']['user'] ? ad_user = params['ad']['user'] : ad_user = env['warden'].user[:id]
             params['ad']['updated_by'] ? updated_by = params['ad']['updated_by'] : updated_by = nil
@@ -112,7 +125,25 @@ module Sinatra
                 repeat_date = repeat_publication.date
               end
               params['ad']['publication'].each do |a|
-                ad = Ad.new(created_at: Time.now, repeat_date: repeat_date, publication_id: a[0], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], payment: params['ad']['payment'], paid: paid, completed: false, placed: false, receipt: params['ad']['receipt'], print_only: params['ad']['print'])
+                ad = Ad.new(
+                    created_at: Time.now, 
+                    repeat_date: repeat_date, 
+                    publication_id: a[0], 
+                    height: params['ad']['height'], 
+                    columns: columns, 
+                    position: params['ad']['position'], 
+                    price: price, 
+                    user_id: ad_user, 
+                    customer_id: params['ad']['customer'], 
+                    feature_id: params['ad']['feature'], 
+                    note: params['ad']['note'], 
+                    payment: params['ad']['payment'], 
+                    paid: paid, 
+                    completed: false, 
+                    placed: false, 
+                    receipt: params['ad']['receipt'], 
+                    print_only: params['ad']['print']
+                )
                 if ad.save
                   repeat_save_success_helper(ad)
                 else
@@ -124,7 +155,26 @@ module Sinatra
               feature = Feature.get(params['ad']['feature'])
               params['ad']['repeat_date'] ? repeat_date = params['ad']['repeat_date'] :repeat_date = nil
 
-              ad = Ad.new(created_at: Time.now, publication_id: params['ad']['single-publication'], height: params['ad']['height'], columns: columns, position: params['ad']['position'], price: price, user_id: ad_user, customer_id: params['ad']['customer'], feature_id: params['ad']['feature'], note: params['ad']['note'], repeat_date: repeat_date, updated_by: updated_by, payment: params['ad']['payment'], paid: paid, completed: false, placed: false, receipt: params['ad']['receipt'], print_only: params['ad']['print'])
+              ad = Ad.new(
+                  created_at: Time.now, 
+                  publication_id: params['ad']['single-publication'], 
+                  height: params['ad']['height'], 
+                  columns: columns, 
+                  position: params['ad']['position'], 
+                  price: price, 
+                  user_id: ad_user, 
+                  customer_id: params['ad']['customer'], 
+                  feature_id: params['ad']['feature'], 
+                  note: params['ad']['note'], 
+                  repeat_date: repeat_date, 
+                  updated_by: updated_by, 
+                  payment: params['ad']['payment'], 
+                  paid: paid, 
+                  completed: false, 
+                  placed: false, 
+                  receipt: params['ad']['receipt'], 
+                  print_only: params['ad']['print']
+              )
               if ad.save
                 save_success_helper(ad)
               else
@@ -182,7 +232,24 @@ module Sinatra
             elsif params['ad']['repeat_date'] == "none"
               params['ad']['repeat_date'] = nil
             end
-            if ad.update(publication_id: params['ad']['publication'], height: params['ad']['height'], columns: params['ad']['columns'], feature_id: params['ad']['feature'], price: price, customer_id: params['ad']['customer'], note: params['ad']['note'], updated_at: Time.now, updated_by: updater, payment: params['ad']['payment'], user_id: user, position: params['ad']['position'], receipt: params['ad']['receipt'], print_only: params['ad']['print'], paid: paid, repeat_date: params['ad']['repeat_date'])
+            if ad.update(
+                publication_id: params['ad']['publication'], 
+                height: params['ad']['height'], 
+                columns: params['ad']['columns'], 
+                feature_id: params['ad']['feature'], 
+                price: price, 
+                customer_id: params['ad']['customer'], 
+                note: params['ad']['note'], 
+                updated_at: Time.now, 
+                updated_by: updater, 
+                payment: params['ad']['payment'], 
+                user_id: user, 
+                position: params['ad']['position'], 
+                receipt: params['ad']['receipt'], 
+                print_only: params['ad']['print'], 
+                paid: paid, 
+                repeat_date: params['ad']['repeat_date']
+            )
               save_success_helper(ad)
             else
               error_helper
