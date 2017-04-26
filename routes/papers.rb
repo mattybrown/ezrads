@@ -23,14 +23,14 @@ module Sinatra
 
           app.post '/setup' do
             p = Paper.new(
-                name: params['paper']['name'], 
+                name: params['paper']['name'],
                 gst: params['paper']['gst']
             )
             if p.save
               u = User.new(
-                  username: params['user']['username'], 
-                  password: params['user']['password'], 
-                  role: 1, 
+                  username: params['user']['username'],
+                  password: params['user']['password'],
+                  role: 1,
                   paper_id: p.id
               )
               if u.save
@@ -47,7 +47,7 @@ module Sinatra
 
           app.post '/create/paper' do
             p = Paper.new(
-                name: params['paper']['name'], 
+                name: params['paper']['name'],
                 gst: params['paper']['gst']
             )
             if p.save
@@ -63,7 +63,7 @@ module Sinatra
 
           app.post '/edit/paper' do
             if p = Paper.update(
-                name: params['paper']['name'], 
+                name: params['paper']['name'],
                 gst: params['paper']['gst']
             )
               flash[:success] = "Paper updated"
@@ -83,9 +83,9 @@ module Sinatra
               enabled = false
             end
             m = Motd.new(
-                message: params['motd']['message'], 
-                paper_id: params['motd']['paper'], 
-                enabled: enabled
+              message: params['motd']['message'],
+              paper_id: params['motd']['paper'],
+              enabled: enabled
             )
             if m.save
               flash[:success] = "Message saved";
