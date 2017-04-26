@@ -194,7 +194,8 @@ module Sinatra
           app.get '/view/publication/:id' do
             env['warden'].authenticate!
             if env['warden'].user.role == 1 || env['warden'].user.role == 4
-              if @publication = Publication.get(params['id'])
+              if Publication.get(params['id'])
+                @publication = Publication.get(params['id'])
                 @title = "Viewing publication #{@publication.name} - #{display_date(@publication.date)}"
                 @ads = @publication.ads
                 @account = 0
