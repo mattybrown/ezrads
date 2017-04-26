@@ -43,7 +43,19 @@ module Sinatra
               repeat_date = repeat_publication.date
 
               params['runon']['publication'].each do |p|
-                runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
+                runon = Ad.new(
+                    height: words, 
+                    customer_id: params['runon']['customer'], 
+                    note: params['runon']['note'], 
+                    payment: params['runon']['payment'], 
+                    publication_id: p[0], 
+                    price: price, 
+                    user_id: params['runon']['user'], 
+                    feature_id: params['runon']['feature'], 
+                    position: params['runon']['position'], 
+                    paid: paid, 
+                    receipt: params['runon']['receipt']
+                )
                 if runon.save
                   repeat_save_success_helper(runon)
                 else
@@ -52,7 +64,19 @@ module Sinatra
               end
               redirect '/'
             else
-              runon = Ad.new(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], paid: paid, receipt: params['runon']['receipt'])
+              runon = Ad.new(
+                  height: words, 
+                  customer_id: params['runon']['customer'], 
+                  note: params['runon']['note'], 
+                  payment: params['runon']['payment'], 
+                  publication_id: params['runon']['single-publication'], 
+                  price: price, 
+                  user_id: params['runon']['user'], 
+                  feature_id: params['runon']['feature'], 
+                  position: params['runon']['position'], 
+                  paid: paid, 
+                  receipt: params['runon']['receipt']
+              )
               if runon.save
                 save_success_helper(runon)
               else
@@ -102,7 +126,20 @@ module Sinatra
               repeat_date = repeat_publication.date
 
               params['runon']['publication'].each do |p|
-                if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: p[0], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
+                if ad.update(
+                    height: words, 
+                    customer_id: params['runon']['customer'], 
+                    note: params['runon']['note'], 
+                    payment: params['runon']['payment'], 
+                    publication_id: p[0], 
+                    price: price, 
+                    user_id: params['runon']['user'], 
+                    feature_id: params['runon']['feature'], 
+                    position: params['runon']['position'], 
+                    updated_by: updater, 
+                    paid: paid, 
+                    receipt: params['runon']['receipt']
+                )
                   flash[:success] = "Run on #{ad.id} updated"
                 else
                   flash[:error] = "Something went wrong #{ad.errors.inspect}"
@@ -111,7 +148,20 @@ module Sinatra
               end
               redirect '/'
             else
-              if ad.update(height: words, customer_id: params['runon']['customer'], note: params['runon']['note'], payment: params['runon']['payment'], publication_id: params['runon']['single-publication'], price: price, user_id: params['runon']['user'], feature_id: params['runon']['feature'], position: params['runon']['position'], updated_by: updater, paid: paid, receipt: params['runon']['receipt'])
+              if ad.update(
+                  height: words, 
+                  customer_id: params['runon']['customer'], 
+                  note: params['runon']['note'], 
+                  payment: params['runon']['payment'], 
+                  publication_id: params['runon']['single-publication'], 
+                  price: price, 
+                  user_id: params['runon']['user'], 
+                  feature_id: params['runon']['feature'], 
+                  position: params['runon']['position'], 
+                  updated_by: updater, 
+                  paid: paid, 
+                  receipt: params['runon']['receipt']
+              )
                 flash[:success] = "Run on #{ad.id} updated"
                 redirect '/'
               else

@@ -351,7 +351,8 @@ module Sinatra
               if d.wday == sd.wday
                 p = Publication.new(
                   name: params['publication']['name'],
-                  date: d, paper_id: params['publication']['publication_id']
+                  date: d,
+                  paper_id: params['publication']['publication_id']
                 )
                 if p.save
                   flash[:success] = 'Publications created'

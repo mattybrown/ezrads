@@ -50,9 +50,40 @@ module Sinatra
             end
 
             if params['customer']['custom_rate'] == ""
-              customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], address_text: params['customer']['address_text'], address_text2: params['customer']['address_text2'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: '0', paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false, booking_order: booking_order)
+              customer = Customer.new(
+                  created_at: Time.now, 
+                  contact_name: params['customer']['contact_name'], 
+                  business_name: params['customer']['business_name'], 
+                  address_text: params['customer']['address_text'], 
+                  address_text2: params['customer']['address_text2'], 
+                  phone: params['customer']['phone'], 
+                  mobile: params['customer']['mobile'], 
+                  email: params['customer']['email'], 
+                  custom_rate: '0', 
+                  paper_id: env['warden'].user.paper_id, 
+                  alt_contact_name: params['customer']['alt_contact_name'], 
+                  alt_contact_phone: params['customer']['alt_contact_phone'], 
+                  notes: params['customer']['notes'], 
+                  banned: false, booking_order: booking_order
+              )
             else
-              customer = Customer.new(created_at: Time.now, contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], address_text: params['customer']['address_text'], address_text2: params['customer']['address_text2'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], paper_id: env['warden'].user.paper_id, alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: false, booking_order: booking_order)
+              customer = Customer.new(
+                  created_at: Time.now, 
+                  contact_name: params['customer']['contact_name'], 
+                  business_name: params['customer']['business_name'], 
+                  address_text: params['customer']['address_text'], 
+                  address_text2: params['customer']['address_text2'], 
+                  phone: params['customer']['phone'], 
+                  mobile: params['customer']['mobile'], 
+                  email: params['customer']['email'], 
+                  custom_rate: params['customer']['custom_rate'], 
+                  paper_id: env['warden'].user.paper_id, 
+                  alt_contact_name: params['customer']['alt_contact_name'], 
+                  alt_contact_phone: params['customer']['alt_contact_phone'], 
+                  notes: params['customer']['notes'], 
+                  banned: false, 
+                  booking_order: booking_order
+              )
             end
             if customer.save
               flash[:success] = "Customer created"
@@ -85,7 +116,21 @@ module Sinatra
             else
               booking_order = false
             end
-            if customer.update(contact_name: params['customer']['contact_name'], business_name: params['customer']['business_name'], address_text: params['customer']['address_text'], address_text2: params['customer']['address_text2'], phone: params['customer']['phone'], mobile: params['customer']['mobile'], email: params['customer']['email'], custom_rate: params['customer']['custom_rate'], alt_contact_name: params['customer']['alt_contact_name'], alt_contact_phone: params['customer']['alt_contact_phone'], notes: params['customer']['notes'], banned: banned, booking_order: booking_order)
+            if customer.update(
+                contact_name: params['customer']['contact_name'], 
+                business_name: params['customer']['business_name'], 
+                address_text: params['customer']['address_text'], 
+                address_text2: params['customer']['address_text2'], 
+                phone: params['customer']['phone'], 
+                mobile: params['customer']['mobile'], 
+                email: params['customer']['email'], 
+                custom_rate: params['customer']['custom_rate'], 
+                alt_contact_name: params['customer']['alt_contact_name'], 
+                alt_contact_phone: params['customer']['alt_contact_phone'], 
+                notes: params['customer']['notes'], 
+                banned: banned, 
+                booking_order: booking_order
+            )
               flash[:success] = "Customer <a href='/view/customer/#{customer.id}'>#{customer.id}</a> updated"
               redirect '/view/customers'
             else
