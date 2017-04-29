@@ -44,27 +44,6 @@ module Sinatra
             end
           end
 
-#          app.get '/view/publication/:id/ads' do
-#            env['warden'].authenticate!
-#            today = Date.today
-#            user = env['warden'].user
-#            user_paper = user.paper_id
-#            @role = user.role
-#            @title = "Home"
-#            @publications = Publication.all(paper_id: user_paper)
-#            @pub = Publication.get params[:id]
-#            @ads = @pub.ads
-#            @features = @ads.features
-#            @gross = 0
-#            @count = 0
-#            @ads.each do |a|
-#              @gross += a.price
-#              @count += 1
-#            end
-#
-#            erb :view_ads
-#          end
-
          app.get '/view/publication/:pub/:feat' do
             env['warden'].authenticate!
             user_publication = env['warden'].user.paper[:id]
@@ -84,7 +63,7 @@ module Sinatra
               feature = paper.features
             end
 
-            if @publications = paper.publications.count >= 1
+            if paper.publications.count >= 1
               @publications = paper.publications(order: [:date.asc])
               @pub = pub
               @ads = feature.ads(publication_id: pub.id)
@@ -206,26 +185,13 @@ module Sinatra
                 @paid = 0
                 @unpaid = 0
                 @unpaid_total = 0
-                @publication.ads.each do |a|
-                  if a.payment == 1
-                    @account += a.price
-                  elsif a.payment == 3
-                    @eftpos += a.price
-                  elsif a.payment == 2
-                    @cash += a.price
-                  elsif a.payment == 4
-                    @direct_credit += a.price
-                  elsif a.payment == 5
-                    @cheque += a.price
-                  end
-                  if a.paid == true
-                    @paid += a.price
-                  else
-                    @unpaid_total += a.price
-                  end
-
-                  a.paid == false ? @unpaid += 1 : nil
-                end
+                # Ad payment totals
+                @publication.ads.map { |i| i.payment == 1 ? @account += i.price : nil }
+                @publication.ads.map { |i| i.payment == 2 ? @cash += i.price : nil }
+                @publication.ads.map { |i| i.payment == 3 ? @eftpos += i.price : nil }
+                @publication.ads.map { |i| i.payment == 4 ? @direct_credit += i.price : nil }
+                @publication.ads.map { |i| i.payment == 5 ? @cheque += i.price : nil }
+                @publication.ads.map { |i| i.payment ? @paid += i.price : @unpaid_total += a.price && @unpaid += 1 }
 
                 @pub_data = {}
                 past_publications = Publication.all(
@@ -242,9 +208,7 @@ module Sinatra
                 )
                 past_publications.each do |p|
                   total = 0
-                  p.ads.each do |a|
-                    total += a.price
-                  end
+                  p.ads.map { |i| total += i.price }
                   @pub_data.update(display_date(p.date) => total)
                 end
 
@@ -254,56 +218,42 @@ module Sinatra
                 @repdata = {}
                 u.each do |u|
                   total = 0
-                  u.ads.each do |a|
-                    a.publication_id == @publication.id ? total += a.price : nil
-                  end
+                  @publication.ads.map { |i| i.user_id == u.id ? total += i.price : nil }
                   @repdata.update(u.username.capitalize => total)
                 end
 
                 @features = @publication.ads.feature
                 @feat_data = {}
-                @rop_data = {}
-                @clas_data = {}
-                @other_data = {}
                 @feat_total = 0
                 @rop_total = 0
                 @clas_total = 0
                 @other_total = 0
-                @features.each do |f|
-                  total = 0
-                  rop_price = 0
-                  clas_price = 0
-                  other_price = 0
 
-                  f.ads.each do |a|
-                    if a.publication_id == @publication.id
-                      total += a.price
-                      if a.feature.type == 1
-                        @rop_total += a.price
-                        rop_price += a.price
-                      elsif a.feature.type == 2 || a.feature.type == 3
-                        @clas_total += a.price
-                        clas_price += a.price
-                      else
-                        @other_total += a.price
-                        other_price += a.price
-                      end
-                    end
-                  end
-                  if f.type == 1
-                    @rop_data.update(f.name => rop_price)
-                  elsif f.type == 2 || f.type == 3
-                    @clas_data.update(f.name => clas_price)
-                  else
-                    @other_data.update(f.name => other_price)
-                  end
+                @publication.ads.map { |i| i.feature.type == 1 ? @rop_total += i.price : 0 }
+                @publication.ads.map { |i| i.feature.type == 2 || i.feature.type == 3 ? @clas_total += i.price : 0 }
+                @publication.ads.map { |i| i.feature.type == 4 ? @other_total += i.price : 0 }
 
-                  @feat_data.update(
-                    'ROP' => @rop_total,
-                    'Classified' => @clas_total,
-                    'Other' => @other_total
-                  )
+                @rop_data = []
+                @clas_data = []
+                @other_data = []
+                @publication.ads.features.each do |f|
+                  z = [f.name] << @publication.ads.map { |x| x.feature_id == f.id && x.feature.type == 1 ? x.price : 0 }.inject(:+)
+                  @rop_data << z
                 end
+                @publication.ads.features.each do |f|
+                  z = [f.name] << @publication.ads.map { |x| x.feature_id == f.id && (x.feature.type == 2 || x.feature.type == 3) ? x.price : 0 }.inject(:+)
+                  @clas_data << z
+                end
+                @publication.ads.features.each do |f|
+                  z = [f.name] << @publication.ads.map { |x| x.feature_id == f.id && x.feature.type == 4 ? x.price : 0 }.inject(:+)
+                  @other_data << z
+                end
+
+                @feat_data.update(
+                  'ROP' => @rop_total,
+                  'Classified' => @clas_total,
+                  'Other' => @other_total
+                )
 
                 erb :view_publication
               else
@@ -352,8 +302,7 @@ module Sinatra
               if d.wday == sd.wday
                 p = Publication.new(
                   name: params['publication']['name'],
-                  date: d,
-                  paper_id: params['publication']['publication_id']
+                  date: d, paper_id: params['publication']['publication_id']
                 )
                 if p.save
                   flash[:success] = 'Publications created'
