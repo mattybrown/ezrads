@@ -11,10 +11,7 @@ module Sinatra
             @user = env['warden'].user
             @title = "#{@user.username.capitalize}'s bookings"
             @tasks = Task.all(:user_id => @user.id, :completed => false)
-            pub = Publication.all(:date.gt => today, :paper_id => env['warden'].user.paper_id, :order => :date.asc)
             @ads = Ad.paginate(Ad.publication.date.gt => today, :order => Ad.publication.date.asc, :page => params[:page], :per_page => 30, :user_id => @user.id)
-            ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
-
             erb :me
           end
 
@@ -30,11 +27,7 @@ module Sinatra
             today = Date.today
             pub = Publication.all(:date.lt => today, :limit => 8, :paper_id => env['warden'].user.paper_id, :order => :date.desc)
             pub += Publication.all(:date.gt => today, :limit => 8, :paper_id => env['warden'].user.paper_id, :order => :date.asc)
-            pub.each do |p|
-              if p.date.mon == today.mon
-                @pub << p.date
-              end
-            end
+            pub.map { |p| p.date.mon == today.mon ? @pub << p.date : nil }
             @users.each do |u|
               if u.role != 3
                 p_user = []
