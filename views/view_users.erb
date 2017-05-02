@@ -12,25 +12,32 @@
 <table id="rep-monthly-breakdown-table">
   <th>Users</th>
   <% @pub.each do |p| %>
-    <th><%= p %></th>
+    <th><%= p[0] %></th>
   <% end %>
   <th>Total</th>
+  <% monthly_total = 0 %>
   <% @pub_users.each do |u| %>
     <tr>
       <% user_total = 0 %>
       <% u.each do |x| %>
-
         <% if x.class == String %>
           <td><strong><%= x.capitalize %></strong></td>
         <% else %>
           <% user_total += x %>
           <td>$<%= format_price(x.to_f) %></td>
         <% end %>
-
       <% end %>
       <td>$<%= format_price(user_total) %></td>
     </tr>
+    <% monthly_total += user_total %>
   <% end %>
+  <tr>
+    <td><strong>Totals</strong></td>
+    <% @pub.each do |p| %>
+      <td>$<%= format_price(p[1]) %></td>
+    <% end %>
+    <td>$<%= format_price(monthly_total) %></td>
+  </tr>
 </table>
 <br>
 <table class="highlight">
