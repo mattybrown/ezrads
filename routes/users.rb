@@ -11,10 +11,7 @@ module Sinatra
             @user = env['warden'].user
             @title = "#{@user.username.capitalize}'s bookings"
             @tasks = Task.all(:user_id => @user.id, :completed => false)
-            pub = Publication.all(:date.gt => today, :paper_id => env['warden'].user.paper_id, :order => :date.asc)
             @ads = Ad.paginate(Ad.publication.date.gt => today, :order => Ad.publication.date.asc, :page => params[:page], :per_page => 30, :user_id => @user.id)
-            ads = Ad.paginate(:page => params[:page], :per_page => 30, :user_id => @user.id, :order => (:created_at.desc))
-
             erb :me
           end
 
@@ -27,64 +24,52 @@ module Sinatra
 
             @pub = []
             @pub_users = []
-            today = Date.today
-            pub = Publication.all(:date.lt => today, :limit => 8, :paper_id => env['warden'].user.paper_id, :order => :date.desc)
-            pub += Publication.all(:date.gt => today, :limit => 8, :paper_id => env['warden'].user.paper_id, :order => :date.asc)
+            sd = Date.today - Date.today.mday + 1
+            ed = Date.new(sd.year, sd.month, -1)
+            lsd = Date.new(sd.year, sd.month - 1, sd.day)
+            led = Date.new(sd.year, sd.month - 1, -1)
+            pub = Publication.all(
+              date: (sd..ed),
+              paper_id: env['warden'].user.paper_id,
+              order: :date.asc
+            )
+            last_month_pubs = Publication.all(
+              date: (lsd..led),
+              paper_id: env['warden'].user.paper_id,
+              order: :date.desc
+            )
             pub.each do |p|
-              if p.date.mon == today.mon
-                @pub << p.date
-              end
+              total = 0
+              p.ads.map { |a| total += a.price }
+              @pub << [p.date, total]
             end
+
+            @this_month = Hash.new
+            @last_month = Hash.new
             @users.each do |u|
               if u.role != 3
                 p_user = []
                 p_user << u.username
                 @user_total = 0
                 pub.each do |p|
-                  if p.date.mon == today.mon
-                    total = 0
-                      p.ads.each do |a|
-                        if a.user_id == u.id
-                          total += a.price
-                        end
-                      end
-                    p_user << total
-                    @user_total += total
-                  end
+                  total = 0
+                  p.ads.map { |a| a.user_id == u.id ? total += a.price : nil }
+                  p_user << total
+                  @user_total += total
+                end
+                @last_month_user_total = 0
+                last_month_pubs.each do |p|
+                  total = 0
+                  p.ads.map { |a| a.user_id == u.id ? total += a.price : nil }
+                  @last_month_user_total += total
                 end
                 if @user_total > 0
                   @pub_users << p_user
+                  @this_month[u.username.capitalize] = @user_total
                 end
+                @last_month_user_total > 0 ? @last_month[u.username.capitalize] = @last_month_user_total : nil
               end
             end
-
-            @this_month = {}
-            @last_month = {}
-
-            @users.each do |u|
-              this_month_total = 0
-              last_month_total = 0
-              u.ads.each do |a|
-                if a.publication != nil
-                  present = Date.today.mon
-                  if present == 1
-                    last_month = 12
-                  else
-                    last_month = present - 1
-                  end
-                  if a.publication.date.mon == present
-                    this_month_total += a.price
-                  end
-                  @this_month.update(u.username.capitalize => this_month_total)
-
-                  if a.publication.date.mon == last_month
-                    last_month_total += a.price
-                  end
-                  @last_month.update(u.username.capitalize => last_month_total)
-                end
-              end
-            end
-
             erb :view_users
           end
 

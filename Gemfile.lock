@@ -103,6 +103,7 @@ GEM
     uuidtools (2.1.5)
     warden (1.2.6)
       rack (>= 1.0)
+    will_paginate (3.1.5)
 
 PLATFORMS
   ruby
@@ -118,6 +119,7 @@ DEPENDENCIES
   sinatra-flash
   tux
   warden
+  will_paginate
 
 BUNDLED WITH
-   1.12.5
+   1.13.1
