@@ -15,7 +15,8 @@ module Sinatra
 
             pub = paper.publications(:date.gt => today) & paper.publications(order: [:date.desc])
             if pub.count > 1
-              if @publications = paper.publications.count >= 1
+              @publications = paper.publications.count
+              if @publications >= 1
                 @publications = paper.publications(order: [:date.asc])
                 @ads = pub.last.ads
                 @pub = pub.last
@@ -44,7 +45,7 @@ module Sinatra
             end
           end
 
-         app.get '/view/publication/:pub/:feat' do
+          app.get '/view/publication/:pub/:feat' do
             env['warden'].authenticate!
             user_publication = env['warden'].user.paper[:id]
             @role = env['warden'].user[:role]
@@ -85,6 +86,7 @@ module Sinatra
               end
             end
 
+
             erb :view_publication_feature
           end
 
@@ -98,8 +100,7 @@ module Sinatra
             @title = 'Home'
             paper = Paper.all(id: user_publication)
             pub = paper.publications.get params[:pub]
-
-            if @publications = paper.publications.count >= 1
+            if paper.publications.count >= 1
               @publications = paper.publications(order: [:date.asc])
               @pub = pub
               @ads = Ad.all(publication_id: @pub.id, feature_id: params['id'])
@@ -119,30 +120,6 @@ module Sinatra
             end
 
             erb :view_publication_feature
-          end
-
-          app.get '/ads/publication/' do
-            env['warden'].authenticate!
-            user = env['warden'].user
-            user_paper = user.paper_id
-            @role = user.role
-            @title = 'Ezrads'
-
-            paper = Paper.all(id: user_paper)
-            pub = paper.publications(id: params['view']['publication'])
-
-            @publications = paper.publications(order: [:date.asc])
-            @ads = pub.ads
-            @features = @ads.features
-            @gross = 0
-            @count = 0
-            @ads.each do |a|
-              @gross += a.price
-              @count += 1
-            end
-
-            @pub = pub.last
-            erb :view_ads
           end
 
           app.get '/view/publications' do
@@ -186,11 +163,11 @@ module Sinatra
                 @unpaid = 0
                 @unpaid_total = 0
                 # Ad payment totals
-                @publication.ads.map { |i| i.payment == 1 ? @account += i.price : nil }
-                @publication.ads.map { |i| i.payment == 2 ? @cash += i.price : nil }
-                @publication.ads.map { |i| i.payment == 3 ? @eftpos += i.price : nil }
-                @publication.ads.map { |i| i.payment == 4 ? @direct_credit += i.price : nil }
-                @publication.ads.map { |i| i.payment == 5 ? @cheque += i.price : nil }
+                @publication.ads.map { |i| i.payment == 1 ? @account += i.price : 0 }
+                @publication.ads.map { |i| i.payment == 2 ? @cash += i.price : 0 }
+                @publication.ads.map { |i| i.payment == 3 ? @eftpos += i.price : 0 }
+                @publication.ads.map { |i| i.payment == 4 ? @direct_credit += i.price : 0 }
+                @publication.ads.map { |i| i.payment == 5 ? @cheque += i.price : 0 }
                 @publication.ads.map { |i| i.payment ? @paid += i.price : @unpaid_total += a.price && @unpaid += 1 }
 
                 @pub_data = {}
@@ -216,10 +193,10 @@ module Sinatra
 
                 u = User.all
                 @repdata = {}
-                u.each do |u|
+                u.each do |x|
                   total = 0
-                  @publication.ads.map { |i| i.user_id == u.id ? total += i.price : nil }
-                  @repdata.update(u.username.capitalize => total)
+                  @publication.ads.map { |i| i.user_id == x.id ? total += i.price : nil }
+                  @repdata.update(x.username.capitalize => total)
                 end
 
                 @features = @publication.ads.feature

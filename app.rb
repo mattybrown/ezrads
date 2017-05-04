@@ -96,12 +96,6 @@ class EzrAds < Sinatra::Base
     redirect '/auth/login'
   end
 
-  get '/protected' do
-    env['warden'].authenticate!
-
-    erb :protected
-  end
-
   #search
   get '/search' do
     env['warden'].authenticate!
