@@ -18,9 +18,12 @@
   <% end %>
 </div>
 
-<a href="/changepassword/<%= @user.id %>" class="btn right">Change password</a>
 <br>
-<p><a href="/view/tasks/complete">View completed tasks</a></p>
+<p>
+  <a href="/view/tasks/complete" class="btn">View completed tasks</a>
+  <a href="/view/tasks/sent" class="btn">View your sent tasks</a>
+  <a href="/changepassword/<%= @user.id %>" class="btn right">Change password</a>
+</p>
 
 <div class="row">
   <div class="pagination">

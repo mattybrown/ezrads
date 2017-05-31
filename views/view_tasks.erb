@@ -7,6 +7,7 @@
         <p class="grey-text text-darken-2">Deadline: <%= display_date(t.deadline) %></p>
         <p class="grey-text text-darken-2">Task created at: <%= display_time(t.created_at) %></p>
         <p class="grey-text text-darken-2">Issued by: <%= display_user(t.created_by) %></p>
+        <p class="grey-text text-darken-2">Recipient: <%= display_user(t.user_id) %></p>
         </p>
         <p><%= t.body %></p>
       </div>
