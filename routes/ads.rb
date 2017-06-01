@@ -256,6 +256,27 @@ module Sinatra
             end
           end
 
+          app.get '/delete/ad/multiple' do
+            env['warden'].authenticate!
+            message = []
+            if params['ad']
+              if env['warden'].user['role'] == 1 || env['warden'].user['role'] == 4
+                params['ad'].keys.each do |a|
+                  ad = Ad.get a
+                  if ad.destroy
+                    message << "Ad #{ad.id} deleted"
+                  end
+                end
+                flash[:success] = "#{message.join(', ')}"
+              else
+                flash[:error] = "Sorry, you don't have permission to do that"
+              end
+            else
+              flash[:error] = 'You should select some ads to delete first...'
+            end
+            redirect back
+          end
+
           app.get '/delete/ad/:id' do
             env['warden'].authenticate!
 

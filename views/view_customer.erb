@@ -48,61 +48,66 @@
       <input type="submit" class="btn red hidden" name="customer[delete]" value="delete">
     </div>
   </form>
+    <form action="/delete/ad/multiple" method="get">
+    <input type="submit" class="btn red right delete-ad" value="delete multiple">
 </div>
-<table class="ad_table tablesorter highlight">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Created at</th>
-      <th>Sales rep</th>
-      <th>Publication date</th>
-      <th>Repeat</th>
-      <th>Publication</th>
-      <th>Height x Columns</th>
-      <th>Position</th>
-      <th>Order Number</th>
-      <th>Info</th>
-      <% if @role != 3 %>
-        <th>Price</th>
-      <% end %>
-    </tr>
-  </thead>
-  <tbody>
-<% if @ads %>
-<% @ads.each do |a| %>
-    <tr>
-      <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
-      <td><%= display_time(a.created_at) %></td>
-      <td><%= a.user[:username].capitalize %></td>
-      <td><%= display_date(a.publication[:date]) %></td>
-      <td><%= display_date(a.repeat_date) %></td>
-      <td><%= a.publication[:name] %></td>
-      <td><%= a.height %> x <%= a.columns %></td>
-      <td><%= a.feature[:name] %></td>
-      <td><%= a.print_only %></td>
-      <td><%= a.position %></td>
-      <% if @role != 3 %>
-        <td>$<%= format_price(a.price) %></td>
-      <% end %>
-      <td>
-        <a href="/view/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="View" data-position="top"><i class="fa fa-eye"></i></a>
-      </td>
-      <td>
-        <% if a.feature.type != 2 %>
-          <a href="/edit/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
-        <% elsif a.feature.type == 2 %>
-          <a href="/edit/runon/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
+  <table class="ad_table tablesorter highlight">
+    <thead>
+      <tr>
+        <th>
+        <th>#</th>
+        <th>Created at</th>
+        <th>Sales rep</th>
+        <th>Publication date</th>
+        <th>Repeat</th>
+        <th>Publication</th>
+        <th>Height x Columns</th>
+        <th>Position</th>
+        <th>Order Number</th>
+        <th>Info</th>
+        <% if @role != 3 %>
+          <th>Price</th>
         <% end %>
-      </td>
-      <td>
-        <a href="/create/task/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Send as task" data-position="top"><i class="fa fa-send"></i></a>
-      </td>
-      <td>
-          <a href="/delete/ad/<%= a.id %>" class="delete-ad tooltipped" data-delay="50" data-tooltip="Delete" data-position="top" style="color:red"><i class="fa fa-trash"></i></a>
-      </td>
-    </tr>
+      </tr>
+    </thead>
+    <tbody>
+  <% if @ads %>
+  <% @ads.each do |a| %>
+      <tr>
+        <td><input type="checkbox" id="deleteAd<%= a.id %>" name="ad[<%= a.id %>]" ><label for="deleteAd<%= a.id %>"></label></td>
+        <td><a href="/view/ad/<%= a.id %>"><%= a.id %></a></td>
+        <td><%= display_time(a.created_at) %></td>
+        <td><%= a.user[:username].capitalize %></td>
+        <td><%= display_date(a.publication[:date]) %></td>
+        <td><%= display_date(a.repeat_date) %></td>
+        <td><%= a.publication[:name] %></td>
+        <td><%= a.height %> x <%= a.columns %></td>
+        <td><%= a.feature[:name] %></td>
+        <td><%= a.print_only %></td>
+        <td><%= a.position %></td>
+        <% if @role != 3 %>
+          <td>$<%= format_price(a.price) %></td>
+        <% end %>
+        <td>
+          <a href="/view/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="View" data-position="top"><i class="fa fa-eye"></i></a>
+        </td>
+        <td>
+          <% if a.feature.type != 2 %>
+            <a href="/edit/ad/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
+          <% elsif a.feature.type == 2 %>
+            <a href="/edit/runon/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Edit" data-position="top"><i class="fa fa-pencil-square-o"></i></a>
+          <% end %>
+        </td>
+        <td>
+          <a href="/create/task/<%= a.id %>" class="tooltipped" data-delay="50" data-tooltip="Send as task" data-position="top"><i class="fa fa-send"></i></a>
+        </td>
+        <td>
+            <a href="/delete/ad/<%= a.id %>" class="delete-ad tooltipped" data-delay="50" data-tooltip="Delete" data-position="top" style="color:red"><i class="fa fa-trash"></i></a>
+        </td>
+      </tr>
 
-<% end %>
-<% end %>
+  <% end %>
+  <% end %>
+</form>
 </tbody>
 </table>
