@@ -183,6 +183,8 @@ module Sinatra
                 @paid = 0
                 @unpaid = 0
                 @unpaid_total = 0
+                @prev_pub = Publication.all(:date.lt => @publication.date, :order => [:date.desc], :limit => 1, :paper_id => @publication.paper_id)
+                @next_pub = Publication.all(:date.gt => @publication.date, :order => [:date.asc], :limit => 1, :paper_id => @publication.paper_id)
                 # Ad payment totals
                 @publication.ads.map { |i| i.payment == 1 ? @account += i.price : 0 }
                 @publication.ads.map { |i| i.payment == 2 ? @cash += i.price : 0 }

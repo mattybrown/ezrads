@@ -1,5 +1,15 @@
 
-<h4><%= "#{@publication.name} - #{display_date(@publication.date)}" %></h4>
+<div class="row">
+  <div class="col s6 m3">
+    <a class="btn" href="/view/publication/<%= @prev_pub[0].id %>">Previous issue</a>
+  </div>
+  <div class="col s12 m6">
+    <h4><%= "#{@publication.name} - #{display_date(@publication.date)}" %></h4>
+  </div>
+  <div class="col s6 m3">
+    <a class="btn" href="/view/publication/<%= @next_pub[0].id %>">Next issue</a>
+  </div>
+</div>
 <div class="col s12">
   <div class="row">
     <div class="input-field col s12">
