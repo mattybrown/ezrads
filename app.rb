@@ -296,7 +296,7 @@ class EzrAds < Sinatra::Base
     end
 
     def get_feature_id(f)
-      k = Feature.first(:name => f)
+      k = Feature.all(:name => f, :paper_id => env['warden'].user.paper_id)[0]
       return k.id
     end
 
