@@ -21,6 +21,14 @@ module Sinatra
             erb :view_tasks
           end
 
+          app.get '/view/tasks/sent' do
+            env['warden'].authenticate!
+            @tasks = Task.all(created_by: env['warden'].user.id, order: [:created_at.desc])
+            @title = 'Sent tasks'
+
+            erb :view_tasks
+          end
+
           app.get '/task/completed/:id' do
             t = Task.get params['id']
             t.completed = true
@@ -37,7 +45,7 @@ module Sinatra
             t = Task.get params['id']
             t.completed = false
             if t.save
-              flash[:success] = "Keep working on it"
+              flash[:success] = "Ad marked as incomplete"
               redirect back
             else
               flash[:error] = "Something went wrong"
@@ -77,13 +85,13 @@ module Sinatra
             title = params['task']['title']
             title.gsub!(/\s/, '-')
             t = Task.new(
-                title: params['task']['title'], 
-                created_by: uid, 
-                created_at: Time.now, 
-                deadline: params['task']['deadline'], 
-                user_id: params['task']['user_id'], 
-                priority: params['task']['priority'], 
-                body: params['task']['body'], 
+                title: params['task']['title'],
+                created_by: uid,
+                created_at: Time.now,
+                deadline: params['task']['deadline'],
+                user_id: params['task']['user_id'],
+                priority: params['task']['priority'],
+                body: params['task']['body'],
                 completed: false
             )
 
