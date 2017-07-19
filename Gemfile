@@ -9,6 +9,7 @@ gem 'chartkick'
 gem 'groupdate'
 gem 'dm-sqlite-adapter'
 gem 'will_paginate'
+gem 'sinatra-cross_origin'
 
 group :development, :test do
 

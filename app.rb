@@ -54,6 +54,7 @@ class EzrAds < Sinatra::Base
   require_relative 'routes/features'
   require_relative 'routes/ads'
   require_relative 'routes/runons'
+  require_relative 'routes/api'
 
   register Sinatra::EzrAds::Helpers
 
@@ -65,6 +66,15 @@ class EzrAds < Sinatra::Base
   register Sinatra::EzrAds::Routing::Features
   register Sinatra::EzrAds::Routing::Ads
   register Sinatra::EzrAds::Routing::Runons
+  register Sinatra::EzrAds::Routing::Api
+
+  register Sinatra::CrossOrigin
+
+  options "*" do
+    response.headers["Allow"] = "HEAD,GET,PUT,POST,DELETE,OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Overide, Content-Type, Cache-Control, Accept"
+    200
+  end
 
   # Authentication
   get '/auth/login' do
