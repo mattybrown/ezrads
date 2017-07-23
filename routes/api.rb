@@ -28,6 +28,14 @@ module Sinatra
             @ads = ad_arr.to_json
           end
 
+          app.post '/api/ad/approve' do
+            cross_origin
+            ad_id = JSON.parse(request.body.read)
+            a = Ad.get ad_id
+            a.approved ? a.approved = false : a.approved = true
+            a.save
+          end
+
         end
       end
     end
