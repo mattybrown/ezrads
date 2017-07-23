@@ -6,7 +6,6 @@ module Sinatra
         def self.registered(app)
 
           app.get '/api/ads' do
-            cross_origin
             pub = Publication.all(:date.gt => Date.today) & Publication.all(order: [:date.desc])
             ads = pub.last.ads
             ad_arr = []
@@ -29,11 +28,14 @@ module Sinatra
           end
 
           app.post '/api/ad/approve' do
-            cross_origin
-            ad_id = JSON.parse(request.body.read)
-            a = Ad.get ad_id
-            a.approved ? a.approved = false : a.approved = true
-            a.save
+            data = JSON.parse(request.body.read)
+            a = Ad.get data["ad_id"]
+            a.completed ? a.completed = false : a.completed = true
+            if a.save
+              logger.info "Object: #{a} SAVED"
+            else
+              logger.info "Object: #{a} save FAILED"
+            end
           end
 
         end

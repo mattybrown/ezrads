@@ -5,11 +5,24 @@ require 'will_paginate'
 require 'will_paginate/data_mapper'
 require './model'
 require 'json'
+require 'logger'
 
 class EzrAds < Sinatra::Base
+  configure do
+    enable :cross_origin
+    enable :logging
+    file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
+    file.sync = true
+    use Rack::CommonLogger, file
+  end
+
   enable :sessions
   register Sinatra::Flash
   set :session_secret, 'very very secret'
+
+  before do
+    response.headers["Access-Control-Allow-Origin"] = "*"
+  end
 
   use Warden::Manager do |config|
     config.serialize_into_session{ |user| user.id }
@@ -43,6 +56,7 @@ class EzrAds < Sinatra::Base
     end
   end
   # end of Warden config
+  register Sinatra::CrossOrigin
 
   require_relative 'helpers'
 
@@ -67,14 +81,6 @@ class EzrAds < Sinatra::Base
   register Sinatra::EzrAds::Routing::Ads
   register Sinatra::EzrAds::Routing::Runons
   register Sinatra::EzrAds::Routing::Api
-
-  register Sinatra::CrossOrigin
-
-  options "*" do
-    response.headers["Allow"] = "HEAD,GET,PUT,POST,DELETE,OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Overide, Content-Type, Cache-Control, Accept"
-    200
-  end
 
   # Authentication
   get '/auth/login' do
@@ -224,4 +230,12 @@ class EzrAds < Sinatra::Base
 
     erb :search
   end
+
+  options "*" do
+    response.headers["Allow"] = "HEAD,GET,PUT,POST,DELETE,OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Overide, Content-Type, Cache-Control, Accept"
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:8080"
+    200
+  end
+
 end
