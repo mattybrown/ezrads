@@ -59,7 +59,7 @@ module Sinatra
 
           def motd
             if env['warden'].user
-              k = Motd.last(paper_id: env['warden'].user.paper_id)
+              k = Motd.last
               k.enabled == true ? k.message : false
             else
               false
