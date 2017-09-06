@@ -147,7 +147,7 @@ module Sinatra
                 if ad.save
                   repeat_save_success_helper(ad)
                 else
-                  error_helper
+                  error_helper(ad, 'There was an error saving the ad.')
                 end
               end
               redirect '/'
