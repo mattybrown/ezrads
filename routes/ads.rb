@@ -5,24 +5,6 @@ module Sinatra
 
         def self.registered(app)
 
-          app.helpers do
-            def save_success_helper(ad)
-              flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{ad.customer.business_name}</a> successfully booked"
-              session[:ad].clear
-              redirect '/'
-            end
-
-            def repeat_save_success_helper(ad)
-              flash[:success] = "<a class='blue-text text-darken-4' href='/view/ad/#{ad.id}'>#{ad.id} - #{ad.height}x#{ad.columns} #{ad.customer.business_name}</a> successfully booked"
-              session[:ad].clear
-            end
-
-            def error_helper(ad, custom_error_text)
-              custom_error_text ? flash[:error] = "#{ad.errors.inspect} - #{custom_error_text}" : flash[:error] = "#{ad.errors.inspect}"
-              redirect back
-            end
-          end
-
           #clears session data for create ad
           app.get '/cancel/ad' do
             env['warden'].authenticate!
@@ -66,17 +48,16 @@ module Sinatra
             params['ad']['updated_by'] ? updated_by = params['ad']['updated_by'] : updated_by = nil
             params['ad']['paid'] ? paid = true : paid = false
 
-
             customer = Customer.get(params['ad']['customer'])
 
             if customer.banned == true
-              flash[:error] = "This customer is blocked - see an admin"
+              flash[:error] = 'This customer is blocked - see an admin'
               redirect back
             end
 
             if customer.booking_order == true
-              if params['ad']['print'] == "" || params['ad']['print'] == nil
-                flash[:error] = "This ad requires an order number to be created"
+              if params['ad']['print'] == '' || params['ad']['print'].nil?
+                flash[:error] = 'This ad requires an order number to be created'
                 redirect back
               end
             end
@@ -84,7 +65,7 @@ module Sinatra
             feature = Feature.get(params['ad']['feature'])
             feature.type == 2 ? columns = 0 : columns = params['ad']['columns']
 
-            user_price = params['ad']['price'].to_f if params['ad']['price'] != ""
+            user_price = params['ad']['price'].to_f if params['ad']['price'] != ''
 
             if customer.custom_rate > 0
               price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
@@ -156,29 +137,29 @@ module Sinatra
               params['ad']['repeat_date'] ? repeat_date = params['ad']['repeat_date'] :repeat_date = nil
 
               ad = Ad.new(
-                  created_at: Time.now,
-                  publication_id: params['ad']['single-publication'],
-                  height: params['ad']['height'],
-                  columns: columns,
-                  position: params['ad']['position'],
-                  price: price,
-                  user_id: ad_user,
-                  customer_id: params['ad']['customer'],
-                  feature_id: params['ad']['feature'],
-                  note: params['ad']['note'],
-                  repeat_date: repeat_date,
-                  updated_by: updated_by,
-                  payment: params['ad']['payment'],
-                  paid: paid,
-                  completed: false,
-                  placed: false,
-                  receipt: params['ad']['receipt'],
-                  print_only: params['ad']['print']
+                created_at: Time.now,
+                publication_id: params['ad']['single-publication'],
+                height: params['ad']['height'],
+                columns: columns,
+                position: params['ad']['position'],
+                price: price,
+                user_id: ad_user,
+                customer_id: params['ad']['customer'],
+                feature_id: params['ad']['feature'],
+                note: params['ad']['note'],
+                repeat_date: repeat_date,
+                updated_by: updated_by,
+                payment: params['ad']['payment'],
+                paid: paid,
+                completed: false,
+                placed: false,
+                receipt: params['ad']['receipt'],
+                print_only: params['ad']['print']
               )
               if ad.save
                 save_success_helper(ad)
               else
-                error_helper
+                error_helper(ad, 'There was an error saving the ad.')
               end
             end
           end
@@ -186,14 +167,18 @@ module Sinatra
           app.get '/edit/ad/:id' do
             env['warden'].authenticate!
             today = Date.today
-            @title = "Edit ad"
+            @title = 'Edit ad'
             @ad = Ad.get params['id']
             @customers = Customer.all
-            @features = Feature.all(:paper_id => env['warden'].user.paper.id)
+            @features = Feature.all(paper_id: env['warden'].user.paper.id)
             if env['warden'].user.role == 1 || env['warden'].user.role == 4
-              @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :order => [:date.asc])
+              @publications = Publication.all(paper_id: env['warden'].user.paper.id, order: [:date.asc])
             else
-              @publications = Publication.all(:paper_id => env['warden'].user.paper.id, :date.gt => today, :order => [:date.asc])
+              @publications = Publication.all(
+                paper_id: env['warden'].user.paper.id,
+                :date.gt => today,
+                order: [:date.asc]
+              )
             end
             @users = User.all
 
@@ -203,21 +188,13 @@ module Sinatra
           app.post '/edit/ad/:id' do
             ad = Ad.get params['id']
             updater = env['warden'].user.id
-            if params['ad']['user']
-              user = params['ad']['user']
-            else
-              user = ad.user[:id]
-            end
+            params['ad']['user'] ? user = params['ad']['user'] : user = ad.user[:id]
             feature = Feature.get params['ad']['feature']
             customer = ad.customer
             if params['ad']['price'] != "" && env['warden'].user.role == 1 || env['warden'].user.role == 4
               price = params['ad']['price'].to_f
-            elsif customer.custom_rate > 0
-              price = params['ad']['height'].to_f * params['ad']['columns'].to_f * customer.custom_rate
-              percent = price / 100 * 20
             else
-              price = params['ad']['height'].to_f * params['ad']['columns'].to_f * feature.rate
-              percent = price / 100 * 20
+              price = ad.price
             end
             if params['ad']['columns'] == ""
               params['ad']['columns'] = 0
@@ -272,7 +249,7 @@ module Sinatra
                 flash[:error] = "Sorry, you don't have permission to do that"
               end
             else
-              flash[:error] = 'You should select some ads to delete first...'
+              flash[:error] = "You should select some ads to delete first... #{params['ad']}"
             end
             redirect back
           end
