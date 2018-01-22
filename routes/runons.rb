@@ -140,10 +140,9 @@ module Sinatra
                     paid: paid, 
                     receipt: params['runon']['receipt']
                 )
-                  save_success_helper(runon)
+                  save_success_helper(ad)
                 else
-                  flash[:error] = "Something went wrong #{ad.errors.inspect}"
-                  redirect back
+                  error_helper(ad, 'There was an error saving the runon')
                 end
               end
               redirect '/'
@@ -162,11 +161,9 @@ module Sinatra
                   paid: paid, 
                   receipt: params['runon']['receipt']
               )
-                flash[:success] = "Run on #{ad.id} updated"
-                redirect '/'
+                save_success_helper(ad)
               else
-                flash[:error] = "Something went wrong #{ad.errors.inspect}"
-                redirect back
+                error_helper(ad)
               end
             end
           end
