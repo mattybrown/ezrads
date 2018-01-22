@@ -26,8 +26,13 @@ module Sinatra
             @pub_users = []
             sd = Date.today - Date.today.mday + 1
             ed = Date.new(sd.year, sd.month, -1)
-            lsd = Date.new(sd.year, sd.month - 1, sd.day)
-            led = Date.new(sd.year, sd.month - 1, -1)
+            if sd.month != 1
+              lsd = Date.new(sd.year, sd.month - 1, sd.day)
+              led = Date.new(sd.year, sd.month - 1, -1)
+            else
+              lsd = Date.new(sd.year - 1, 12)
+              led = Date.new(sd.year - 1, 12, -1)
+            end
             pub = Publication.all(
               date: (sd..ed),
               paper_id: env['warden'].user.paper_id,
