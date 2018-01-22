@@ -140,7 +140,7 @@ module Sinatra
                     paid: paid, 
                     receipt: params['runon']['receipt']
                 )
-                  flash[:success] = "Run on #{ad.id} updated"
+                  save_success_helper(runon)
                 else
                   flash[:error] = "Something went wrong #{ad.errors.inspect}"
                   redirect back
